@@ -184,9 +184,8 @@ prepare_print_master (GtkWidget *print_dlg,
   gint from, to;
   GfvProgressData *p_data;
 
-  p_data = gfv_progress_new
-    (GTK_WINDOW (print_dlg),
-     _("Please wait..."), NULL, ABORT_BTN);
+  p_data = gfv_progress_new (print_dlg, _("Please wait..."),
+			     NULL, ABORT_BTN);
 
   print_master =
     gnome_print_master_new_from_dialog (GPD (print_dlg));
@@ -246,8 +245,7 @@ print_or_preview (GtkWidget *print_dlg,
 							  _("Print"
 							    " preview..."));
 	  
-	  transient_window_show (GTK_WINDOW (preview),
-				 GTK_WINDOW (print_dlg));
+	  transient_window_show (preview, print_dlg);
 	  
 	  gtk_widget_show (preview);
 	}
@@ -300,6 +298,5 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
 		      "clicked", print_dlg_clicked_cb,
 		      viewer_data);
   
-  transient_window_show (GTK_WINDOW (print_dialog),
-			 GTK_WINDOW (viewer_data->viewer_window));
+  transient_window_show (print_dialog, viewer_data->viewer_window);
 }

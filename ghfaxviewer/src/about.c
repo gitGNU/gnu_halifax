@@ -41,23 +41,20 @@ static gboolean i18n_initted = FALSE;
 static
 void about_i18n_init ()
 {
-  if (!i18n_initted)
-    {
-      copyright =
-	_("Copyright (C) 2000,2001 Wolfgang Sourdeau");
-      description =
-	_("This program displays image files received on a HylaFAX system.");
-      licensing =
-	_("This program is free software, you"
-	  " are welcome to use it, modify it"
-	  " and redistribute it under certain"
-	  " conditions. See the file COPYING"
-	  " for further informations. There is"
-	  " NO warranty; not even for"
+  copyright =
+    _("Copyright (C) 2000, 2001 Wolfgang Sourdeau");
+  description =
+    _("This program displays image files received on a HylaFAX system.");
+  licensing =
+    _("This program is free software, you"
+      " are welcome to use it, modify it"
+      " and redistribute it under certain"
+      " conditions. See the file COPYING"
+      " for further informations. There is"
+      " NO warranty; not even for"
 	  " MERCHANTABILITY or FITNESS FOR A"
-	  " PARTICULAR PURPOSE.");
+      " PARTICULAR PURPOSE.");
       i18n_initted = TRUE;
-    }
 }
 
 #ifdef NEED_GNOMESUPPORT_H
@@ -72,7 +69,8 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 			    NULL};
   GtkWidget *about_dialog;
 
-  about_i18n_init ();
+  if (!i18n_initted)
+    about_i18n_init ();
 
   message = g_strdup_printf ("%s %s",
 			     _(description),
@@ -86,8 +84,8 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 		     message,
 		     PIXMAP ("ghfaxviewer-logo.xpm"));
 		       
-  transient_window_show (GTK_WINDOW (about_dialog),
-			 GTK_WINDOW (viewer_window));
+  transient_window_show (about_dialog,
+			 viewer_window);
 
   g_free (message);
 }
@@ -180,7 +178,8 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
   DialogWindow *about_dialog;
   GtkWidget *content, *ok_button;
 
-  about_i18n_init ();
+  if (!i18n_initted)
+    about_i18n_init ();
 
   about_dialog = dialog_window_new (_("About..."));
   content = about_content (viewer_window);
