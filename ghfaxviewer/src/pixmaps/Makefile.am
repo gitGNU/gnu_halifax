@@ -1,7 +1,7 @@
 if TARGET_WIN32
 if HAS_XPM2WICO
 ghfaxviewer-icon.ico: ghfaxviewer-icon.xpm
-	@XPM2WICO@ $<
+	@XPM2WICO@ -f $<
 
 all: ghfaxviewer-icon.ico
 endif
