@@ -4,27 +4,13 @@ gnulocaledir = $(datadir)/locale
 pixmapsdir = @PIXMAPS_DIR@
 gnome_graph_app_dir = @GNOME_GRAPH_APP_DIR@
 
-LIBS = @GTK_LIBS@ @TIFF_LIBS@ @WIN32_LIBS@ @GNOME_PRINT_LIBS@ @GCONF_LIBS@
+LIBS = @GNOME_LIBS@ @GNOME_PRINT_LIBS@ @TIFF_LIBS@
 
-INCLUDES = -I.. -I. @GHFW_CFLAGS@ @GTK_CFLAGS@ @GNOME_PRINT_CFLAGS@ @GCONF_CFLAGS@
+INCLUDES = -I.. -I. @GHFW_CFLAGS@ @GNOME_CFLAGS@ @GNOME_PRINT_CFLAGS@
 
 bin_PROGRAMS = ghfaxviewer
 
-if TARGET_GNU
-if WITHOUT_GNOMEPRINT
-PRINTSRC = ps_print.c
-NOPRINTSRC = winprint.c gn_print.c
-else
-PRINTSRC = gn_print.c
-NOPRINTSRC = winprint.c ps_print.c
-endif
-RCSRC =
-SYSDEPDEFS = -DLOCALEDIR="\"$(gnulocaledir)\"" -DPIXMAP_DIR="\"$(pixmapsdir)\""
-else
-if TARGET_WIN32
-NOPRINTSRC = ps_print.c gn_print.c
-PRINTSRC = winprint.c
-RCSRC = ghfaxviewer-res.rc
+SYSDEPDEFS = -DLOCALEDIR="\"$(gnulocaledir)\"" -DPIXMAP_DIR="\"$(pixmapsdir)\""  -DNEED_GNOMESUPPORT_H -DGTK_DISABLE_DEPRECATED -DG_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED
 
 .rc.o:
 	@WINDRES@ --include-dir=$(prefix)/include $< $@
@@ -38,13 +24,13 @@ SUFFIXES = .rc .o
 
 noinst_HEADERS = setup.h tiffimages.h tiffinfo.h viewer.h cursors.h print.h \
 		 menu.h toolbar.h errors.h i18n.h \
-		 callbcks.h draw_page.h zoom.h $(NOPRINTSRC)
+		 callbcks.h draw_page.h zoom.h winprint.c ps_print.c
 
 ghfaxviewer_SOURCES = setup.c fileopen.c cursors.c draw_page.c \
 		 thumbnails.c prefs.c ps_export.c \
 		 tiffimages.c tiffinfo.c zoom.c viewer.c callbcks.c toolbar.c \
-		 menu.c about.c errors.c info.c \
-		 $(PRINTSRC) $(RCSRC)
+		 menu.c about.c errors.c info.c gn_print.c
+
 ghfaxviewer_LDADD = @GHFW_LIBS@
 
 EXTRA_DIST = ghfaxviewer.desktop ghfaxviewer-res.rc
@@ -60,4 +46,3 @@ uninstall-local:
 		rm -f $(gnome_graph_app_dir)/ghfaxviewer.desktop
 	test -d $(gnome_graph_app_dir) && \
 		rmdir --ignore-fail-on-non-empty $(gnome_graph_app_dir)
-endif

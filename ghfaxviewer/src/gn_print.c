@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:07:56 wolfgang>
+ * Time-stamp: <2003-02-17 22:36:13 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -29,11 +29,10 @@
 #endif
 
 #include <time.h>
-#include <libgnome/gnome-paper.h>
 #include <libgnomeprint/gnome-print.h>
-#include <libgnomeprint/gnome-print-dialog.h>
-#include <libgnomeprint/gnome-print-master.h>
-#include <libgnomeprint/gnome-print-master-preview.h>
+#include <libgnomeprint/gnome-print-paper.h>
+#include <libgnomeprintui/gnome-print-dialog.h>
+#include <libgnomeprintui/gnome-print-preview.h>
 #include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "setup.h"
@@ -42,10 +41,7 @@
 #include "viewer.h"
 #include "callbcks.h"
 
-/* Damn, I hate those
-   very-long-names-that-just-serve-no-purpose-at-all-except-filling-a-whole-line-just-for-pleasure */
 #define GPD(dlg) GNOME_PRINT_DIALOG(dlg)
-
 
 static double *
 create_matrix_from_page (FaxPage *gray_page)
@@ -74,7 +70,7 @@ print_page (GnomePrintContext *context,
 
   page_name = g_strdup_printf ("%d", gray_page->nbr + 1);
   gnome_print_beginpage (context, page_name);
-  def_font = gnome_font_new_closest  ("times", GNOME_FONT_BOOK, 0, 10);
+  def_font = gnome_font_find_closest  ("times", 10);
   gnome_print_setfont (context, def_font);
 
   matrix = create_matrix_from_page (gray_page);
@@ -181,13 +177,14 @@ send_pages_to_pc (GnomePrintContext *context,
   return aborted;
 }
 
-static GnomePrintMaster *
-prepare_print_master (GtkWidget *print_dlg,
-		      FaxFile *fax_file,
-		      FaxPage *current_page)
+static GnomePrintJob *
+prepare_print_job (GtkWidget *print_dlg,
+ 		   FaxFile *fax_file,
+ 		   FaxPage *current_page)
 {
   GnomePrintContext *print_context;
-  GnomePrintMaster *print_master;
+  GnomePrintConfig *print_config;
+  GnomePrintJob *print_job;
   gint copies, collate, range, aborted;
   gint from, to;
   GtkWidget *progress_win;
@@ -196,12 +193,13 @@ prepare_print_master (GtkWidget *print_dlg,
   ghfw_progress_window_set_abortable (GHFW_PROGRESS_WINDOW (progress_win), TRUE);
   transient_window_show (progress_win, print_dlg);
 
-  print_master = gnome_print_master_new_from_dialog (GPD (print_dlg));
-  print_context = gnome_print_master_get_context (print_master);
+  print_config = gnome_print_config_default ();
+  print_job = gnome_print_job_new (print_config);
+
+  print_context = gnome_print_job_get_context (print_job);
 
   gnome_print_dialog_get_copies (GPD (print_dlg), &copies, &collate);
-  range = gnome_print_dialog_get_range_page (GPD (print_dlg),
-					     &from, &to);
+  range = gnome_print_dialog_get_range_page (GPD (print_dlg), &from, &to);
 
   if (range == GNOME_PRINT_RANGE_CURRENT)
     from = to = current_page->nbr + 1;
@@ -218,13 +216,13 @@ prepare_print_master (GtkWidget *print_dlg,
 
   if (aborted)
     {
-      gnome_print_master_close (print_master);
-      print_master = NULL;
+      gnome_print_job_close (print_job);
+      print_job = NULL;
     }
 
   gtk_widget_destroy (progress_win);
 
-  return print_master;
+  return print_job;
 }
 
 static gint
@@ -232,7 +230,6 @@ print_or_preview (GtkWidget *print_dlg,
 		  ViewerData *viewer_data,
 		  gint button)
 {
-  GnomePrintMaster *print_master;
   GtkWidget *preview;
   gint result;
 
@@ -241,17 +238,17 @@ print_or_preview (GtkWidget *print_dlg,
 				       viewer_data->fax_file,
 				       viewer_data->current_page);
 
-  if (print_master)
+  if (viewer_data->print_job)
     {
-      if (button == GNOME_PRINT_PRINT)
-	result = gnome_print_master_print (print_master);
+      if (button == GNOME_PRINT_DIALOG_RESPONSE_PRINT)
+ 	gnome_print_job_print (viewer_data->print_job);
       else
 	{
 	  preview =
-	    (GtkWidget *) gnome_print_master_preview_new (print_master,
-							  _("Print"
-							    " preview..."));
-	  
+ 	    GTK_WIDGET (gnome_print_job_preview_new (viewer_data->print_job,
+						     _("Print"
+						       " preview...")));
+
 	  transient_window_show (preview, print_dlg);
 	  window_set_icon (preview, PIXMAP ("ghfaxviewer-icon.xpm"));
 
@@ -259,7 +256,7 @@ print_or_preview (GtkWidget *print_dlg,
 	  result = TRUE;
 	}
 
-      gnome_print_master_close (print_master);
+      gnome_print_job_close (viewer_data->print_job);
     }
 
   return (!result);
@@ -273,7 +270,7 @@ print_dlg_clicked_cb (GtkWidget *print_dlg, gint button,
 
   destroy_dlg = TRUE;
 
-  if (button != GNOME_PRINT_CANCEL)
+  if (button != GNOME_PRINT_DIALOG_RESPONSE_CANCEL)
     destroy_dlg = print_or_preview (print_dlg, viewer_data, button);
   else
     destroy_dlg = TRUE;
@@ -287,11 +284,14 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
   GtkWidget *print_dialog;
 
-  print_dialog =
-    gnome_print_dialog_new (_("Print..."),
-			    GNOME_PRINT_DIALOG_RANGE
-			    | GNOME_PRINT_DIALOG_COPIES);
-  
+  print_dialog = gnome_print_dialog_new (viewer_data->print_job, _("Print..."),
+					 GNOME_PRINT_DIALOG_RANGE
+					 | GNOME_PRINT_DIALOG_COPIES);
+
+  viewer_data->print_job = prepare_print_job (print_dialog,
+					      viewer_data->fax_file,
+					      viewer_data->current_page);
+
   gnome_print_dialog_construct_range_page 
     (GPD (print_dialog), (GNOME_PRINT_RANGE_CURRENT
 			  | GNOME_PRINT_RANGE_ALL
@@ -300,8 +300,8 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
      _("Current page only"),
      _("Range"));
 					   
-  gtk_signal_connect (GTK_OBJECT (print_dialog),
-		      "clicked", print_dlg_clicked_cb,
+  g_signal_connect (G_OBJECT (print_dialog),
+		      "clicked", G_CALLBACK (print_dlg_clicked_cb),
 		      viewer_data);
   
   transient_window_show (print_dialog, viewer_data->viewer_window);

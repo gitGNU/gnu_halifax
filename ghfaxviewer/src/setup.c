@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:08:11 wolfgang>
+ * Time-stamp: <2003-02-17 22:47:45 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -28,11 +28,6 @@
 #ifdef NEED_GNOMESUPPORT_H
 #include <gnome.h>
 #include <gconf/gconf-client.h>
-
-#include "pixmaps/stock-zoom-in.xpm"
-#include "pixmaps/stock-zoom-out.xpm"
-#include "pixmaps/stock-zoom-in-menu.xpm"
-#include "pixmaps/stock-zoom-out-menu.xpm"
 #else
 #include <gtk/gtk.h>
 #include <unistd.h>
@@ -164,7 +159,7 @@ vwindow_set_def_coords (GdkWindow *window)
 static void
 locale_setup ()
 {
-  bindtextdomain (PACKAGE, LOCALEDIR);
+  bind_textdomain_codeset (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 }
 #endif /* ENABLE_NLS && !WIN32*/
@@ -242,41 +237,6 @@ void save_last_directory (gchar *path)
 			   CONFIG_KEY KEY_DEF_DIR,
 			   path,
 			   &gerror);
-}
-
-void
-stock_init (void)
-{
-  static GnomeStockPixmapEntry entries[4];
-
-  entries[0].data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
-  entries[0].data.width = 24;
-  entries[0].data.height = 24;
-  entries[0].data.xpm_data = stock_zoom_in_xpm;
-
-  entries[1].data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
-  entries[1].data.width = 24;
-  entries[1].data.height = 24;
-  entries[1].data.xpm_data = stock_zoom_out_xpm;
-
-  entries[2].data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
-  entries[2].data.width = 16;
-  entries[2].data.height = 16;
-  entries[2].data.xpm_data = stock_zoom_in_menu_xpm;
-
-  entries[3].data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
-  entries[3].data.width = 16;
-  entries[3].data.height = 16;
-  entries[3].data.xpm_data = stock_zoom_out_menu_xpm;
-
-  gnome_stock_pixmap_register (STOCK_ZOOM_IN, GNOME_STOCK_PIXMAP_REGULAR,
-			       &entries[0]);
-  gnome_stock_pixmap_register (STOCK_ZOOM_OUT, GNOME_STOCK_PIXMAP_REGULAR,
-			       &entries[1]);
-  gnome_stock_pixmap_register (STOCK_ZOOM_IN_MENU, GNOME_STOCK_PIXMAP_REGULAR,
-			       &entries[2]);
-  gnome_stock_pixmap_register (STOCK_ZOOM_OUT_MENU, GNOME_STOCK_PIXMAP_REGULAR,
-			       &entries[3]);
 }
 
 static void
@@ -545,8 +505,8 @@ app_setup (gint *argc, gchar **argv[])
 
 #ifdef NEED_GNOMESUPPORT_H
   gconf_init (*argc, *argv, NULL);
-  gnome_init (PACKAGE, VERSION, *argc, *argv);
-  stock_init ();
+  gnome_program_init (PACKAGE, VERSION, LIBGNOMEUI_MODULE,
+		      *argc, *argv, NULL);
 
   gc_client = gconf_client_get_default ();
   gconf_client_set_error_handling (gc_client,

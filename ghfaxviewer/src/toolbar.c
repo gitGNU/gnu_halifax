@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau 
  *
- * Time-stamp: <2002-10-25 01:08:21 wolfgang>
+ * Time-stamp: <2003-02-17 22:43:44 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -72,66 +72,68 @@ gnome_toolbar_new (ViewerData *viewer_data)
     {
       GNOME_APP_UI_ITEM, NULL, N_("Go to previous page"),
       (gpointer) prevpage_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_BACK,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_GO_BACK,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, NULL, N_("Go to next page"),
       (gpointer) nextpage_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FORWARD,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_GO_FORWARD,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_SEPARATOR,
     {
       GNOME_APP_UI_ITEM, NULL, N_("Zoom in"),
       (gpointer) zoomin_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, STOCK_ZOOM_IN,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ZOOM_IN,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, NULL, N_("Zoom out"),
       (gpointer) zoomout_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, STOCK_ZOOM_OUT,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ZOOM_OUT,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_SEPARATOR,
     {
       GNOME_APP_UI_ITEM, NULL, N_("Rotate 90 degrees counter-clockwise"),
       (gpointer) left90_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_UNDO,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_UNDO,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, NULL, N_("Reverse image"),
       (gpointer) reverse_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_REFRESH,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, NULL, N_("Rotate 90 degrees clockwise"),
       (gpointer) right90_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_REDO,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REDO,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_SEPARATOR,
     {
       GNOME_APP_UI_ITEM, NULL, N_("Print fax"),
       (gpointer) print_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_PRINT,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_PRINT,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_SEPARATOR,
     {
       GNOME_APP_UI_ITEM, NULL, N_("Properties..."),
       (gpointer) info_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_PROPERTIES,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_PROPERTIES,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_END
   };
 
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL,
-			     GTK_TOOLBAR_ICONS);
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
   gnome_app_fill_toolbar (GTK_TOOLBAR (toolbar),
 			  toolbar_uiinfo,
 			  NULL);
@@ -153,7 +155,7 @@ toolbar_button_new (GtkWidget *window, gchar *xpm_path,
   gtk_button_set_relief (GTK_BUTTON (new_button), GTK_RELIEF_NONE);
   icon = pixmap_from_xpm (window, xpm_path);
   gtk_container_add (GTK_CONTAINER (new_button), icon);
-  gtk_signal_connect (GTK_OBJECT (new_button), "clicked",
+  g_signal_connect (G_OBJECT (new_button), "clicked",
 		      callback, cb_data);
 
   /* buttons are insensitive when created, draw_page will make them
@@ -170,8 +172,8 @@ toolbar_new (ViewerData *viewer_data)
 
   /* To give a GNOMEish look to those poor users without GNOME */
   bbar_handle_box = gtk_handle_box_new ();
-  gtk_signal_connect (GTK_OBJECT (bbar_handle_box), "child-detached",
-		      GTK_SIGNAL_FUNC (handle_box_transient_cb),
+  g_signal_connect (G_OBJECT (bbar_handle_box), "child-detached",
+		      G_CALLBACK (handle_box_transient_cb),
 		      viewer_data->viewer_window->window);
 
   new_bbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL,
@@ -239,7 +241,7 @@ toolbar_new (ViewerData *viewer_data)
 
   viewer_data->cmd_buttons[FILE_PRINT] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("printer.xpm"),
-			GTK_SIGNAL_FUNC (print_cb), viewer_data);
+			G_CALLBACK (print_cb), viewer_data);
   gtk_toolbar_append_widget
     (GTK_TOOLBAR (new_bbar), viewer_data->cmd_buttons[FILE_PRINT],
      _("Print fax"), NULL);

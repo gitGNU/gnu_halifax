@@ -98,7 +98,7 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
   ti_set_draw_func (draw_page_func);
   ti_set_draw_func_user_data (draw_data);
 
-  gtk_pixmap = gtk_pixmap_new (gdk_pixmap, NULL);
+  gtk_pixmap = gtk_image_new_from_pixmap (gdk_pixmap, NULL);
 
   thumbnail = ti_zoomed_fax_page (cur_page, th_width, th_height,
 				  ROT_NONE);
@@ -123,14 +123,14 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
   draw_request->viewer_data = viewer_data;
   draw_request->requested_page = cur_page;
 
-  gtk_signal_connect (GTK_OBJECT(button), "destroy",
-		      GTK_SIGNAL_FUNC (free_data_on_destroy_cb),
+  g_signal_connect (G_OBJECT (button), "destroy",
+		      G_CALLBACK (free_data_on_destroy_cb),
 		      draw_request);
-  gtk_signal_connect (GTK_OBJECT(button), "clicked",
-		      GTK_SIGNAL_FUNC (draw_req_page_cb),
+  g_signal_connect (G_OBJECT (button), "clicked",
+		      G_CALLBACK (draw_req_page_cb),
 		      draw_request);
   
-  cur_tooltips = gtk_tooltips_new();
+  cur_tooltips = gtk_tooltips_new ();
   tttext = g_strdup_printf (_("Page %d"), cur_page->nbr + 1);
   gtk_tooltips_set_tip (cur_tooltips,
 			button,

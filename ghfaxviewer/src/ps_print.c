@@ -312,7 +312,7 @@ get_printers (void)
 static gint
 activate_printer_cb (GtkWidget *widget, PrintData *print_data)
 {
-  print_data->printer = gtk_object_get_data (GTK_OBJECT (widget),
+  print_data->printer = gtk_object_get_data (G_OBJECT (widget),
 					     "printer_name");
 
   return FALSE;
@@ -338,10 +338,10 @@ make_printer_menu (PrintData *print_data)
 	{
 	  menuitem = gtk_menu_item_new_with_label (cur_printer->name);
 	  gtk_menu_append (GTK_MENU (menu), menuitem);
-	  gtk_object_set_data (GTK_OBJECT (menuitem), "printer_name",
+	  gtk_object_set_data (G_OBJECT (menuitem), "printer_name",
 			       cur_printer->name);
-	  gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
-			      GTK_SIGNAL_FUNC (activate_printer_cb),
+	  g_signal_connect (G_OBJECT (menuitem), "activate",
+			      G_CALLBACK (activate_printer_cb),
 			      print_data);
 
 	  if (cur_printer->is_default)
@@ -350,7 +350,7 @@ make_printer_menu (PrintData *print_data)
 	  cur_printer++;
 	}
 
-      gtk_signal_connect (GTK_OBJECT (menu), "destroy",
+      g_signal_connect (G_OBJECT (menu), "destroy",
 			  free_data_on_destroy_cb, plist);
     }
   else
@@ -421,11 +421,11 @@ make_output_frame (PrintData *print_data)
   print_data->widgets.file_rb =
     gtk_radio_button_new_with_label (rb_group, _("File"));
   
-  gtk_signal_connect (GTK_OBJECT (print_data->widgets.printer_rb),
-		      "clicked", GTK_SIGNAL_FUNC (toggle_entries_cb),
+  g_signal_connect (G_OBJECT (print_data->widgets.printer_rb),
+		      "clicked", G_CALLBACK (toggle_entries_cb),
 		      &(print_data->widgets));			     
-  gtk_signal_connect (GTK_OBJECT (print_data->widgets.file_rb),
-		      "clicked", GTK_SIGNAL_FUNC (toggle_entries_cb),
+  g_signal_connect (G_OBJECT (print_data->widgets.file_rb),
+		      "clicked", G_CALLBACK (toggle_entries_cb),
 		      &(print_data->widgets));			     
 
   print_data->widgets.printer_cmd_lbl = gtk_label_new (_("Command"));
@@ -525,10 +525,10 @@ make_page_frame (PrintData *print_data)
   gtk_table_attach_defaults (GTK_TABLE (page_table),
 			     print_data->widgets.all_pages_rb,
 			     0, 4, 0, 1);
-  gtk_signal_connect (GTK_OBJECT
+  g_signal_connect (G_OBJECT
 		      (print_data->widgets.all_pages_rb),
 		      "clicked",
-		      GTK_SIGNAL_FUNC (toggle_page_sel_entries_cb),
+		      G_CALLBACK (toggle_page_sel_entries_cb),
 		      &(print_data->widgets));
   
   print_data->widgets.from_to_rb =
@@ -538,9 +538,9 @@ make_page_frame (PrintData *print_data)
   gtk_table_attach_defaults (GTK_TABLE (page_table),
 			     print_data->widgets.from_to_rb,
 			     0, 1, 1, 2);
-  gtk_signal_connect (GTK_OBJECT (print_data->widgets.from_to_rb),
+  g_signal_connect (G_OBJECT (print_data->widgets.from_to_rb),
 		      "clicked",
-		      GTK_SIGNAL_FUNC (toggle_page_sel_entries_cb),
+		      G_CALLBACK (toggle_page_sel_entries_cb),
 		      &(print_data->widgets));
 
   max_pages = (gfloat) (print_data->document->nbr_pages + 1);
@@ -575,9 +575,9 @@ make_page_frame (PrintData *print_data)
   gtk_table_attach_defaults (GTK_TABLE (page_table),
 			     print_data->widgets.cur_page_rb,
 			     0, 4, 2, 3);
-  gtk_signal_connect (GTK_OBJECT (print_data->widgets.cur_page_rb),
+  g_signal_connect (G_OBJECT (print_data->widgets.cur_page_rb),
 		      "clicked",
-		      GTK_SIGNAL_FUNC (toggle_page_sel_entries_cb),
+		      G_CALLBACK (toggle_page_sel_entries_cb),
 		      &(print_data->widgets));
   
   gtk_widget_set_sensitive (print_data->widgets.from_sp_but, FALSE);

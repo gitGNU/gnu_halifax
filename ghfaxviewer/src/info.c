@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:07:59 wolfgang>
+ * Time-stamp: <2003-02-17 22:46:31 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -197,7 +197,7 @@ info_fill_order (unsigned int fill_order)
 static GtkWidget *
 info_pixmap (GtkWidget *window)
 {
-  GtkWidget *gtk_pixmap;
+  GtkWidget *gtk_image;
   GdkPixmap *gdk_pixmap;
   GdkBitmap *mask; 
   
@@ -205,10 +205,10 @@ info_pixmap (GtkWidget *window)
     (window->window, &mask,
      &(window->style->bg[GTK_STATE_NORMAL]),
      PIXMAP ("info.xpm"));
-  gtk_pixmap = gtk_pixmap_new (gdk_pixmap, mask);
-  gtk_misc_set_alignment (GTK_MISC (gtk_pixmap), 0.0, 0.0);
+  gtk_image = gtk_image_new_from_pixmap (gdk_pixmap, mask);
+  gtk_misc_set_alignment (GTK_MISC (gtk_image), 0.0, 0.0);
 
-  return gtk_pixmap;
+  return gtk_image;
 }
 
 static GtkWidget *
@@ -324,14 +324,10 @@ create_info_dialog (GtkWidget *viewer_window, TiffInfo *file_info)
   ghfw_dlg_window_set_content_with_frame ((GhfwDlgWindow *) info_dialog,
 					  table);
 
-#ifdef NEED_GNOMESUPPORT_H
-  ok_button = gnome_stock_button (GNOME_STOCK_BUTTON_OK);
-#else /* NEED_GNOMESUPPORT_H */
-  ok_button = gtk_button_new_with_label (_("Close"));
-#endif
-  gtk_signal_connect_object (GTK_OBJECT (ok_button), "clicked",
-			     gtk_widget_destroy,
-			     GTK_OBJECT (info_dialog));
+  ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
+  g_signal_connect_object (G_OBJECT (ok_button), "clicked",
+			   G_CALLBACK (gtk_widget_destroy),
+			   G_OBJECT (info_dialog));
 
   ghfw_dlg_window_set_button ((GhfwDlgWindow *) info_dialog,
 			      ok_button);

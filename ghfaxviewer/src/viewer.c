@@ -278,7 +278,7 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
 
       if (!fax_file)
 	file_open_error (viewer_data->viewer_window,
-			 g_basename (file_name));
+			 g_path_get_basename (file_name));
       else
 	{
 	  if (viewer_data->fax_file)
@@ -323,15 +323,15 @@ page_area_realize_cb (GtkWidget *drawing_area,
      gdk_window_get_events (viewer_data->page_area->window)
      | GDK_BUTTON_PRESS_MASK);
 
-  gtk_signal_connect (GTK_OBJECT (drawing_area),
+  g_signal_connect (G_OBJECT (drawing_area),
 		      "button_press_event",
-		      GTK_SIGNAL_FUNC (button_press_event_cb),
+		      G_CALLBACK (button_press_event_cb),
 		      viewer_data);
 
 #ifndef __WIN32__
-  gtk_signal_connect (GTK_OBJECT (drawing_area),
+  g_signal_connect (G_OBJECT (drawing_area),
 		      "destroy",
-		      GTK_SIGNAL_FUNC (page_area_destroy_cb),
+		      G_CALLBACK (page_area_destroy_cb),
 		      drawing_area->window);
 #endif
 }
@@ -412,13 +412,13 @@ viewer_window_realize_cb (GtkWidget *viewer_window, ViewerData *viewer_data)
      | GDK_EXPOSURE_MASK
      | GDK_BUTTON_RELEASE_MASK);
 
-  gtk_signal_connect (GTK_OBJECT (viewer_window),
+  g_signal_connect (G_OBJECT (viewer_window),
 		      "button_release_event",
-		      GTK_SIGNAL_FUNC (button_release_event_cb),
+		      G_CALLBACK (button_release_event_cb),
 		      viewer_data);
-  gtk_signal_connect (GTK_OBJECT (viewer_window),
+  g_signal_connect (G_OBJECT (viewer_window),
 		      "motion_notify_event",
-		      GTK_SIGNAL_FUNC (motion_notify_event_cb),
+		      G_CALLBACK (motion_notify_event_cb),
 		      viewer_data);
 }
 
@@ -427,8 +427,8 @@ viewer_window_cfg_event_cb (GtkWidget *viewer_window,
 			    GdkEventConfigure *event, gpointer nothing)
 {
   /* the signal has to be caught only once */
-  gtk_signal_disconnect_by_func (GTK_OBJECT (viewer_window),
-				 GTK_SIGNAL_FUNC (viewer_window_cfg_event_cb),
+  g_signal_handlers_disconnect_by_func (G_OBJECT (viewer_window),
+				 G_CALLBACK (viewer_window_cfg_event_cb),
 				 nothing);
   while (gtk_events_pending ())
     gtk_main_iteration ();
@@ -452,33 +452,33 @@ viewer_window_new (ViewerData *viewer_data)
 #endif
 
 #ifdef CAN_SAVE_CONFIG
-  gtk_signal_connect (GTK_OBJECT (viewer_data->viewer_window),
+  g_signal_connect (G_OBJECT (viewer_data->viewer_window),
 		      "delete-event",
-		      GTK_SIGNAL_FUNC (precloseviewer_cb),
+		      G_CALLBACK (precloseviewer_cb),
 		      NULL);
 #endif
 
-  gtk_signal_connect (GTK_OBJECT (viewer_data->viewer_window),
+  g_signal_connect (G_OBJECT (viewer_data->viewer_window),
 		      "destroy",
-		      GTK_SIGNAL_FUNC (closeviewer_cb),
+		      G_CALLBACK (closeviewer_cb),
 		      viewer_data);
 
-  gtk_signal_connect (GTK_OBJECT (viewer_data->viewer_window),
+  g_signal_connect (G_OBJECT (viewer_data->viewer_window),
 		      "realize",
-		      GTK_SIGNAL_FUNC (viewer_window_realize_cb),
+		      G_CALLBACK (viewer_window_realize_cb),
 		      viewer_data);
 
   /* This signal is handled only once, to resize and reposition the
      window according to our settings. */
-  gtk_signal_connect_after (GTK_OBJECT (viewer_data->viewer_window),
+  g_signal_connect_after (G_OBJECT (viewer_data->viewer_window),
 			    "configure-event",
-			    GTK_SIGNAL_FUNC (viewer_window_cfg_event_cb),
+			    G_CALLBACK (viewer_window_cfg_event_cb),
 			    NULL);
 
   viewer_data->page_area = gtk_drawing_area_new ();
-  gtk_signal_connect (GTK_OBJECT (viewer_data->page_area),
+  g_signal_connect (G_OBJECT (viewer_data->page_area),
 		      "realize",
-		      GTK_SIGNAL_FUNC (page_area_realize_cb),
+		      G_CALLBACK (page_area_realize_cb),
 		      viewer_data);
 
   gtk_widget_show_all (viewer_data->viewer_window);

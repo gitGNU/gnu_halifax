@@ -93,7 +93,6 @@ reverse_cb (GtkWidget *widget, ViewerData *viewer_data)
     case ROT_LEFT90:
       viewer_data->rotation = ROT_RIGHT90;
       break;
-    default:
     }
   
   draw_page (viewer_data);
@@ -116,7 +115,6 @@ right90_cb (GtkWidget *widget, ViewerData *viewer_data)
     case ROT_LEFT90:
       viewer_data->rotation = ROT_NONE;
       break;
-    default:
     }
 
   draw_page (viewer_data);
@@ -139,7 +137,6 @@ left90_cb (GtkWidget *widget, ViewerData *viewer_data)
     case ROT_LEFT90:
       viewer_data->rotation = ROT_180;
       break;
-    default:
     }
   
   draw_page (viewer_data);

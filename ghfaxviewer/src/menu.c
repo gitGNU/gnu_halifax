@@ -67,45 +67,45 @@ gnome_menu_bar_new (ViewerData *viewer_data)
     {
       GNOME_APP_UI_ITEM, N_("Go to next page"),
       NULL, (gpointer) nextpage_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_FORWARD,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_GO_FORWARD,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, N_("Go to previous page"),
       NULL, (gpointer) prevpage_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_BACK,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_GO_BACK,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_SEPARATOR,
     {
       GNOME_APP_UI_ITEM, N_("Zoom in"),
       NULL, (gpointer) zoomin_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, STOCK_ZOOM_IN_MENU,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ZOOM_IN,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, N_("Zoom out"),
       NULL, (gpointer) zoomout_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, STOCK_ZOOM_OUT_MENU,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ZOOM_OUT,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_SEPARATOR,
     {
       GNOME_APP_UI_ITEM, N_("Rotate 90 degrees clockwise"),
       NULL, (gpointer) right90_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_REDO,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REDO,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, N_("Rotate 90 degrees counter-clockwise"),
       NULL, (gpointer) left90_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_UNDO,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_UNDO,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, N_("Reverse image"),
       NULL, (gpointer) reverse_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_REFRESH,
+      GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_END
@@ -258,8 +258,8 @@ menu_bar_new (ViewerData *viewer_data)
   /* To give a GNOMEish look to those poor users with only GTK+
      available */
   menu_handle_box = gtk_handle_box_new ();
-  gtk_signal_connect (GTK_OBJECT (menu_handle_box), "child-detached",
-		      GTK_SIGNAL_FUNC (handle_box_transient_cb),
+  g_signal_connect (G_OBJECT (menu_handle_box), "child-detached",
+		      G_CALLBACK (handle_box_transient_cb),
 		      viewer_data->viewer_window->window);
 
   viewer_menu = gtk_menu_bar_new ();

@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:08:15 wolfgang>
+ * Time-stamp: <2003-02-17 22:41:03 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -217,7 +217,7 @@ ti_open_fax_file (char* file_name)
 	  if (values_ok (width, height, x_res, y_res))
 	    {
 	      fax_file = (FaxFile*) g_malloc(sizeof(FaxFile));
-	      fax_file->file_name = g_strdup (g_basename (file_name));
+	      fax_file->file_name = g_strdup (g_path_get_basename (file_name));
 	      fax_file->tiff_file = tiff_file;
 		  
 	      fax_file->x_res = (guint) x_res;
@@ -350,9 +350,9 @@ ti_load_fax_page (FaxFile *fax_file, FaxPage *fax_page)
 
   TIFFSetDirectory (fax_file->tiff_file, fax_page->nbr);
 		
-  stripsize = TIFFStripSize(fax_file->tiff_file);
-  nbr_strips = TIFFNumberOfStrips(fax_file->tiff_file);
-  fax_page->image = _TIFFmalloc(stripsize * nbr_strips);
+  stripsize = TIFFStripSize (fax_file->tiff_file);
+  nbr_strips = TIFFNumberOfStrips (fax_file->tiff_file);
+  fax_page->image = _TIFFmalloc (stripsize * nbr_strips);
   fax_page->limit = fax_page->image + fax_page->cwidth * fax_page->height;
 
   for (strip = 0; strip < nbr_strips; strip++) 

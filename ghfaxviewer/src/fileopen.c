@@ -48,7 +48,7 @@ file_dlg_ok_cb (GtkWidget *ok_button, ViewerData *viewer_data)
     {
       gtk_widget_destroy (viewer_data->file_dlg);
 #ifdef CAN_SAVE_CONFIG
-      last_directory = g_dirname (file_name);
+      last_directory = g_path_get_dirname (file_name);
       save_last_directory (last_directory);
       g_free (last_directory);
 #endif
@@ -78,16 +78,16 @@ file_dialog (ViewerData *viewer_data)
   g_free (last_dir);
 #endif
 
-  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION
 				  (open_dialog)->ok_button),
 		      "clicked",
-		      GTK_SIGNAL_FUNC (file_dlg_ok_cb),
+		      G_CALLBACK (file_dlg_ok_cb),
 		      viewer_data);
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION
+  g_signal_connect_object (G_OBJECT (GTK_FILE_SELECTION
 					 (open_dialog)->cancel_button),
 			     "clicked",
-			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			     GTK_OBJECT (open_dialog));
+			     G_CALLBACK (gtk_widget_destroy),
+			     G_OBJECT (open_dialog), 0);
 
   transient_window_show (open_dialog,
 			 viewer_data->viewer_window);

@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:07:46 wolfgang>
+ * Time-stamp: <2003-02-17 22:39:03 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -94,9 +94,9 @@ display_failure (GtkWidget *window,
 		      FALSE, FALSE, 0);
 
   ok_but = gtk_button_new_with_label (but_text); 
-  gtk_signal_connect_object (GTK_OBJECT (ok_but), "clicked",
-			     gtk_widget_destroy,
-			     GTK_OBJECT (fail_dialog));
+  g_signal_connect_object (G_OBJECT (ok_but), "clicked",
+			   G_CALLBACK (gtk_widget_destroy),
+			   G_OBJECT (fail_dialog));
 
   ghfw_dlg_window_set_content_with_frame ((GhfwDlgWindow *) fail_dialog, vbox);
   ghfw_dlg_window_set_button ((GhfwDlgWindow *) fail_dialog, ok_but);

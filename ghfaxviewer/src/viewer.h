@@ -76,6 +76,9 @@ struct _ViewerData
   
   /* Cursor motion data */
   MotionData *motion_data;
+
+  /* printing */
+  void *print_job;
 };
 
 struct _MotionData

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.50)
-AC_INIT(src/cursors.c)
+AC_INIT(config.h.in)
 
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(ghfaxviewer, 0.29.10)
@@ -21,7 +21,7 @@ dnl AC_HEADER_STDC
 dnl AC_C_CONST
 dnl AC_C_INLINE
 
-AC_EXEEXT
+dnl AC_EXEEXT
 
 case $host_os in
   *cygwin* ) CYGWIN=yes;
@@ -40,314 +40,72 @@ WINDOWS_DETECTED=no
 ALL_LINGUAS="de fr pl zh_TW.Big5"
 
 MANPAGES=ghfaxviewer.1
+PIXMAPS_DIR="$datadir/pixmaps/ghfaxviewer"
 
-# are we configured from halifax parent dir or from independent ghfaxviewer
-# subdir ?
-if test "x$cache_file" == "x.././config.cache"; then
-  SUPPSUBDIRS= 
-  docsubdir=no
-  if test ! -f docs/Makefile.in; then
-    mkdir docs
-    echo "install clean distclean dist:" > docs/Makefile.in
-  fi
-else
-  SUPPSUBDIRS="docs macros"
-  docsubdir=yes
-fi
-
-AC_SUBST(SUPPSUBDIRS)
-
-AC_ARG_ENABLE(debug,
-  [  --enable-debug          warnings, debugging codes and messages],
-    debug="$enableval", debug="no")
-
-# FreeBSD hacks
-if test "`uname`" = "FreeBSD"; then
-  AC_MSG_WARN([Compiling for FreeBSD])
-  if test -x /usr/X11R6/bin/gtk12-config; then
-    GTK_CONFIG=/usr/X11R6/bin/gtk12-config
-  fi
-  if test -x /usr/local/bin/glib12-config; then
-    GLIB_CONFIG=/usr/local/bin/glib12-config
-  fi 
-fi
-
-if test "$ac_cv_exeext" = ".exe"; then
-  WINDOWS_DETECTED=yes;
-fi
-
-case $ac_cv_build in
-  *cygwin*)
-    CYGWIN=yes
-    WINDOWS_DETECTED=yes;
-    ;;
-  *mingw*)
-    MINGW32=yes
-    WINDOWS_DETECTED=yes;
-    ;;
-esac
-
-if test "$WINDOWS_DETECTED" = yes; then
-# under Windows
-OS=WIN32
-AC_MSG_WARN([It seems we are compiling for WIN32...])
-window_system=yes;
-
-AC_MSG_CHECKING([how we adapt to gcc])
-GCC_VERSION="`gcc --version`"
-if test $? != 0; then
-  AC_MSG_ERROR([Your gcc executable couldn't be found.])
-else
-  case $GCC_VERSION in
-    2.95*) AC_MSG_RESULT([-fnative-struct will be used])
-           CFLAGS="$CFLAGS -fnative-struct"
-	   ;;
-    egcs*) AC_MSG_RESULT([using egcs (GCC 2.95.2 is recommended)])
-           ;;
-    *) AC_MSG_ERROR([What version of GCC are you using dude?!])
-  esac
-fi
-
-AC_MSG_CHECKING([which version of the GCC port you are using])
-if test "$CYGWIN" = yes; then
-	AC_MSG_RESULT([using cygwin, CFLAGS+=-mno-cygwin])
-	CFLAGS="$CFLAGS -mno-cygwin -I$includedir/w32api -I$includedir/mingw"
-	WINDRES_INCLUDE_DIR="$includedir/w32api"
-else
-	AC_MSG_RESULT([using mingw])
-	WINDRES_INCLUDE_DIR=$includedir
-fi
-
-AC_CHECK_TOOL(WINDRES, windres, false)
-WINDRES="$WINDRES"
-
-AC_MSG_WARN(*** libtiff and GTK assumed to be present)
-TIFF_LIBS="-ltiff"
-GTK_LIBS="-lgtk -lgdk -lglib"
-WIN32_LIBS="-lcomdlg32 -lgnu-intl"
-
-USE_INCLUDED_LIBINTL="no"
-BUILD_INCLUDED_LIBINTL="no"
-USE_NLS="yes"
-CATALOGS="`for cats in $ALL_LINGUAS; do echo -n "$cats.gmo "; done`"
-GMSGFMT="msgfmt"
-
-AC_PATH_PROG(XGETTEXT, "xgettext")
-AC_PATH_PROG(GETTEXT, "gettext")
-AC_PATH_PROG(MSGFMT, "msgfmt")
-AC_PATH_PROG(GENCAT, "gencat")
-AC_PATH_PROG(MSGMERGE, "msgmerge")
-AC_PATH_PROG(XPM2WICO, "xpm2wico")
-
-if test x"$XPM2WICO" != x; then
-  RC_ICON_DIRECTIVE="GHFAXVIEWER_ICON ICON DISCARDABLE \"pixmaps/ghfaxviewer-icon.ico\""
-else
-  RC_ICON_DIRECTIVE=""
-fi
-
-AC_SUBST(WINDRES_INCLUDE_DIR)
-AC_SUBST(USE_INCLUDED_LIBINTL)
-AC_SUBST(BUILD_INCLUDED_LIBINTL)
-AC_SUBST(USE_NLS)
-AC_SUBST(CATALOGS)
-AC_SUBST(XGETTEXT)
-AC_SUBST(GETTEXT)
-AC_SUBST(MSGFMT)
-AC_SUBST(GMSGFMT)
-AC_SUBST(GENCAT)
-AC_SUBST(MSGMERGE)
-AC_SUBST(XPM2WICO)
-AC_SUBST(WIN32_LIBS)
-
-AC_DEFINE(ENABLE_NLS)
-AC_DEFINE(HAVE_GETTEXT)
-AC_DEFINE(HAVE_LC_MESSAGES)
-
-AM_CONDITIONAL(HAS_XPM2WICO, test x"$XPM2WICO" != x)
-else
-# under GNU
-OS=GNU
-WIN32_LIBS=
-
+AC_PATH_PROG(LIBTOOL, "libtool")
+  
 AM_GNU_GETTEXT
 
-AC_PATH_X
-window_system=$have_x;
-
-GNOME_INIT
-GNOME_COMPILE_WARNINGS
-GNOME_X_CHECKS
-
-dnl ******************************
-dnl gnome-libs checking
-dnl ******************************
-if test "x$want_gnome" = "xyes"; then
-   AC_MSG_CHECKING([for gnome-libs >= 1.2.13])
-   if gnome-config --version > /dev/null 2>&1; then
-      gnome_version=`gnome-config --version | sed -e s/[[^0-9.]]//g`
-      gnome_major=`echo $gnome_version | cut -d . -f 1`
-      gnome_minor=`echo $gnome_version | cut -d . -f 2`
-      gnome_micro=`echo $gnome_version | cut -d . -f 3`
-
-      if test $gnome_major = 1
-      then
-	if test $gnome_minor =  2
-	then
-	  if test $gnome_micro -lt 13
-	  then
-	    AC_MSG_RESULT([found $gnome_version])
-	  else
-	    if test $gnome_micro -gt 13
-	    then
-	      AC_MSG_RESULT([found $gnome_version])
-	    else
-	      AC_MSG_RESULT([failed (found $gnome_version instead)])
-	      AC_MSG_ERROR([Please upgrade your version of the GNOME libraries 
-			    at least version 1.2.13 and try again.])
-	    fi
-	  fi
-	else
-	  if test $gnome_minor -gt 2
-	  then
-	    AC_MSG_RESULT([found $gnome_version])
-	  else
-	    AC_MSG_RESULT([failed (found $gnome_version instead)])
-	    AC_MSG_ERROR([Please upgrade your version of the GNOME libraries 
-			  at least version 1.2.13 and try again.])
-	  fi
-	fi
-      else
-	if test $gnome_major -gt 2
-	then
-	  AC_MSG_RESULT([failed (found $gnome_version instead)])
-	  AC_MSG_ERROR([GhfaxViewer has yet to be ported to GNOME 2.])
-	else
-	  AC_MSG_RESULT([failed (found $gnome_version instead)])
-	  AC_MSG_ERROR([Please upgrade your version of the GNOME libraries to
-			at least version 1.2.13 and try again.])
-	fi
-      fi
-
-      USING_GNOME="yes"
-      CFLAGS="$CFLAGS `gnome-config --cflags gnomeui gdk_pixbuf`"
-      LDFLAGS="$LDFLAGS `gnome-config --libs gnomeui gdk_pixbuf`"
-      PIXMAPS_DIR="`gnome-config --datadir`/pixmaps/ghfaxviewer"
-      GNOME_GRAPH_APP_DIR="`gnome-config --datadir`/gnome/apps/Graphics"
-
-      AM_PATH_GNOME_PRINT(0.25.0)
-      AM_PATH_GCONF(1.0.0,,,gconf-gtk)
-
-      AC_SUBST(GNOME_GRAPH_APP_DIR)
-      AC_SUBST(GCONF_LIBS)
-      AC_SUBST(GCONF_CFLAGS)
-
-      if test "x$no_gconf" = xyes; then
-	AC_MSG_ERROR([You need gconf installed to compile this application for GNOME.
-	              Use the --without-gnome to fall back on the GTK+ only version.])
-      fi
-   else
-      PIXMAPS_DIR="$datadir/pixmaps/ghfaxviewer"
-
-      AC_MSG_WARN([Did not find gnome-libraries, falling back on GTK+])
-dnl Checks for libraries.
-      AM_PATH_GLIB([1.2.0],[],[
-	   AC_MSG_ERROR([You need GLib installed.])
-	   ])	
-      AM_PATH_GTK([1.2.8],[],[
-	   AC_MSG_ERROR([Argh... where did you get your system from ?!])
-	   ])
-      no_gnome_print=yes
-   fi
-else
-   PIXMAPS_DIR="$datadir/pixmaps/ghfaxviewer"
-
-   AC_MSG_WARN([GNOME support disabled, falling back on GTK+])
-   AM_PATH_GLIB([1.2.0],[],[
-   	   AC_MSG_ERROR([You need GLib installed.])
-	   ])
-   AM_PATH_GTK([1.2.8],[],[
-   	   AC_MSG_ERROR([Argh... where did you get your system from ?!])
-	   ])
-   no_gnome_print=yes
-fi
-
 dnl Test for libtiff
-if test "$window_system" = "yes"; then
-  if test "$have_x" = "yes"; then
-    old_cpp_flags="${CPPFLAGS}"
-    old_c_flags="${CFLAGS}"
-    old_ld_flags="${LDFLAGS}"
-    if test "x${x_includes}" != "x"; then
-      CPPFLAGS="${CPPFLAGS} -I${x_includes}"
-      CFLAGS="${CFLAGS} -I${x_includes} -I/usr/local/include"
-    fi
-    if test "x${x_libraries}" != "x"; then
-      LDFLAGS="${LDFLAGS} -L${x_libraries} -L/usr/local/lib -Wl,-rpath-link -Wl,${x_libraries}"
-    fi
-  fi
-  if test -z "$TIFF_LIBS"; then
-    AC_CHECK_LIB(tiff, TIFFReadScanline,
+  
+AC_PATH_X
+  
+if test "$have_x" = "yes"; then
+  AC_CHECK_LIB(tiff, TIFFReadScanline,
       AC_CHECK_HEADER(tiffio.h,
-        TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff",
-        AC_MSG_WARN([*** please install libtiff (TIFF header files not found) ***])),
+                    TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff",
+      AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
       AC_CHECK_LIB(tiff, TIFFWriteScanline,
         AC_CHECK_HEADER(tiffio.h,
-          TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff -ljpeg -lz",
-          AC_MSG_WARN([*** please install libtiff (TIFF header files not found) ***])),
-        AC_CHECK_LIB(tiff34, TIFFFlushData,
-          AC_CHECK_HEADER(tiffio.h,
-            TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff34 -ljpeg -lz",
-            AC_MSG_WARN([*** please install libtiff (TIFF header files not found) ***])),
-        AC_MSG_WARN([*** please install libtiff (TIFF library not found) ***]), -ljpeg -lz -lm), -ljpeg -lz -lm), -lm)
-  fi
-  if test "$have_x" = "yes"; then
-    CFLAGS="${old_c_flags}"
-    CPPFLAGS="${old_cpp_flags}"
-    LDFLAGS="${old_ld_flags}"
-  fi
+                        TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff -ljpeg -lz",
+          AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
+          AC_CHECK_LIB(tiff34, TIFFFlushData,
+            AC_CHECK_HEADER(tiffio.h,
+                            TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff34 -ljpeg -lz",
+              AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
+             AC_MSG_WARN(*** please install libtiff (TIFF library not found) ***), -ljpeg -lz -lm), -ljpeg -lz -lm), -lm)
 fi
-
-AM_PATH_GHFW([0.0.0],[],[
-	AC_MSG_ERROR([You need the GNU HaliFAX Widgets library too.])
-	])
 
 # no_gnome_print
 fi
 
-deps="$TIFF_LIBS"
+dnl deps="$TIFF_LIBS"
 
 AC_MSG_CHECKING([whether debugging is requested])
 if test "$debug" = "yes"; then
     AC_MSG_RESULT([yes])
     CFLAGS="$CFLAGS -Wall -O0 -ggdb3"
-    if test "$OS" = "WIN32"; then
-    	WIN32_LIBS="-lgdi32 $WIN32_LIBS"
-    fi
 else
     AC_MSG_RESULT([no])
-    if test "$OS" = "WIN32"; then
-    	CFLAGS="-mwindows $CFLAGS"
-	WIN32_LIBS="-mwindows $WIN32_LIBS"
-    fi
 fi
+
+PKG_CHECK_MODULES(GNOME, libgnomeui-2.0 >= 0.14.0  libgnomeprintui-2.2 >= 0.14.0)
+PKG_CHECK_MODULES(GHFAXWIDGETS, libgnomeui-2.0 >= 0.14.0  libgnomeprintui-2.2 >= 0.14.0)
+AC_SUBST(GNOME_CFLAGS)
+AC_SUBST(GNOME_LIBS)
+AC_SUBST(GNOME_PRINT_CFLAGS)
+AC_SUBST(GNOME_PRINT_LIBS)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+AC_SUBST(GHFW_CFLAGS)
+AC_SUBST(GHFW_LIBS)
 
 AC_SUBST(PIXMAPS_DIR)
 AC_SUBST(MANPAGES)
 AC_SUBST(TIFF_LIBS)
-AC_SUBST(RC_ICON_DIRECTIVE)
+dnl AC_SUBST(RC_ICON_DIRECTIVE)
 
-AM_CONDITIONAL(TARGET_GNU, test $OS = GNU)
-AM_CONDITIONAL(TARGET_WIN32, test $OS = WIN32)
+dnl AM_CONDITIONAL(TARGET_GNU, test $OS = GNU)
+dnl AM_CONDITIONAL(TARGET_WIN32, test $OS = WIN32)
 AM_CONDITIONAL(HAVE_TIFF, test "x$TIFF_LIBS" != x)
-AM_CONDITIONAL(GNOME, test x"$USING_GNOME" = xyes)
-AM_CONDITIONAL(WITHOUT_GNOMEPRINT, test "x$no_gnome_print" = xyes)
+dnl AM_CONDITIONAL(GNOME, test x"$USING_GNOME" = xyes)
+dnl AM_CONDITIONAL(WITHOUT_GNOMEPRINT, test "x$no_gnome_print" = xyes)
 
 AC_OUTPUT([
 Makefile
-Makefile.win32
 ghfaxviewer.spec
 debian/Makefile
-macros/Makefile
 intl/Makefile
 docs/Makefile
 src/Makefile
@@ -357,12 +115,12 @@ po/Makefile.in
 po/Makefile
 ])
 
-if test x"$XPM2WICO" = x && test $OS = WIN32; then
-  AC_MSG_WARN([The xpm2wico utility was not found. As a result,
-	the application icon won't be generated, which won't arm anything
-	anyway.
-	To benefit from its functionalities, please get the latest version
-	of xpm2wico from:
-
-	ftp://ftp.gnu.org/gnu/halifax/tools/])
-fi
+dnl if test x"$XPM2WICO" = x && test $OS = WIN32; then
+dnl  AC_MSG_WARN([The xpm2wico utility was not found. As a result,
+dnl	the application icon won't be generated, which won't arm anything
+dnl	anyway.
+dnl	To benefit from its functionalities, please get the latest version
+dnl	of xpm2wico from:
+  
+dnl	ftp://ftp.gnu.org/gnu/halifax/tools])
+dnl fi
