@@ -24,10 +24,10 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <ghfaxwidgets/ghfwgtkutils.h>
 
 #include "tiffimages.h"
 #include "viewer.h"
-#include "gtkutils.h"
 
 #include "setup.h"
 
@@ -89,6 +89,8 @@ file_dialog (ViewerData *viewer_data)
 
   transient_window_show (open_dialog,
 			 viewer_data->viewer_window);
+  window_set_icon (open_dialog,
+                   PIXMAP ("ghfaxviewer-icon.xpm"));
 }
 
 void

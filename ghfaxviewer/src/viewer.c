@@ -36,6 +36,8 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
+#include <ghfaxwidgets/ghfwgtkutils.h>
+#include <ghfaxwidgets/ghfwthumbbox.h>
 #include <stdio.h>
 
 #include "tiffimages.h"
@@ -45,9 +47,7 @@
 #include "toolbar.h"
 #include "menu.h"
 #include "viewer.h"
-#include "thumblayout.h"
 #include "setup.h"
-#include "gtkutils.h"
 
 static gint
 motion_notify_event_cb (GtkWidget *widget,

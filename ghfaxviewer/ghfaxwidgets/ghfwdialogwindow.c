@@ -1,3 +1,4 @@
+
 /* dialog_window.c - this file is part of the GNU HaliFAX Viewer
  *
  * Copyright (C) 2001 Wolfgang Sourdeau
@@ -22,7 +23,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "gtkutils.h"
+#include "ghfwgtkutils.h"
 
 typedef struct _EscCallbackData EscCallbackData;
 typedef struct _DialogWindow DialogWindow;

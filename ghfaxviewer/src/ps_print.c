@@ -33,13 +33,14 @@
 #include <tiffio.h>
 #include <unistd.h>
 #include <gtk/gtk.h>
+#include <ghfaxwidgets/ghfwdialogwindow.h>
+#include <ghfaxwidgets/ghfwgtkutils.h>
+#include <ghfaxwidgets/ghfwprogress.h>
 
 #include "tiffimages.h"
 #include "viewer.h"
-#include "progress.h"
 #include "print.h"
 #include "i18n.h"
-#include "gtkutils.h"
 #include "errors.h"
 #include "setup.h"
 

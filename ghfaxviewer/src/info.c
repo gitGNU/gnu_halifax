@@ -31,7 +31,8 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
-#include "dialog_window.h"
+#include <ghfaxwidgets/ghfwdialogwindow.h>
+
 #include "setup.h"
 #include "tiffimages.h"
 #include "tiffinfo.h"

@@ -1,6 +1,6 @@
 /* gtkutils.h - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2001 Wolfgang Sourdeau
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include "gtkutils.h"
+#include "ghfwgtkutils.h"
 
 #include "pixmaps/layout_up_arrow.xpm"
 #include "pixmaps/layout_down_arrow.xpm"

@@ -32,12 +32,13 @@
 #include <libgnomeprint/gnome-print-dialog.h>
 #include <libgnomeprint/gnome-print-master.h>
 #include <libgnomeprint/gnome-print-master-preview.h>
+#include <ghfaxwidgets/ghfwprogress.h>
+#include <ghfaxwidgets/ghfwgtkutils.h>
 
+#include "setup.h"
 #include "tiffimages.h"
 #include "zoom.h"
 #include "viewer.h"
-#include "progress.h"
-#include "gtkutils.h"
 
 /* Damn, I hate those
    very-long-names-that-just-serve-no-purpose-at-all-except-filling-a-whole-line-just-for-pleasure */
@@ -248,7 +249,8 @@ print_or_preview (GtkWidget *print_dlg,
 							    " preview..."));
 	  
 	  transient_window_show (preview, print_dlg);
-	  
+	  window_set_icon (preview, PIXMAP ("ghfaxviewer-icon.xpm"));
+
 	  gtk_widget_show (preview);
 	  result = TRUE;
 	}
@@ -299,4 +301,5 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
 		      viewer_data);
   
   transient_window_show (print_dialog, viewer_data->viewer_window);
+  window_set_icon (print_dialog, PIXMAP ("ghfaxviewer-icon.xpm"));
 }

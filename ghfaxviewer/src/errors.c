@@ -27,10 +27,10 @@
 
 #include <stdio.h>
 #include <gtk/gtk.h>
+#include <ghfaxwidgets/ghfwdialogwindow.h>
 
 #include "tiffimages.h"
 #include "viewer.h"
-#include "dialog_window.h"
 
 /*  static gchar* */
 /*  list_to_text (GSList *string_list) */

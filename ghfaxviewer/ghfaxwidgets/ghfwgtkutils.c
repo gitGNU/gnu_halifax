@@ -1,5 +1,6 @@
 /* gtkutils.c - this file is part of the GNU HaliFAX Viewer
  *
+ * Copyright (C) 2000 The Free Software Foundation, inc.
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
@@ -42,7 +43,7 @@
 #include <sys/wait.h>
 #endif
 
-#include "setup.h"
+/* #include "setup.h" */
 
 /* This function happens to be present in more than one place. Let's
    clean up some... */
@@ -118,10 +119,10 @@ pixmap_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data)
   return gtk_pixmap;
 }
 
-#ifndef __WIN32__
 void
 window_set_icon (GtkWidget* ref_widget, gchar *file_name)
 {
+#ifndef __WIN32__
   GdkPixmap *pixmap;
   GdkBitmap *mask;
   
@@ -131,8 +132,8 @@ window_set_icon (GtkWidget* ref_widget, gchar *file_name)
      file_name);
 
   gdk_window_set_icon (ref_widget->window, ref_widget->window, pixmap, mask);
-}
 #endif /* __WIN32__ */
+}
 
 
 /* transient windows */
@@ -146,7 +147,7 @@ transient_destroy_cb (GtkWidget *window, gpointer data)
   if (parent)
     gtk_window_set_modal (parent, TRUE);
     
-  decrease_win_count ();
+/*   decrease_win_count (); */
 }
 
 #ifdef __WIN32__
@@ -160,9 +161,13 @@ void win32gdk_window_set_transient_for (GdkWindow *window, GdkWindow *parent)
 
   style = GetWindowLong (window_id, GWL_STYLE);
   style |= WS_POPUP;
+  style &= ~(WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX);
 
   SetWindowLong (window_id, GWL_STYLE, style);
   SetWindowLong (window_id, GWL_HWNDPARENT, (LONG) parent_id);
+
+  RedrawWindow (window_id, NULL, NULL,
+		RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW);
 }
 #endif
 
@@ -189,17 +194,14 @@ transient_window_show (GtkWidget *transient, GtkWidget *parent)
 
   gtk_widget_show_all (transient);
 
-#ifndef __WIN32__
-  window_set_icon (transient,
-		   PIXMAP ("ghfaxviewer-icon.xpm"));
-#else
+#ifdef __WIN32__
   /* Have to call this here because the window is not realized at the
      beginning of this function. With the next version of GTK+/GDK for
      Windows we won't need this anymore. */
   win32gdk_window_set_transient_for (transient->window, parent->window);
 #endif
 
-  increase_win_count ();
+/*   increase_win_count (); */
 }
 
 /* ESC-key handling */

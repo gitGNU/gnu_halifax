@@ -34,13 +34,13 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
+#include <ghfaxwidgets/ghfwgtkutils.h>
 #include <stdio.h>
 
 #include "tiffimages.h"
 #include "viewer.h"
 #include "callbcks.h"
 #include "print.h"
-#include "gtkutils.h"
 #include "setup.h"
 
 #ifdef NEED_GNOMESUPPORT_H

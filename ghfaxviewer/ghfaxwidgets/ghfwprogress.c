@@ -32,8 +32,8 @@
 #include <gtk/gtk.h>
 #endif
 
+#include "ghfwdialogwindow.h"
 #include "i18n.h"
-#include "dialog_window.h"
 
 typedef struct _GfvProgressData GfvProgressData;
 

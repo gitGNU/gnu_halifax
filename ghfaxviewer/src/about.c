@@ -38,9 +38,10 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
-#include "urlzone.h"
-#include "gtkutils.h"
-#include "dialog_window.h"
+#include <ghfaxwidgets/ghfwgtkutils.h>
+#include <ghfaxwidgets/ghfwdialogwindow.h>
+#include <ghfaxwidgets/ghfwurlzone.h>
+
 #include "setup.h"
 #include "i18n.h"
 
@@ -52,8 +53,8 @@ void about_pixmap_realize_cb (GtkWidget *ref_window, GtkWidget *pixmap)
   gchar *text;
   gint text_len;
 
-  url_zone = url_zone_new (HALIFAX_URL, 150, 280, 195, 17);
-  url_zone_attach (url_zone, pixmap);
+  url_zone = url_zone_new (HALIFAX_URL);
+  url_zone_attach (url_zone, pixmap, 150, 280, 195, 17);
 
   gdk_font = gdk_font_load (TEXT_FONT);
 

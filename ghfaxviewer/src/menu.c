@@ -35,11 +35,12 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
+#include <ghfaxwidgets/ghfwgtkutils.h>
+
 #include "tiffimages.h"
 #include "viewer.h"
 #include "callbcks.h"
 #include "print.h"
-#include "gtkutils.h"
 
 #ifdef NEED_GNOMESUPPORT_H
 void

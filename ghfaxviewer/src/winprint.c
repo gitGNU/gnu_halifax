@@ -26,13 +26,14 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <ghfaxwidgets/ghfwprogress.h>
 
 #include <windows.h>
 #include <tiffio.h>
 
+
 #include "tiffimages.h"
 #include "viewer.h"
-#include "progress.h"
 
 static gboolean aborted;
 

@@ -1,4 +1,4 @@
-/* cursors.h - this file is part of the GNU HaliFAX Viewer
+/* i18n.h - this file is part of the GNU HaliFAX Viewer
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
@@ -19,27 +19,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/* Code taken from the Eye of Gnome image viewer
- *
- * Copyright (C) Federico Mena-Quintero <federico@gimp.org>
- *
- */
+#ifndef I18N_H
+#define I18N_H
 
-#ifndef CURSORS_H
-#define CURSORS_H
-
-#include <gdk/gdk.h>
-
-
-
-typedef enum {
-	CURSOR_HAND_OPEN,
-	CURSOR_HAND_CLOSED,
-	CURSOR_NUM_CURSORS
-} CursorType;
-
-void cursor_set (GdkWindow *window, CursorType type);
-
-
+#ifdef ENABLE_NLS
+#    include <libintl.h>
+#    include <locale.h>
+#    undef _
+#    define _(String) dgettext (PACKAGE, String)
+#    ifdef gettext_noop
+#        define N_(String) gettext_noop (String)
+#    else
+#        define N_(String) (String)
+#    endif
+#else
+/* Stubs that do something close enough.  */
+#    define textdomain(String) (String)
+#    define gettext(String) (String)
+#    define dgettext(Domain,Message) (Message)
+#    define dcgettext(Domain,Message,Type) (Message)
+#    define bindtextdomain(Domain,Directory) (Domain)
+#    define _(String) (String)
+#    define N_(String) (String)
+#endif
 
 #endif

@@ -33,9 +33,10 @@
 #include "viewer.h"
 #include "draw_page.h"
 #include "errors.h"
-#include "progress.h"
-#include "thumblayout.h"
-#include "gtkutils.h"
+
+#include <ghfaxwidgets/ghfwprogress.h>
+#include <ghfaxwidgets/ghfwthumbbox.h>
+#include <ghfaxwidgets/ghfwgtkutils.h>
 
 typedef struct _DrawReqData DrawReqData;
 

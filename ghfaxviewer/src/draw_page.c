@@ -28,13 +28,15 @@
 
 #include <gtk/gtk.h>
 
+#include <ghfaxwidgets/ghfwgtkutils.h>
+#include <ghfaxwidgets/ghfwgdkutils.h>
+
 #include "tiffimages.h"
 #include "cursors.h"
 #include "zoom.h"
 #include "viewer.h"
 #include "draw_page.h"
 #include "errors.h"
-#include "gtkutils.h"
 
 static gfloat zoom_factor[] = {0.25, 0.37, 0.50, 0.75, 1.0,
 			       1.5, 2.0, 3.0, 4.0};

@@ -1,6 +1,6 @@
-/* cursors.h - this file is part of the GNU HaliFAX Viewer
+/* urlzone.h - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2001 Wolfgang Sourdeau
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -19,27 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/* Code taken from the Eye of Gnome image viewer
- *
- * Copyright (C) Federico Mena-Quintero <federico@gimp.org>
- *
- */
+#ifndef URLZONE_H
+#define URLZONE_H
 
-#ifndef CURSORS_H
-#define CURSORS_H
+typedef void UrlZone;  /* private */
 
-#include <gdk/gdk.h>
-
-
-
-typedef enum {
-	CURSOR_HAND_OPEN,
-	CURSOR_HAND_CLOSED,
-	CURSOR_NUM_CURSORS
-} CursorType;
-
-void cursor_set (GdkWindow *window, CursorType type);
-
-
+UrlZone *url_zone_new (gchar *url);
+void url_zone_destroy (UrlZone *url_zone);
+void url_zone_attach (UrlZone *url_zone, GtkWidget *pixmap_widget,
+		       gint x, gint y, gint width, gint height);
 
 #endif
