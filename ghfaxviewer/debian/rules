@@ -38,7 +38,8 @@ install-stamp: build-stamp
 		prefix=`pwd`/debian/ghfaxviewer/usr		\
 		sysconfdir=`pwd`/debian/ghfaxviewer/etc		\
 		infodir=`pwd`/debian/ghfaxviewer/usr/share/info	\
-		mandir=`pwd`/debian/ghfaxviewer/usr/share/man
+		mandir=`pwd`/debian/ghfaxviewer/usr/share/man   \
+		datadir=`pwd`/debian/ghfaxviewer/usr/share
 	touch install-stamp
 
 

@@ -1,3 +1,10 @@
+ghfaxviewer (0.21.1-2) unstable; urgency=low
+
+  * 0.21.1-1 was built against a bad archive.
+  * locale files were not correctly installed.
+
+ -- Wolfgang Sourdeau <was@debian.org>  Fri, 27 Apr 2001 17:02:39 -0400
+
 ghfaxviewer (0.21.1-1) unstable; urgency=low
 
   * New upstream release.
