@@ -46,11 +46,9 @@ struct _ViewerData
   GtkWidget *page_area;
   int rotation;
   
-#ifndef NEED_GNOMESUPPORT_H
   /* button bar */
   GtkWidget *bb_buttons[4];
   GtkWidget *ut_buttons[5]; 
-#endif /*  NEED_GNOMESUPPORT_H */
 
   /* print dialog */
   GtkWidget *zoom_entry;
@@ -68,7 +66,7 @@ struct _ViewerData
 
 struct _MotionData
 {
-  guint dragging:1;
+  gboolean dragging;
   guint orig_x, orig_y;
   gfloat orig_adj_x, orig_adj_y;
 };

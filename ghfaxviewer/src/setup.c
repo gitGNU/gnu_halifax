@@ -26,6 +26,11 @@
 #ifdef NEED_GNOMESUPPORT_H
 #include <gnome.h>
 #include <gconf/gconf-client.h>
+
+#include "pixmaps/stock-zoom-in.xpm"
+#include "pixmaps/stock-zoom-out.xpm"
+#include "pixmaps/stock-zoom-in-menu.xpm"
+#include "pixmaps/stock-zoom-out-menu.xpm"
 #else
 #include <gtk/gtk.h>
 #endif
@@ -40,6 +45,15 @@
 
 #include "i18n.h"
 #include "setup.h"
+
+#ifdef CAN_SAVE_CONFIG
+#define KEY_DEF_DIR "default_dir"
+
+#define KEY_DEF_X "viewer_def_x"
+#define KEY_DEF_Y "viewer_def_y"
+#define KEY_DEF_WIDTH "viewer_def_width"
+#define KEY_DEF_HEIGHT "viewer_def_height"
+#endif
 
 static gint windows_count;
 
@@ -135,19 +149,19 @@ save_window_coords (GdkWindow *window)
   gdk_window_get_size (window, &width, &height);
 
   gconf_client_set_int (gc_client,
-			CONFIG_KEY "viewer_def_x",
+			CONFIG_KEY KEY_DEF_X,
 			x,
 			&gerror);
   gconf_client_set_int (gc_client,
-			CONFIG_KEY "viewer_def_y",
+			CONFIG_KEY KEY_DEF_Y,
 			y,
 			&gerror);
   gconf_client_set_int (gc_client,
-			CONFIG_KEY "viewer_def_width",
+			CONFIG_KEY KEY_DEF_WIDTH,
 			width,
 			&gerror);
   gconf_client_set_int (gc_client,
-			CONFIG_KEY "viewer_def_height",
+			CONFIG_KEY KEY_DEF_HEIGHT,
 			height,
 			&gerror);
 }
@@ -160,7 +174,7 @@ gchar *load_last_directory ()
   gerror = NULL;
 
   last_dir = gconf_client_get_string (gc_client,
-				      CONFIG_KEY "default_dir",
+				      CONFIG_KEY KEY_DEF_DIR,
 				      &gerror);
  
   if (!last_dir)
@@ -180,9 +194,40 @@ void save_last_directory (gchar *path)
   gerror = NULL;
 
   gconf_client_set_string (gc_client,
-			   CONFIG_KEY "default_dir",
+			   CONFIG_KEY KEY_DEF_DIR,
 			   path,
 			   &gerror);
+}
+
+void
+stock_init (void)
+{
+  static GnomeStockPixmapEntry entries[4];
+
+  entries[0].data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
+  entries[0].data.width = 24;
+  entries[0].data.height = 24;
+  entries[0].data.xpm_data = stock_zoom_in_xpm;
+
+  entries[1].data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
+  entries[1].data.width = 24;
+  entries[1].data.height = 24;
+  entries[1].data.xpm_data = stock_zoom_out_xpm;
+
+  entries[2].data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
+  entries[2].data.width = 16;
+  entries[2].data.height = 16;
+  entries[2].data.xpm_data = stock_zoom_in_menu_xpm;
+
+  entries[3].data.type = GNOME_STOCK_PIXMAP_TYPE_DATA;
+  entries[3].data.width = 16;
+  entries[3].data.height = 16;
+  entries[3].data.xpm_data = stock_zoom_out_menu_xpm;
+
+  gnome_stock_pixmap_register (STOCK_ZOOM_IN, GNOME_STOCK_PIXMAP_REGULAR, &entries[0]);
+  gnome_stock_pixmap_register (STOCK_ZOOM_OUT, GNOME_STOCK_PIXMAP_REGULAR, &entries[1]);
+  gnome_stock_pixmap_register (STOCK_ZOOM_IN_MENU, GNOME_STOCK_PIXMAP_REGULAR, &entries[2]);
+  gnome_stock_pixmap_register (STOCK_ZOOM_OUT_MENU, GNOME_STOCK_PIXMAP_REGULAR, &entries[3]);
 }
 
 static void
@@ -193,16 +238,16 @@ gnome_screen_setup ()
   gerror = NULL;
 
   viewer_def_x = gconf_client_get_int (gc_client,
-				       CONFIG_KEY "viewer_def_x",
+				       CONFIG_KEY KEY_DEF_X,
 				       &gerror);
   viewer_def_y = gconf_client_get_int (gc_client,
-				       CONFIG_KEY "viewer_def_y",
+				       CONFIG_KEY KEY_DEF_Y,
 				       &gerror);
   viewer_def_width = gconf_client_get_int (gc_client,
-					   CONFIG_KEY "viewer_def_width",
+					   CONFIG_KEY KEY_DEF_WIDTH,
 					   &gerror);
   viewer_def_height = gconf_client_get_int (gc_client,
-					    CONFIG_KEY "viewer_def_height",
+					    CONFIG_KEY KEY_DEF_HEIGHT,
 					    &gerror);
 
   if (viewer_def_width == 0 && viewer_def_height == 0)
@@ -227,19 +272,19 @@ save_window_coords (GdkWindow *window)
 		CONFIG_KEY,
 		&reg_key);
   RegSetValueEx (reg_key,
-		 "viewer_def_x", 0,
+		 KEY_DEF_X, 0,
 		 reg_vtype,
 		 (LPBYTE) &x, buf_size);
   RegSetValueEx (reg_key,
-		 "viewer_def_y", 0,
+		 KEY_DEF_Y, 0,
 		 reg_vtype,
 		 (LPBYTE) &y, buf_size);
   RegSetValueEx (reg_key,
-		 "viewer_def_width", 0,
+		 KEY_DEF_WIDTH, 0,
 		 reg_vtype,
 		 (LPBYTE) &width, buf_size);
   RegSetValueEx (reg_key,
-		 "viewer_def_height", 0,
+		 KEY_DEF_HEIGHT, 0,
 		 reg_vtype,
 		 (LPBYTE) &height, buf_size);
   RegCloseKey (reg_key);  
@@ -253,7 +298,7 @@ void save_last_directory (gchar *path)
 		CONFIG_KEY,
 		&reg_key);
   RegSetValueEx (reg_key,
-		 "default_dir", 0,
+		 KEY_DEF_DIR, 0,
 		 REG_SZ,
 		 (LPBYTE) path, strlen (path));
   RegCloseKey (reg_key); 
@@ -277,7 +322,7 @@ gchar *load_last_directory ()
       key_vtype = REG_SZ;
 
       RegQueryValueEx (reg_key,
-		       "default_dir", 0,
+		       KEY_DEF_DIR, 0,
 		       &key_vtype,
 		       NULL, &buf_size);
       
@@ -286,7 +331,7 @@ gchar *load_last_directory ()
 	{
 	  last_dir = g_malloc (buf_size + 1);
 	  RegQueryValueEx (reg_key,
-			   "default_dir", 0,
+			   KEY_DEF_DIR, 0,
 			   &key_vtype,
 			   last_dir, &buf_size);	  
 	}
@@ -351,7 +396,7 @@ win32_screen_setup ()
       key_vtype = REG_DWORD; /* I just don't understand the absurdity
 				in this API */
       rc = RegQueryValueEx (reg_key,
-			    "viewer_def_x", 0,
+			    KEY_DEF_X, 0,
 			    &key_vtype,
 			    (LPBYTE) &viewer_def_x, &buf_size);
       if (rc)
@@ -359,15 +404,15 @@ win32_screen_setup ()
       else
 	{
 	  RegQueryValueEx (reg_key,
-			   "viewer_def_y", 0,
+			   KEY_DEF_Y, 0,
 			   &key_vtype,
 			   (LPBYTE) &viewer_def_y, &buf_size);
 	  RegQueryValueEx (reg_key,
-			   "viewer_def_width", 0,
+			   KEY_DEF_WIDTH, 0,
 			   &key_vtype,
 			   (LPBYTE) &viewer_def_width, &buf_size);
 	  RegQueryValueEx (reg_key,
-			   "viewer_def_height", 0,
+			   KEY_DEF_HEIGHT, 0,
 			   &key_vtype,
 			   (LPBYTE) &viewer_def_height, &buf_size);
 	}
@@ -441,6 +486,7 @@ app_setup (gint *argc, gchar **argv[])
 #ifdef NEED_GNOMESUPPORT_H
   gconf_init (*argc, *argv, NULL);
   gnome_init (PACKAGE, VERSION, *argc, *argv);
+  stock_init ();
 
   gc_client = gconf_client_get_default ();
   gconf_client_set_error_handling (gc_client,

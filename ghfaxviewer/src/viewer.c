@@ -260,10 +260,8 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
 {
   FaxFile *fax_file;
   gchar *title, *app_title;
-#ifndef NEED_GNOMESUPPORT_H
   gint ut_but_cnt, bb_but_cnt;
   gboolean set_ut_button_sensitive;
-#endif
 
   app_title = _("GNU HaliFAX - Viewer");
 
@@ -273,12 +271,10 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
 
       if (!fax_file)
 	{
-#ifndef NEED_GNOMESUPPORT_H
 	  if (viewer_data->fax_file)
 	    set_ut_button_sensitive = TRUE;
 	  else
 	    set_ut_button_sensitive = FALSE;
-#endif
 
 	  file_open_error (g_basename (file_name));
 	}
@@ -296,9 +292,7 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
 	  add_thumbs (viewer_data);  
 	  draw_page (viewer_data);
 
-#ifndef NEED_GNOMESUPPORT_H
 	  set_ut_button_sensitive = TRUE;
-#endif
 	}
     }
   else
@@ -311,20 +305,16 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
 			    title);
       g_free (title);
       
-#ifndef NEED_GNOMESUPPORT_H
       set_ut_button_sensitive = FALSE;
 
       for (bb_but_cnt = 0; bb_but_cnt < 4; bb_but_cnt++)
 	gtk_widget_set_sensitive (viewer_data->bb_buttons [bb_but_cnt],
 				  FALSE);
-#endif
     }
 
-#ifndef NEED_GNOMESUPPORT_H
   for (ut_but_cnt = 0; ut_but_cnt < 5; ut_but_cnt++)
     gtk_widget_set_sensitive (viewer_data->ut_buttons [ut_but_cnt],
 			      set_ut_button_sensitive);
-#endif
 }
 
 static void
@@ -333,8 +323,6 @@ page_area_realize_cb (GtkWidget *drawing_area,
 {
   gtk_drawing_area_size
     (GTK_DRAWING_AREA (drawing_area), 0, 0);
-
-/*    cursor_set (drawing_area->window, CURSOR_HAND_OPEN); */
 
   gdk_window_set_events
     (drawing_area->window,

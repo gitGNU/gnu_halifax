@@ -27,10 +27,9 @@
 #endif
 
 #ifdef NEED_GNOMESUPPORT_H
-#include "pixmaps/stock-zoom-in.xpm"
-#include "pixmaps/stock-zoom-out.xpm"
-
 #include <gnome.h>
+
+#include "setup.h"
 #else /* NEED_GNOMESUPPORT_H */
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
@@ -45,6 +44,20 @@
 #include "setup.h"
 
 #ifdef NEED_GNOMESUPPORT_H
+static void
+remember_widgets (ViewerData *viewer_data, GnomeUIInfo uiinfo[])
+{
+  viewer_data->bb_buttons[PREV_PAGE] = uiinfo[0].widget;
+  viewer_data->bb_buttons[NEXT_PAGE] = uiinfo[1].widget;
+  viewer_data->bb_buttons[ZOOM_IN] = uiinfo[3].widget;
+  viewer_data->bb_buttons[ZOOM_OUT] = uiinfo[4].widget;
+
+  viewer_data->ut_buttons[LEFT90] = uiinfo[6].widget;
+  viewer_data->ut_buttons[REVERSE] = uiinfo[7].widget;
+  viewer_data->ut_buttons[RIGHT90] = uiinfo[8].widget;
+  viewer_data->ut_buttons[PRINT] = uiinfo[10].widget;
+  viewer_data->ut_buttons[INFO] = uiinfo[12].widget;
+}
 
 void
 gnome_toolbar_new (ViewerData *viewer_data)
@@ -68,13 +81,13 @@ gnome_toolbar_new (ViewerData *viewer_data)
     {
       GNOME_APP_UI_ITEM, NULL, N_("Zoom in"),
       (gpointer) zoomin_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_DATA, stock_zoom_in_xpm,
+      GNOME_APP_PIXMAP_STOCK, STOCK_ZOOM_IN,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, NULL, N_("Zoom out"),
       (gpointer) zoomout_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_DATA, stock_zoom_out_xpm,
+      GNOME_APP_PIXMAP_STOCK, STOCK_ZOOM_OUT,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_SEPARATOR,
@@ -121,6 +134,8 @@ gnome_toolbar_new (ViewerData *viewer_data)
 
   gnome_app_set_toolbar (GNOME_APP (viewer_data->viewer_window),
 			 GTK_TOOLBAR (toolbar));
+
+  remember_widgets (viewer_data, toolbar_uiinfo);
 }
 
 #else /* NEED_GNOMESUPPORT_H */

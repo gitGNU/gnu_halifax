@@ -29,10 +29,8 @@
 #include <stdio.h>
 
 #ifdef NEED_GNOMESUPPORT_H
-#include "pixmaps/stock-zoom-in-menu.xpm"
-#include "pixmaps/stock-zoom-out-menu.xpm"
-
 #include <gnome.h>
+#include "setup.h"
 #else /* NEED_GNOMESUPPORT_H */
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
@@ -78,13 +76,13 @@ gnome_menu_bar_new (ViewerData *viewer_data)
     {
       GNOME_APP_UI_ITEM, N_("Zoom in"),
       NULL, (gpointer) zoomin_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_DATA, stock_zoom_in_menu_xpm,
+      GNOME_APP_PIXMAP_STOCK, STOCK_ZOOM_IN_MENU,
       0, (GdkModifierType) 0, NULL
     },
     {
       GNOME_APP_UI_ITEM, N_("Zoom out"),
       NULL, (gpointer) zoomout_cb, viewer_data, NULL,
-      GNOME_APP_PIXMAP_DATA, stock_zoom_out_menu_xpm,
+      GNOME_APP_PIXMAP_STOCK, STOCK_ZOOM_OUT_MENU,
       0, (GdkModifierType) 0, NULL
     },
     GNOMEUIINFO_SEPARATOR,

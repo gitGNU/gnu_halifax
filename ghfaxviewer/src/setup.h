@@ -41,3 +41,8 @@ void save_window_coords (GdkWindow *window);
 gchar *load_last_directory ();
 void save_last_directory (gchar *path);
 #endif
+
+#define STOCK_ZOOM_IN       "GHFV_stock_zoom_in"
+#define STOCK_ZOOM_OUT	    "GHFV_stock_zoom_out"
+#define STOCK_ZOOM_IN_MENU  "GHFV_stock_zoom_in_menu"
+#define STOCK_ZOOM_OUT_MENU "GHFV_stock_zoom_out_menu"

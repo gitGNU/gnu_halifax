@@ -107,7 +107,6 @@ refresh_widgets (ViewerData *viewer_data)
 {
   int bcounter;
 
-#ifndef NEED_GNOMESUPPORT_H
   if (viewer_data->current_page->next == NULL)
     gtk_widget_set_sensitive(viewer_data->bb_buttons[NEXT_PAGE],
 			     FALSE);
@@ -136,7 +135,6 @@ refresh_widgets (ViewerData *viewer_data)
 	gtk_widget_set_sensitive (viewer_data->bb_buttons[ZOOM_IN],
 				  TRUE);
     }
-#endif /*  NEED_GNOMESUPPORT_H */
   
   for (bcounter = 0; 
        bcounter < viewer_data->fax_file->nbr_pages + 1;

@@ -1,3 +1,25 @@
+2001-04-26  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/setup.c: "viewer_def_*" and "default_dir" replaced with
+	macros, for cleanliness.
+
+	* src/menu.c (gnome_menu_bar_new): same thing as below.
+
+	* src/toolbar.c (gnome_toolbar_new): following the modification
+	below, the toolbar is using stock pixmaps for zoom buttons.
+
+	* src/setup.c (stock_init): copied this function from the Eye of
+	GNOME to obtain stock pixmaps for zoom icons:
+	STOCK_ZOOM_IN, STOCK_ZOOM_OUT, STOCK_ZOOM_IN_MENU,
+	STOCK_ZOOM_OUT_MENU
+
+	* src/viewer.h (struct _ViewerData): see below
+
+	* src/draw_page.c (refresh_widgets): see below
+
+	* src/viewer.c: GNOME widgets are partially adapted to the status
+	of the viewer (the toolbar buttons are enabled/disabled)
+
 2001-04-25  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/pixmaps/ghfaxviewer-icon.xpm: made the icon compliant with
