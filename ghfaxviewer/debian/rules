@@ -35,11 +35,11 @@ install-stamp: build-stamp
 	dh_clean -k
 	dh_installdirs
 	$(MAKE) install 				\
-		prefix=`pwd`/debian/ghfaxviewer/usr		\
-		sysconfdir=`pwd`/debian/ghfaxviewer/etc		\
-		infodir=`pwd`/debian/ghfaxviewer/usr/share/info	\
-		mandir=`pwd`/debian/ghfaxviewer/usr/share/man   \
-		datadir=`pwd`/debian/ghfaxviewer/usr/share
+		prefix=`pwd`/debian/$(package)/usr		\
+		sysconfdir=`pwd`/debian/$(package)/etc		\
+		infodir=`pwd`/debian/$(package)/usr/share/info	\
+		mandir=`pwd`/debian/$(package)/usr/share/man   \
+		datadir=`pwd`/debian/$(package)/usr/share
 	touch install-stamp
 
 

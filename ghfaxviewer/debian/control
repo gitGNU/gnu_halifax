@@ -12,7 +12,7 @@ Conflicts: gfaxviewer, ghfaxviewer-gtk, ghfaxviewer-gnome
 Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: gfax
-Description: The GNU HaliFAX - Viewer
+Description: The GNU HaliFAX Viewer
  This is the GNU HaliFAX Viewer, a component of GNU HaliFAX which will
  help you look at the TIFF g3/g4 fax files produced by HylaFAX
  .
