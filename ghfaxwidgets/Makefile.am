@@ -2,7 +2,9 @@ PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 SUBDIRS = @SUPPSUBDIRS@ intl po src
 
-EXTRA_DIST = README 
+bin_SCRIPTS = ghfw-config
+
+EXTRA_DIST = README ghfw-config.in
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 

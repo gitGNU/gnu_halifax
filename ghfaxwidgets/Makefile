@@ -16,20 +16,20 @@ SHELL = /bin/sh
 srcdir = .
 top_srcdir = .
 
-prefix = /usr
+prefix = /usr/i586-pc-mingw32msv
 exec_prefix = ${prefix}
 
-bindir = ${exec_prefix}/bin
-sbindir = ${exec_prefix}/sbin
-libexecdir = ${exec_prefix}/libexec
-datadir = ${prefix}/share
-sysconfdir = ${prefix}/etc
+bindir = /usr/i586-pc-mingw32msv/bin
+sbindir = /usr/sbin
+libexecdir = /usr/libexec
+datadir = /usr/share
+sysconfdir = /etc
 sharedstatedir = ${prefix}/com
-localstatedir = ${prefix}/var
-libdir = ${exec_prefix}/lib
-infodir = ${prefix}/info
-mandir = ${prefix}/man
-includedir = ${prefix}/include
+localstatedir = /var
+libdir = /usr/i586-pc-mingw32msv/lib
+infodir = /usr/info
+mandir = /usr/man
+includedir = /usr/i586-pc-mingw32msv/include
 oldincludedir = /usr/include
 
 DESTDIR =
@@ -57,94 +57,116 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = 
-host_triplet = i686-pc-linux-gnu
-AS = as
+host_alias = i586-pc-mingw32msv
+host_triplet = i586-pc-mingw32msv
+AS = /usr/i586-pc-mingw32msv/bin/as
 BUILD_INCLUDED_LIBINTL = no
-CATALOGS =  de.gmo fr.gmo pl.gmo zh_TW.Big5.gmo
-CATOBJEXT = .gmo
-CC = gcc
-DATADIRNAME = share
-DLLTOOL = dlltool
+CATALOGS = de.gmo fr.gmo pl.gmo zh_TW.Big5.gmo 
+CATOBJEXT = 
+CC = /usr/bin/i586-pc-mingw32msv-gcc
+CXX = /usr/bin/i586-pc-mingw32msv-g++
+CXXCPP = /usr/bin/i586-pc-mingw32msv-g++ -E
+DATADIRNAME = 
+DEBUG_CFLAGS = 
+DEBUG_LIBS = 
+DLLTOOL = /usr/i586-pc-mingw32msv/bin/dlltool
 ECHO = echo
-EXEEXT = 
-GENCAT = gencat
-GETTEXT = 
-GLIBC21 = yes
+EXEEXT = .exe
+GCC_CFLAGS = -fnative-struct
+GCJ = @GCJ@
+GCJFLAGS = @GCJFLAGS@
+GENCAT = /usr/bin/gencat
+GETTEXT = /usr/bin/gettext
+GHFW_CFLAGS =   -mwindows
+GHFW_INCLUDEDIR = -I/usr/i586-pc-mingw32msv/include/ghfaxwidgets
+GHFW_LIBDIR = -L/usr/i586-pc-mingw32msv/lib
+GHFW_LIBS = -lghfaxwidgets -L/usr/i586-pc-mingw32msv/lib -lgtk -lgdk -lglib  -L/usr/i586-pc-mingw32msv/lib -lcomdlg32 -lgnu-intl
+GHFW_VERSION = 0.0.0
+GLIBC21 = 
 GLIB_CFLAGS = 
 GLIB_CONFIG = 
 GLIB_LIBS = 
-GMOFILES =  de.gmo fr.gmo pl.gmo zh_TW.Big5.gmo
-GMSGFMT = /usr/bin/msgfmt
-GNOMEGNORBA_LIBS = -rdynamic -lgnorba -lORBitCosNaming -lORBit -lIIOP -lORBitutil -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -ldl -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib
-GNOMEUI_LIBS = -rdynamic -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -ldl -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib
+GMOFILES = 
+GMSGFMT = msgfmt
+GNOMEGNORBA_LIBS = 
+GNOMEUI_CFLAGS = 
+GNOMEUI_LIBS = 
 GNOME_APPLETS_LIBS = 
 GNOME_CAPPLET_LIBS = 
-GNOME_CONFIG = /usr/bin/gnome-config
+GNOME_CONFIG = 
 GNOME_DOCKLETS_LIBS = 
-GNOME_INCLUDEDIR = -I/usr/include -DNEED_GNOMESUPPORT_H -I/usr/lib/gnome-libs/include -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/gtk-1.2
-GNOME_LIBDIR = -rdynamic -L/usr/lib -L/usr/X11R6/lib
-GNOME_LIBS = -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib
-GNORBA_CFLAGS = -I/usr/include -DNEED_GNOMESUPPORT_H -I/usr/lib/gnome-libs/include -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/gtk-1.2
-GNORBA_LIBS = -rdynamic -L/usr/lib -L/usr/X11R6/lib -lgnorba -lORBitCosNaming -lORBit -lIIOP -lORBitutil -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -ldl -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib
-GTKXMHTML_LIBS = -rdynamic -lgtkxmhtml -lXpm -ljpeg -lpng -lz -lSM -lICE -lgtk -lgdk -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
-GTK_CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include
-GTK_CONFIG = /usr/bin/gtk-config
-GTK_LIBS = -lSM -lICE -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
-INSTOBJEXT = .mo
-INTLBISON = bison
+GNOME_INCLUDEDIR = 
+GNOME_LIBDIR = 
+GNOME_LIBS = 
+GNORBA_CFLAGS = 
+GNORBA_LIBS = 
+GTKXMHTML_LIBS = 
+GTK_CFLAGS = 
+GTK_CONFIG = 
+GTK_LIBS = -L/usr/i586-pc-mingw32msv/lib -lgtk -lgdk -lglib
+INSTOBJEXT = 
+INTLBISON = 
 INTLLIBS = 
 INTLOBJS = 
 INTL_LIBTOOL_SUFFIX_PREFIX = 
 LIBICONV = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LN_S = ln -s
+LT_AGE = 0
+LT_CURRENT = 0
+LT_RELEASE = 0.0
+LT_REVISION = 0
 MAINT = #
 MAKEINFO = makeinfo
 MANPAGES = 
-MKINSTALLDIRS = ./mkinstalldirs
+MKINSTALLDIRS = 
 MSGFMT = /usr/bin/msgfmt
-MSGMERGE = 
-OBJDUMP = objdump
+MSGMERGE = /usr/bin/msgmerge
+OBJDUMP = /usr/i586-pc-mingw32msv/bin/objdump
 OBJEXT = o
-ORBIT_CFLAGS = -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include
-ORBIT_CONFIG = /usr/bin/orbit-config
-ORBIT_IDL = /usr/bin/orbit-idl
-ORBIT_LIBS = -L/usr/lib -lORBitCosNaming -lORBit -lIIOP -lORBitutil -lglib -lm
-PIXMAPS_DIR = /usr/share/pixmaps/ghfaxwidgets
-POFILES =  de.po fr.po pl.po zh_TW.Big5.po
-POSUB = po
-PTHREAD_LIB = -lpthread
-RANLIB = ranlib
+ORBIT_CFLAGS = 
+ORBIT_CONFIG = 
+ORBIT_IDL = 
+ORBIT_LIBS = 
+PIXMAPS_DIR = 
+POFILES = 
+POSUB = 
+PTHREAD_LIB = 
+RANLIB = /usr/i586-pc-mingw32msv/bin/ranlib
 RC_ICON_DIRECTIVE = 
-STRIP = strip
+STRIP = /usr/i586-pc-mingw32msv/bin/strip
 SUPPSUBDIRS = docs macros
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-WIN32_LIBS = 
-WINDRES = 
-WINDRES_INCLUDE_DIR = 
+WIN32_CFLAGS = -mwindows
+WIN32_LIBS = -L/usr/i586-pc-mingw32msv/lib -lcomdlg32 -lgnu-intl
+WINDRES = /usr/bin/i586-pc-mingw32msv-windres -O coff --target pe-i386
+WINDRES_INCLUDE_DIR = /usr/i586-pc-mingw32msv/include
 XGETTEXT = /usr/bin/xgettext
-XPM_LIBS = -lXpm
-ZVT_LIBS = -rdynamic -lzvt -lutil -lSM -lICE -lgdk_imlib -lgtk -lgdk -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
-cflags_set = yes
+XPM_LIBS = 
+ZVT_LIBS = 
+cflags_set = 
 cxxflags_set = @cxxflags_set@
 
 PACKAGE = ghfaxwidgets
 VERSION = 0.0.0
 SUBDIRS = docs macros intl po src
 
-EXTRA_DIST = README 
+bin_SCRIPTS = ghfw-config
+
+EXTRA_DIST = README ghfw-config.in
 
 LIBTOOL_DEPS = ./ltmain.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = 
+CONFIG_CLEAN_FILES =  ghfw-config
+SCRIPTS =  $(bin_SCRIPTS)
+
 DIST_COMMON =  README ./stamp-h.in ABOUT-NLS AUTHORS COPYING ChangeLog \
 INSTALL Makefile.am Makefile.in NEWS acconfig.h aclocal.m4 config.guess \
-config.h.in config.sub configure configure.in install-sh ltmain.sh \
-missing mkinstalldirs
+config.h.in config.sub configure configure.in ghfw-config.in install-sh \
+ltmain.sh missing mkinstalldirs
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -195,6 +217,27 @@ distclean-hdr:
 	-rm -f config.h
 
 maintainer-clean-hdr:
+ghfw-config: $(top_builddir)/config.status ghfw-config.in
+	cd $(top_builddir) && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+install-binSCRIPTS: $(bin_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	@list='$(bin_SCRIPTS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`"; \
+	    $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`; \
+	  else if test -f $(srcdir)/$$p; then \
+	    echo " $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`"; \
+	    $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`; \
+	  else :; fi; fi; \
+	done
+
+uninstall-binSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	list='$(bin_SCRIPTS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`; \
+	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -359,7 +402,7 @@ installcheck: installcheck-recursive
 all-recursive-am: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
-install-exec-am:
+install-exec-am: install-binSCRIPTS
 install-exec: install-exec-recursive
 
 install-data-am:
@@ -368,14 +411,15 @@ install-data: install-data-recursive
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-recursive
-uninstall-am:
+uninstall-am: uninstall-binSCRIPTS
 uninstall: uninstall-recursive
-all-am: Makefile config.h
+all-am: Makefile $(SCRIPTS) config.h
 all-redirect: all-recursive-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs: installdirs-recursive
 installdirs-am:
+	$(mkinstalldirs)  $(DESTDIR)$(bindir)
 
 
 mostlyclean-generic:
@@ -410,7 +454,8 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f config.status
 
 .PHONY: mostlyclean-hdr distclean-hdr clean-hdr maintainer-clean-hdr \
-install-data-recursive uninstall-data-recursive install-exec-recursive \
+uninstall-binSCRIPTS install-binSCRIPTS install-data-recursive \
+uninstall-data-recursive install-exec-recursive \
 uninstall-exec-recursive installdirs-recursive uninstalldirs-recursive \
 all-recursive check-recursive installcheck-recursive info-recursive \
 dvi-recursive mostlyclean-recursive distclean-recursive clean-recursive \

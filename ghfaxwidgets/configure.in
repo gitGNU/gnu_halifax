@@ -16,6 +16,22 @@ AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 
+GHFW_MAJOR_VERSION=0
+GHFW_MINOR_VERSION=0
+GHFW_MICRO_VERSION=0
+GHFW_INTERFACE_AGE=0
+GHFW_BINARY_AGE=0
+
+# libtool versioning
+LT_RELEASE=$GHFW_MAJOR_VERSION.$GHFW_MINOR_VERSION
+LT_CURRENT=`expr $GHFW_MICRO_VERSION - $GHFW_INTERFACE_AGE`
+LT_REVISION=$GHFW_INTERFACE_AGE
+LT_AGE=`expr $GHFW_BINARY_AGE - $GHFW_INTERFACE_AGE`
+AC_SUBST(LT_RELEASE)
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+
 dnl AM_PROG_CC_STDC
 dnl AC_HEADER_STDC
 dnl AC_C_CONST
@@ -91,6 +107,27 @@ case $ac_cv_build in
     ;;
 esac
 
+OS=
+USING_GNOME=
+
+GCC_CFLAGS=
+DEBUG_CFLAGS=
+DEBUG_LIBS=
+
+WIN32_CFLAGS=
+WIN32_LIBS=
+
+GTK_CFLAGS=
+GTK_LIBS=
+GNOMEUI_CFLAGS=
+GNOMEUI_LIBS=
+
+GHFW_VERSION="$VERSION"
+GHFW_CFLAGS=
+GHFW_LIBS=
+GHFW_INCLUDEDIR=
+GHFW_LIBDIR=
+
 if test "$WINDOWS_DETECTED" = yes; then
 # under Windows
 OS=WIN32
@@ -104,7 +141,7 @@ if test $? != 0; then
 else
   case $GCC_VERSION in
     2.95*) AC_MSG_RESULT([-fnative-struct will be used])
-           CFLAGS="$CFLAGS -fnative-struct"
+           GCC_CFLAGS="-fnative-struct"
 	   ;;
     egcs*) AC_MSG_RESULT([using egcs (GCC 2.95.2 is recommended)])
            ;;
@@ -115,7 +152,7 @@ fi
 AC_MSG_CHECKING([which version of the GCC port you are using])
 if test "$CYGWIN" = yes; then
 	AC_MSG_RESULT([using cygwin, CFLAGS+=-mno-cygwin])
-	CFLAGS="$CFLAGS -mno-cygwin -I$includedir/w32api -I$includedir/mingw"
+	GCC_CFLAGS="-mno-cygwin -I$includedir/w32api -I$includedir/mingw"
 	WINDRES_INCLUDE_DIR="$includedir/w32api"
 else
 	AC_MSG_RESULT([using mingw])
@@ -126,8 +163,8 @@ AC_CHECK_TOOL(WINDRES, windres, false)
 WINDRES="$WINDRES"
 
 AC_MSG_WARN(*** libtiff and GTK assumed to be present)
-GTK_LIBS="-lgtk -lgdk -lglib"
-WIN32_LIBS="-lcomdlg32 -lgnu-intl"
+GTK_LIBS="-L${libdir} -lgtk -lgdk -lglib"
+WIN32_LIBS="-L${libdir} -lcomdlg32 -lgnu-intl"
 
 USE_INCLUDED_LIBINTL="no"
 BUILD_INCLUDED_LIBINTL="no"
@@ -152,7 +189,6 @@ AC_SUBST(MSGFMT)
 AC_SUBST(GMSGFMT)
 AC_SUBST(GENCAT)
 AC_SUBST(MSGMERGE)
-AC_SUBST(WIN32_LIBS)
 
 AC_DEFINE(ENABLE_NLS)
 AC_DEFINE(HAVE_GETTEXT)
@@ -161,7 +197,6 @@ AC_DEFINE(HAVE_LC_MESSAGES)
 else
 # under GNU
 OS=GNU
-WIN32_LIBS=
 
 AM_GNU_GETTEXT
 
@@ -182,6 +217,8 @@ if test "x$want_gnome" = "xyes"; then
 
       USING_GNOME="yes"
       PIXMAPS_DIR="`gnome-config --datadir`/pixmaps/ghfaxwidgets"
+      GNOMEUI_CFLAGS="`gnome-config --cflags gnomeui`"
+      GNOMEUI_LIBS="`gnome-config --libs gnomeui`"
    else
       PIXMAPS_DIR="$datadir/pixmaps/ghfaxwidgets"
 
@@ -193,6 +230,8 @@ dnl Checks for libraries.
       AM_PATH_GTK([1.2.8],[],[
 	   AC_MSG_ERROR([Argh... where did you get your system from ?!])
 	   ])
+      GTK_CFLAGS="`gtk-config --cflags`"
+      GTK_LIBS="`gtk-config --libs`"
    fi
 else
    PIXMAPS_DIR="$datadir/pixmaps/ghfaxwidgets"
@@ -204,27 +243,49 @@ else
    AM_PATH_GTK([1.2.8],[],[
    	   AC_MSG_ERROR([Argh... where did you get your system from ?!])
 	   ])
+   GTK_CFLAGS="`gtk-config --cflags`"
+   GTK_LIBS="`gtk-config --libs`"
 fi
 fi
 
 AC_MSG_CHECKING([whether debugging is requested])
 if test "$debug" = "yes"; then
     AC_MSG_RESULT([yes])
-    CFLAGS="$CFLAGS -Wall -O0 -ggdb3"
+    DEBUG_CFLAGS="-Wall -O0 -ggdb3"
     if test "$OS" = "WIN32"; then
-    	WIN32_LIBS="-lgdi32 $WIN32_LIBS"
+    	DEBUG_LIBS="-L${libdir} -lgdi32"
     fi
 else
     AC_MSG_RESULT([no])
     if test "$OS" = "WIN32"; then
-    	CFLAGS="-mwindows $CFLAGS"
-	WIN32_LIBS="-mwindows $WIN32_LIBS"
+    	WIN32_CFLAGS="-mwindows"
     fi
 fi
+
+AC_SUBST(GCC_CFLAGS)
+AC_SUBST(DEBUG_CFLAGS)
+AC_SUBST(DEBUG_LIBS)
+AC_SUBST(WIN32_CFLAGS)
+AC_SUBST(WIN32_LIBS)
+AC_SUBST(GTK_LIBS)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GNOMEUI_CFLAGS)
+AC_SUBST(GNOMEUI_LIBS)
 
 AC_SUBST(PIXMAPS_DIR)
 AC_SUBST(MANPAGES)
 AC_SUBST(RC_ICON_DIRECTIVE)
+
+dnl Computing GHFW_values
+GHFW_INCLUDEDIR="-I${includedir}/ghfaxwidgets"
+GHFW_CFLAGS="$GNOMEUI_CFLAGS $GTK_CFLAGS $WIN32_CFLAGS"
+GHFW_LIBDIR="-L${libdir}"
+GHFW_LIBS="-lghfaxwidgets $GTK_LIBS $GNOMEUI_LIBS $WIN32_LIBS"
+AC_SUBST(GHFW_VERSION)
+AC_SUBST(GHFW_INCLUDEDIR)
+AC_SUBST(GHFW_CFLAGS)
+AC_SUBST(GHFW_LIBDIR)
+AC_SUBST(GHFW_LIBS)
 
 AM_CONDITIONAL(TARGET_GNU, test $OS = GNU)
 AM_CONDITIONAL(TARGET_WIN32, test $OS = WIN32)
@@ -232,6 +293,7 @@ AM_CONDITIONAL(GNOME, test x"$USING_GNOME" = xyes)
 
 AC_OUTPUT([
 Makefile
+ghfw-config
 intl/Makefile
 docs/Makefile
 macros/Makefile
