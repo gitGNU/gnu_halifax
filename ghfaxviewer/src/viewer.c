@@ -213,8 +213,8 @@ closeviewer_cb (GtkWidget *widget, ViewerData *viewer_data)
       g_free (viewer_data->motion_data);
     }
 
-  if (viewer_data->page_pixmap)
-    gdk_pixmap_unref (viewer_data->page_pixmap);
+/*   if (viewer_data->page_pixmap) */
+/*     gdk_pixmap_unref (viewer_data->page_pixmap); */
 
   decrease_win_count ();
 }
