@@ -20,16 +20,16 @@ prefix = /usr
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
-sbindir = /usr/sbin
-libexecdir = /usr/lib
-datadir = /usr/share
+sbindir = ${exec_prefix}/sbin
+libexecdir = ${exec_prefix}/libexec
+datadir = ${prefix}/share
 sysconfdir = /etc
 sharedstatedir = ${prefix}/com
-localstatedir = /var
-libdir = /usr/lib
+localstatedir = ${prefix}/var
+libdir = ${exec_prefix}/lib
 infodir = /usr/share/info
 mandir = /usr/share/man
-includedir = /usr/include
+includedir = ${prefix}/include
 oldincludedir = /usr/include
 
 DESTDIR =
@@ -78,8 +78,8 @@ GCJFLAGS = @GCJFLAGS@
 GENCAT = gencat
 GETTEXT = 
 GHFW_CFLAGS = -I/usr/include -DNEED_GNOMESUPPORT_H -I/usr/lib/gnome-libs/include -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include 
-GHFW_INCLUDEDIR = -I/usr/include/ghfaxwidgets
-GHFW_LIBDIR = -L/usr/lib
+GHFW_INCLUDEDIR = -I${prefix}/include
+GHFW_LIBDIR = -L${exec_prefix}/lib
 GHFW_LIBS = -lghfaxwidgets -lSM -lICE -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm -rdynamic -L/usr/lib -L/usr/X11R6/lib -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib -ldl 
 GHFW_VERSION = 0.0.0
 GLIBC21 = yes
@@ -150,7 +150,7 @@ cxxflags_set = @cxxflags_set@
 
 PACKAGE = ghfaxwidgets
 VERSION = 0.0.0
-SUBDIRS = docs macros intl po src
+SUBDIRS = docs macros intl po src tests debian
 
 bin_SCRIPTS = ghfw-config
 

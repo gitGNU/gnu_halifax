@@ -32,7 +32,8 @@
 #include <gtk/gtk.h>
 #endif
 
-#include "ghfwdialogwindow.h"
+#include "ghfwdlgwindow.h"
+#include "ghfwgtkutils.h"
 #include "i18n.h"
 
 typedef struct _GfvProgressData GfvProgressData;
@@ -49,7 +50,7 @@ struct _GfvProgressData
   gchar *action_string;
   GfvProgressTag tag;
   GtkWidget *label, *progress_bar, *abort_btn;
-  DialogWindow *progress_win;
+  GtkWidget *progress_win;
   GtkWidget *parent_window;
 };
 
@@ -64,7 +65,7 @@ gfv_progress_new (GtkWidget *parent_window,
 		  gchar *title, gchar *action_string,
 		  GfvProgressTag tag)
 {
-  DialogWindow *dlg_window;
+  GtkWidget *dlg_window;
   GtkWidget *vbox, *progress, *abort_btn, *label;
   GtkObject *adjustment;
   GfvProgressData *prog_data;
@@ -73,11 +74,11 @@ gfv_progress_new (GtkWidget *parent_window,
 
   adjustment = gtk_adjustment_new (0.0, 0.0, 1.0, 0.1, 0.1, 1.0);
 
-  dlg_window = dialog_window_new (title);
+  dlg_window = ghfw_dlg_window_new (title);
 
   vbox = gtk_vbox_new (FALSE, 3);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-  dialog_window_set_content_with_frame (dlg_window, vbox);
+  ghfw_dlg_window_set_content_with_frame (GHFW_DLG_WINDOW (dlg_window), vbox);
 	
   label = gtk_label_new (action_string);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, FALSE, 3);
@@ -95,17 +96,16 @@ gfv_progress_new (GtkWidget *parent_window,
 #endif
       gtk_signal_connect (GTK_OBJECT (abort_btn), "clicked",
 			  (GtkSignalFunc) progress_abort, prog_data); 
-      dialog_window_set_button (dlg_window, abort_btn);
-      dialog_window_set_escapable_with_callback (dlg_window, 
-						 (GtkSignalFunc) progress_abort,
-						 prog_data);
+      ghfw_dlg_window_set_button (GHFW_DLG_WINDOW (dlg_window), abort_btn);
+      gtk_signal_connect (GTK_OBJECT (dlg_window), "escaped",
+			  (GtkSignalFunc) progress_abort, prog_data);
 
       prog_data->abort_btn = abort_btn;
     }
 
   if (!(tag & DISPLAY_WHEN_NEEDED))
     {
-      dialog_window_show (dlg_window, parent_window);
+      transient_window_show (dlg_window, parent_window);
       prog_data->is_visible = TRUE;
     }
   else
@@ -157,8 +157,8 @@ gfv_progress_update_with_percentage (guint value, guint total,
   if ((prog_data->tag & DISPLAY_WHEN_NEEDED)
       && !(prog_data->is_visible))
     {
-      dialog_window_show (prog_data->progress_win,
-			  prog_data->parent_window);
+      transient_window_show (prog_data->progress_win,
+			     prog_data->parent_window);
       prog_data->is_visible = TRUE;
     }
 
@@ -203,7 +203,7 @@ gfv_progress_update_with_value (guint value, guint total,
 void
 gfv_progress_destroy (GfvProgressData *prog_data)
 {
-  dialog_window_destroy (prog_data->progress_win);
+  gtk_widget_destroy (prog_data->progress_win);
   if (prog_data->action_string)
     g_free (prog_data->action_string);
   g_free (prog_data);

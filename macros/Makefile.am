@@ -5,4 +5,5 @@ EXTRA_DIST = compiler-flags.m4 \
 		gnome-pthread-check.m4 \
 		gnome-x-checks.m4 \
 		gnome-print-check.m4 \
+		ghfaxwidgets.m4 \
 		Makefile.am

@@ -1,0 +1,16 @@
+This package was debianized by Wolfgang Sourdeau <was@debian.org> on
+Mon, 1 Oct 2001 00:20:50 -0400.
+
+It was downloaded from ftp://ftp.gnu.org/gnu/halifax/ .
+
+Upstream maintainer: Wolfgang Sourdeau <wolfgang@gnu.org>
+
+Copyright:
+
+The ghfaxwidgets library Copyright (C) 2001 Wolfgang Sourdeau <wolfgang@gnu.org>
+
+The GNU HaliFAX Widgets library (ghfaxwidgets) is distributed under the
+GNU General Public License.
+
+On Debian GNU/Linux systems, the full text of the GNU General Public
+License can be found in the file /usr/share/common-licenses/GPL. 

@@ -1,0 +1,28 @@
+Source: ghfaxwidgets
+Section: libs
+Priority: optional
+Maintainer: Wolfgang Sourdeau <was@debian.org>
+Build-Depends: debhelper, gettext, libgtk1.2-dev, libgnome-dev
+Standards-Version: 3.5.6
+
+Package: libghfaxwidgets0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: The GNU HaliFAX Widgets library
+ This library is part of GNU HaliFAX.
+ .
+ It has been written to provide a consistent user interface through
+ all the GNU HaliFAX components and to provide functions for common and
+ repetitive tasks in a platform-independent way. It may be used by other
+ projects as long as they are distributed under the GNU GPL.
+ .
+ http://www.gnu.org/halifax/
+
+Package: libghfaxwidgets-dev
+Section: devel
+Architecture: any
+Depends: libghfaxwidgets0 (= ${Source-Version})
+Description: The GNU HaliFAX Widgets library (development package)
+ This package contains the header and the static library file for
+ the The GNU HaliFAX Widgets library.

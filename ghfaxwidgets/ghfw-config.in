@@ -47,7 +47,7 @@ while test $# -gt 0; do
 	;;
 
     --version)
-	echo ghfaxwidgets @GHFW_VERSION@
+	echo @GHFW_VERSION@
 	exit 0
 	;;
 
