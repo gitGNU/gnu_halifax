@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* This file interfaces between the raw image handling functions
+   provided by tiffimages.c, zoom.c and the GTK+/GDK framework */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

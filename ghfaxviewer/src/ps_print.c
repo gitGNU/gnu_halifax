@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* This file implement the functions needed to get dumb UNIX printing
+ */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -97,8 +100,6 @@ struct _OutputData
   gint from_page, to_page;
   GtkWidget *print_dlg, *err_dlg, *parent_window;
 };
-
-/* Dumb UNIX printing */
 
 #define MAX_PLIST 8
 

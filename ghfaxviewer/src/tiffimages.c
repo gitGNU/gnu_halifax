@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* This file implements the handling of TIFF g3/g4 files */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

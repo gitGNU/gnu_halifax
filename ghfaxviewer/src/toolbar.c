@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* This file is the collection of functions needed to create and
+   manage the toolbar */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

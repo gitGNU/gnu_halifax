@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* This file implements the viewer window mechanisms and the main
+   function */
+
 /* FIXME: This file contains the main routines plus a couple of
    utility routines which should be separated at some point so as to
    make it cleaner */

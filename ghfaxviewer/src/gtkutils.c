@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
-/* Some useful GTK+ related functions used all around the program */
+/* This file implements some useful GTK+-related functions used all
+   around the program */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

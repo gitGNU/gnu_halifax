@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* This file provides facilities to create progress bars and their
+   windows */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

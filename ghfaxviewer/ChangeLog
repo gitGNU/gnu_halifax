@@ -1,3 +1,9 @@
+2001-04-15  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/viewer.c: added a short description at the beginning of
+	every file describing the utility and explains how those files
+	make their part to save the World.
+
 2001-04-14  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/ps_print.c: added definition of __compar_fn_t for non-glibc
