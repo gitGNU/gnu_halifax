@@ -57,7 +57,7 @@ gnome_menu_bar_new (ViewerData *viewer_data)
     GNOMEUIINFO_MENU_EXIT_ITEM (widget_close_cb, viewer_data),
     GNOMEUIINFO_END
   };
-  
+
   GnomeUIInfo view_menu_uiinfo[] =
   {
     {
@@ -106,7 +106,7 @@ gnome_menu_bar_new (ViewerData *viewer_data)
     },
     GNOMEUIINFO_END
   };
-  
+
   GnomeUIInfo settings_menu_uiinfo[] =
   {
     GNOMEUIINFO_MENU_PREFERENCES_ITEM (NULL, NULL),
@@ -130,6 +130,17 @@ gnome_menu_bar_new (ViewerData *viewer_data)
 
   gnome_app_create_menus (GNOME_APP (viewer_data->viewer_window),
 			  menubar_uiinfo);
+  viewer_data->cmd_menus[FILE_CLOSE] = file_menu_uiinfo[1].widget;
+  viewer_data->cmd_menus[FILE_PRINT] = file_menu_uiinfo[3].widget;
+  viewer_data->cmd_menus[FILE_PROPERTIES] = file_menu_uiinfo[5].widget;
+  
+  viewer_data->cmd_menus[VIEW_PREV_PAGE] = view_menu_uiinfo[0].widget;
+  viewer_data->cmd_menus[VIEW_NEXT_PAGE] = view_menu_uiinfo[1].widget;
+  viewer_data->cmd_menus[VIEW_ZOOM_IN] = view_menu_uiinfo[3].widget;
+  viewer_data->cmd_menus[VIEW_ZOOM_OUT] = view_menu_uiinfo[4].widget;
+  viewer_data->cmd_menus[VIEW_ROTATE_LEFT90] = view_menu_uiinfo[6].widget;
+  viewer_data->cmd_menus[VIEW_ROTATE_REVERSE] = view_menu_uiinfo[7].widget;
+  viewer_data->cmd_menus[VIEW_ROTATE_RIGHT90] = view_menu_uiinfo[8].widget;
 }
 
 #else /* NEED_GNOMESUPPORT_H */
@@ -144,12 +155,21 @@ file_menu_new (ViewerData *viewer_data)
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (file_menu_item), file_menu);
 
   menu_item_new (file_menu, _("Open..."), file_dialog_cb, viewer_data);
-  menu_item_new (file_menu, _("Close"), close_file_cb, viewer_data);
+  viewer_data->cmd_menus[FILE_CLOSE] =
+    menu_item_new (file_menu, _("Close"), close_file_cb, viewer_data);
+
   menu_separator_new (file_menu);
-  menu_item_new (file_menu, _("Print fax"), print_cb, viewer_data);
+
+  viewer_data->cmd_menus[FILE_PRINT] =
+    menu_item_new (file_menu, _("Print fax"), print_cb, viewer_data);
+
   menu_separator_new (file_menu);
-  menu_item_new (file_menu, _("Properties..."), info_cb, viewer_data);
+
+  viewer_data->cmd_menus[FILE_PROPERTIES] =
+    menu_item_new (file_menu, _("Properties..."), info_cb, viewer_data);
+
   menu_separator_new (file_menu);
+
   menu_item_new (file_menu, _("Quit"), widget_close_cb, viewer_data);
 
   return file_menu_item;
@@ -164,18 +184,33 @@ view_menu_new (ViewerData *viewer_data)
   view_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (view_menu_item), view_menu);
 
-  menu_item_new (view_menu, _("Go to next page"), nextpage_cb, viewer_data);
-  menu_item_new (view_menu, _("Go to previous page"), prevpage_cb, viewer_data);
+  viewer_data->cmd_menus[VIEW_NEXT_PAGE] =
+    menu_item_new (view_menu, _("Go to next page"),
+		   nextpage_cb, viewer_data);
+  viewer_data->cmd_menus[VIEW_PREV_PAGE] =
+    menu_item_new (view_menu, _("Go to previous page"),
+		   prevpage_cb, viewer_data);
+
   menu_separator_new (view_menu);
-  menu_item_new (view_menu, _("Zoom in"), zoomin_cb, viewer_data);
-  menu_item_new (view_menu, _("Zoom out"), zoomout_cb, viewer_data);
+
+  viewer_data->cmd_menus[VIEW_ZOOM_IN] =
+    menu_item_new (view_menu, _("Zoom in"),
+		   zoomin_cb, viewer_data);
+  viewer_data->cmd_menus[VIEW_ZOOM_OUT] =
+    menu_item_new (view_menu, _("Zoom out"),
+		   zoomout_cb, viewer_data);
+
   menu_separator_new (view_menu);
-  menu_item_new (view_menu, _("Rotate 90 degrees clockwise"),
-		 right90_cb, viewer_data);
-  menu_item_new (view_menu, _("Rotate 90 degrees counter-clockwise"),
-		 left90_cb, viewer_data);
-  menu_item_new (view_menu, _("Reverse image"),
-		 reverse_cb, viewer_data);
+
+  viewer_data->cmd_menus[VIEW_ROTATE_RIGHT90] =
+    menu_item_new (view_menu, _("Rotate 90 degrees clockwise"),
+		   right90_cb, viewer_data);
+  viewer_data->cmd_menus[VIEW_ROTATE_LEFT90] =
+    menu_item_new (view_menu, _("Rotate 90 degrees counter-clockwise"),
+		   left90_cb, viewer_data);
+  viewer_data->cmd_menus[VIEW_ROTATE_REVERSE] =
+    menu_item_new (view_menu, _("Reverse image"),
+		   reverse_cb, viewer_data);
 
   return view_menu_item;
 }

@@ -283,26 +283,23 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
   GtkWidget *print_dialog;
 
-  if (viewer_data->fax_file)
-    {
-      print_dialog =
-	gnome_print_dialog_new (_("Print..."),
-				GNOME_PRINT_DIALOG_RANGE
-				| GNOME_PRINT_DIALOG_COPIES);
-
-      gnome_print_dialog_construct_range_page 
-	(GPD (print_dialog), (GNOME_PRINT_RANGE_CURRENT
-			      | GNOME_PRINT_RANGE_ALL
-			      | GNOME_PRINT_RANGE_RANGE),
-	 1, viewer_data->fax_file->nbr_pages + 1,
-	 _("Current page only"),
-	 _("Range"));
+  print_dialog =
+    gnome_print_dialog_new (_("Print..."),
+			    GNOME_PRINT_DIALOG_RANGE
+			    | GNOME_PRINT_DIALOG_COPIES);
+  
+  gnome_print_dialog_construct_range_page 
+    (GPD (print_dialog), (GNOME_PRINT_RANGE_CURRENT
+			  | GNOME_PRINT_RANGE_ALL
+			  | GNOME_PRINT_RANGE_RANGE),
+     1, viewer_data->fax_file->nbr_pages + 1,
+     _("Current page only"),
+     _("Range"));
 					   
-      gtk_signal_connect (GTK_OBJECT (print_dialog),
-			  "clicked", print_dlg_clicked_cb,
-			  viewer_data);
-
-      transient_window_show (GTK_WINDOW (print_dialog),
-			     GTK_WINDOW (viewer_data->viewer_window));
-    }
+  gtk_signal_connect (GTK_OBJECT (print_dialog),
+		      "clicked", print_dlg_clicked_cb,
+		      viewer_data);
+  
+  transient_window_show (GTK_WINDOW (print_dialog),
+			 GTK_WINDOW (viewer_data->viewer_window));
 }

@@ -2,6 +2,12 @@ This file lists user-visible changes. It might not be up-to-date
 although an effort is made to keep it so. For even more
 programming-related informations, see the file 'ChangeLog'.
 
+05/06/2001:
+- widgets are enabled or disabled at need;
+- all the dialog windows are escapable;
+- the dialog windows are managed through one consistant api;
+- fixes for compilation on FreeBSD;
+
 
 04/07/2001:
 - zooming functions have been splitted for better optimization;

@@ -228,6 +228,19 @@ page_area_destroy_cb (GtkWidget *widget, GdkWindow *page_area_window)
 #endif /* __WIN32__ */
 
 static void
+viewer_set_cmd_widgets_sensitive (ViewerData *viewer_data, gboolean state)
+{
+  gint wid_count;
+
+  for (wid_count = FIRST_BUTTON; wid_count < NBR_ACTIONS; wid_count++)
+    gtk_widget_set_sensitive (viewer_data->cmd_buttons [wid_count],
+			      state);
+  for (wid_count = FIRST_MENU; wid_count < NBR_ACTIONS; wid_count++)
+    gtk_widget_set_sensitive (viewer_data->cmd_menus [wid_count],
+			      state);
+}
+
+static void
 viewer_window_unset_file (ViewerData *viewer_data)
 {
   GList *fixed_children;
@@ -238,18 +251,19 @@ viewer_window_unset_file (ViewerData *viewer_data)
   g_list_foreach (fixed_children, destroy_thumb,
 		  viewer_data->thumbs_fixed);
 
+  viewer_set_cmd_widgets_sensitive (viewer_data, FALSE);
+
   ti_destroy_fax_file (viewer_data->fax_file);
 
   gdk_pixmap_unref (viewer_data->page_pixmap);
   gdk_window_set_back_pixmap
     (viewer_data->page_area->window,
      NULL, FALSE);
-  gtk_drawing_area_size
-    (GTK_DRAWING_AREA (viewer_data->page_area), 0, 0);
+  gtk_widget_hide (viewer_data->page_area);
 
   viewer_data->fax_file = NULL;
   viewer_data->current_page = NULL;
-  viewer_data->zoom_index = 5;
+  viewer_data->zoom_index = 4;
   viewer_data->rotation = ROT_NONE;
   viewer_data->page_pixmap = NULL;
 }
@@ -259,8 +273,6 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
 {
   FaxFile *fax_file;
   gchar *title, *app_title;
-  gint ut_but_cnt, bb_but_cnt;
-  gboolean set_ut_button_sensitive;
 
   app_title = _("GNU HaliFAX - Viewer");
 
@@ -269,19 +281,13 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
       fax_file = ti_open_fax_file (file_name);
 
       if (!fax_file)
-	{
-	  if (viewer_data->fax_file)
-	    set_ut_button_sensitive = TRUE;
-	  else
-	    set_ut_button_sensitive = FALSE;
-
-	  file_open_error (viewer_data->viewer_window,
-			   g_basename (file_name));
-	}
+	file_open_error (viewer_data->viewer_window,
+			 g_basename (file_name));
       else
 	{
 	  if (viewer_data->fax_file)
 	    viewer_window_unset_file (viewer_data);
+
 	  viewer_data->fax_file = fax_file;
 
 	  title = g_strdup_printf ("%s %s (%s)", app_title,
@@ -289,10 +295,12 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
 	  gtk_window_set_title (GTK_WINDOW (viewer_data->viewer_window),
 				title);
 	  g_free (title);
+
+	  viewer_set_cmd_widgets_sensitive (viewer_data, TRUE);
+	  gtk_widget_show (viewer_data->page_area);
+
 	  add_thumbs (viewer_data);  
 	  draw_page (viewer_data);
-
-	  set_ut_button_sensitive = TRUE;
 	}
     }
   else
@@ -304,17 +312,7 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
       gtk_window_set_title (GTK_WINDOW (viewer_data->viewer_window),
 			    title);
       g_free (title);
-      
-      set_ut_button_sensitive = FALSE;
-
-      for (bb_but_cnt = 0; bb_but_cnt < 4; bb_but_cnt++)
-	gtk_widget_set_sensitive (viewer_data->bb_buttons [bb_but_cnt],
-				  FALSE);
     }
-
-  for (ut_but_cnt = 0; ut_but_cnt < 5; ut_but_cnt++)
-    gtk_widget_set_sensitive (viewer_data->ut_buttons [ut_but_cnt],
-			      set_ut_button_sensitive);
 }
 
 static void
@@ -378,6 +376,9 @@ viewer_window_realize_cb (GtkWidget *viewer_window, ViewerData *viewer_data)
 
   gtk_box_pack_start (GTK_BOX (vbox), view_hbox, TRUE, TRUE, 0);
 #endif
+
+  viewer_set_cmd_widgets_sensitive (viewer_data, FALSE);
+  gtk_widget_hide (viewer_data->page_area);
 
   thumbs_sc_win = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW

@@ -32,16 +32,13 @@ nextpage_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
   FaxPage *current_page, *next_page;
 
-  if (viewer_data->fax_file)
-    {
-      current_page = viewer_data->current_page;
-      next_page = current_page->next;
+  current_page = viewer_data->current_page;
+  next_page = current_page->next;
   
-      if (next_page)
-	{
-	  viewer_data->current_page = current_page->next;
-	  draw_page (viewer_data);
-	}
+  if (next_page)
+    {
+      viewer_data->current_page = current_page->next;
+      draw_page (viewer_data);
     }
 }
 
@@ -50,119 +47,99 @@ prevpage_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
   FaxPage *current_page, *prev_page;
 
-  if (viewer_data->fax_file)
+  current_page = viewer_data->current_page;
+  prev_page = current_page->prev;
+  
+  if (prev_page)
     {
-      current_page = viewer_data->current_page;
-      prev_page = current_page->prev;
-      
-      if (prev_page)
-	{
-	  viewer_data->current_page = current_page->prev;
-	  draw_page (viewer_data);
-	}
+      viewer_data->current_page = current_page->prev;
+      draw_page (viewer_data);
     }
 }	
 
 void
 zoomout_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
-  if (viewer_data->fax_file
-      && viewer_data->zoom_index != 0)
-    {
-      viewer_data->zoom_index--;
+  viewer_data->zoom_index--;
       
-      draw_page (viewer_data);
-    }
+  draw_page (viewer_data);
 }
 
 void
 zoomin_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
-  if (viewer_data->fax_file
-      && viewer_data->zoom_index != MAX_ZOOM_INDEX)
-    {
-      viewer_data->zoom_index++;
+  viewer_data->zoom_index++;
       
-      draw_page (viewer_data);
-    }
+  draw_page (viewer_data);
 }
 
 void
 reverse_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
-  if (viewer_data->fax_file)
+  switch (viewer_data->rotation)
     {
-      switch (viewer_data->rotation)
-	{
-	case ROT_NONE:
-	  viewer_data->rotation = ROT_180;
-	  break;
-	case ROT_180:
-	  viewer_data->rotation = ROT_NONE;
-	  break;
-	case ROT_RIGHT90:
-	  viewer_data->rotation = ROT_LEFT90;
-	  break;
-	case ROT_LEFT90:
-	  viewer_data->rotation = ROT_RIGHT90;
-	  break;
-	default:
-	}
-  
-      draw_page (viewer_data);
+    case ROT_NONE:
+      viewer_data->rotation = ROT_180;
+      break;
+    case ROT_180:
+      viewer_data->rotation = ROT_NONE;
+      break;
+    case ROT_RIGHT90:
+      viewer_data->rotation = ROT_LEFT90;
+      break;
+    case ROT_LEFT90:
+      viewer_data->rotation = ROT_RIGHT90;
+      break;
+    default:
     }
+  
+  draw_page (viewer_data);
 }
 
 void
 right90_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
-  if (viewer_data->fax_file)
+  switch (viewer_data->rotation)
     {
-      switch (viewer_data->rotation)
-	{
-	case ROT_NONE:
-	  viewer_data->rotation = ROT_RIGHT90;
-	  break;
-	case ROT_180:
-	  viewer_data->rotation = ROT_LEFT90;
-	  break;
-	case ROT_RIGHT90:
-	  viewer_data->rotation = ROT_180;
-	  break;
-	case ROT_LEFT90:
-	  viewer_data->rotation = ROT_NONE;
-	  break;
-	default:
-	}
-
-      draw_page (viewer_data);
+    case ROT_NONE:
+      viewer_data->rotation = ROT_RIGHT90;
+      break;
+    case ROT_180:
+      viewer_data->rotation = ROT_LEFT90;
+      break;
+    case ROT_RIGHT90:
+      viewer_data->rotation = ROT_180;
+      break;
+    case ROT_LEFT90:
+      viewer_data->rotation = ROT_NONE;
+      break;
+    default:
     }
+
+  draw_page (viewer_data);
 }
 
 void
 left90_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
-  if (viewer_data->fax_file)
+  switch (viewer_data->rotation)
     {
-      switch (viewer_data->rotation)
-	{
-	case ROT_NONE:
-	  viewer_data->rotation = ROT_LEFT90;
-	  break;
-	case ROT_180:
-	  viewer_data->rotation = ROT_RIGHT90;
-	  break;
-	case ROT_RIGHT90:
-	  viewer_data->rotation = ROT_NONE;
-	  break;
-	case ROT_LEFT90:
-	  viewer_data->rotation = ROT_180;
-	  break;
-	default:
-	}
-      
-      draw_page (viewer_data);
+    case ROT_NONE:
+      viewer_data->rotation = ROT_LEFT90;
+      break;
+    case ROT_180:
+      viewer_data->rotation = ROT_RIGHT90;
+      break;
+    case ROT_RIGHT90:
+      viewer_data->rotation = ROT_NONE;
+      break;
+    case ROT_LEFT90:
+      viewer_data->rotation = ROT_180;
+      break;
+    default:
     }
+  
+  draw_page (viewer_data);
 }
 
 void widget_close_cb (GtkWidget *widget, ViewerData *viewer_data)

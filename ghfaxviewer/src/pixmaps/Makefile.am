@@ -9,17 +9,23 @@ endif
 
 pixmapdir = $(prefix)/share/pixmaps/ghfaxviewer
 
-pixmap_DATA = printer.xpm \
-	      left90.xpm right90.xpm reverse.xpm \
-              right_arrow.xpm left_arrow.xpm \
-              zoom_in.xpm zoom_out.xpm info.xpm \
-	      ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm
+if GNOME
+pixmap_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm
+else
+pixmap_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm \
+	      printer.xpm left90.xpm right90.xpm reverse.xpm \
+              right_arrow.xpm left_arrow.xpm zoom_in.xpm zoom_out.xpm
+endif
 
 EXTRA_DIST = hand-closed-data.xbm hand-closed-mask.xbm \
-		 hand-open-data.xbm hand-open-mask.xbm \
-		 stock-zoom-out.xpm stock-zoom-in.xpm \
-		 stock-zoom-out-menu.xpm stock-zoom-in-menu.xpm \
-		 $(pixmap_DATA)
+	     hand-open-data.xbm hand-open-mask.xbm \
+	     stock-zoom-out.xpm stock-zoom-in.xpm \
+	     stock-zoom-out-menu.xpm stock-zoom-in-menu.xpm \
+	     printer.xpm \
+	     left90.xpm right90.xpm reverse.xpm \
+             right_arrow.xpm left_arrow.xpm \
+             zoom_in.xpm zoom_out.xpm info.xpm \
+	     ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm
 
 uninstall-local:
 	test -d $(pixmapdir) && \

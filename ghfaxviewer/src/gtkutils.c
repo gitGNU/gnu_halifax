@@ -70,7 +70,7 @@ menu_separator_new (GtkWidget *menu)
   return separator;
 }
 
-void
+GtkWidget *
 menu_item_new (GtkWidget *menu, gchar *label,
 	       GtkSignalFunc callback, gpointer data)
 {
@@ -82,6 +82,8 @@ menu_item_new (GtkWidget *menu, gchar *label,
   if (callback)
     gtk_signal_connect (GTK_OBJECT (new_menu_item), "activate",
 			callback, data);
+
+  return new_menu_item;
 }
 
 /* Pixmaps and icons */

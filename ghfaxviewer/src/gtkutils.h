@@ -28,9 +28,9 @@ typedef gpointer DialogWindow;                         /* private */
 
 void free_data_on_destroy_cb (GtkWidget *widget, gpointer data);
 
-GtkWidget* menu_separator_new (GtkWidget *menu);
-void menu_item_new (GtkWidget *menu, gchar *label,
-		    GtkSignalFunc callback, gpointer data);
+GtkWidget *menu_separator_new (GtkWidget *menu);
+GtkWidget *menu_item_new (GtkWidget *menu, gchar *label,
+			  GtkSignalFunc callback, gpointer data);
 
 void gtk_window_set_escapable (GtkWindow *window);
 void dialog_window_set_escapable_with_callback (DialogWindow *window,

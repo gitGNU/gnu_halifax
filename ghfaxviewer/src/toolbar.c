@@ -45,18 +45,19 @@
 
 #ifdef NEED_GNOMESUPPORT_H
 static void
-remember_widgets (ViewerData *viewer_data, GnomeUIInfo uiinfo[])
+remember_buttons (ViewerData *viewer_data, GnomeUIInfo uiinfo[])
 {
-  viewer_data->bb_buttons[PREV_PAGE] = uiinfo[0].widget;
-  viewer_data->bb_buttons[NEXT_PAGE] = uiinfo[1].widget;
-  viewer_data->bb_buttons[ZOOM_IN] = uiinfo[3].widget;
-  viewer_data->bb_buttons[ZOOM_OUT] = uiinfo[4].widget;
+  viewer_data->cmd_buttons[VIEW_PREV_PAGE] = uiinfo[0].widget;
+  viewer_data->cmd_buttons[VIEW_NEXT_PAGE] = uiinfo[1].widget;
+  viewer_data->cmd_buttons[VIEW_ZOOM_IN] = uiinfo[3].widget;
+  viewer_data->cmd_buttons[VIEW_ZOOM_OUT] = uiinfo[4].widget;
 
-  viewer_data->ut_buttons[LEFT90] = uiinfo[6].widget;
-  viewer_data->ut_buttons[REVERSE] = uiinfo[7].widget;
-  viewer_data->ut_buttons[RIGHT90] = uiinfo[8].widget;
-  viewer_data->ut_buttons[PRINT] = uiinfo[10].widget;
-  viewer_data->ut_buttons[INFO] = uiinfo[12].widget;
+  viewer_data->cmd_buttons[VIEW_ROTATE_LEFT90] = uiinfo[6].widget;
+  viewer_data->cmd_buttons[VIEW_ROTATE_REVERSE] = uiinfo[7].widget;
+  viewer_data->cmd_buttons[VIEW_ROTATE_RIGHT90] = uiinfo[8].widget;
+
+  viewer_data->cmd_buttons[FILE_PRINT] = uiinfo[10].widget;
+  viewer_data->cmd_buttons[FILE_PROPERTIES] = uiinfo[12].widget;
 }
 
 void
@@ -135,7 +136,7 @@ gnome_toolbar_new (ViewerData *viewer_data)
   gnome_app_set_toolbar (GNOME_APP (viewer_data->viewer_window),
 			 GTK_TOOLBAR (toolbar));
 
-  remember_widgets (viewer_data, toolbar_uiinfo);
+  remember_buttons (viewer_data, toolbar_uiinfo);
 }
 
 #else /* NEED_GNOMESUPPORT_H */
@@ -178,76 +179,76 @@ toolbar_new (ViewerData *viewer_data)
 
   gtk_toolbar_set_space_size (GTK_TOOLBAR (new_bbar), 20);
 
-  viewer_data->bb_buttons[PREV_PAGE] =
+  viewer_data->cmd_buttons[VIEW_PREV_PAGE] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("left_arrow.xpm"),
 			prevpage_cb, viewer_data);
   gtk_toolbar_append_widget (GTK_TOOLBAR (new_bbar),
-			     viewer_data->bb_buttons[PREV_PAGE],
+			     viewer_data->cmd_buttons[VIEW_PREV_PAGE],
 			     _("Go to previous page"), NULL);
 
-  viewer_data->bb_buttons[NEXT_PAGE] =
+  viewer_data->cmd_buttons[VIEW_NEXT_PAGE] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("right_arrow.xpm"),
 			nextpage_cb, viewer_data);
   gtk_toolbar_append_widget (GTK_TOOLBAR (new_bbar),
-			     viewer_data->bb_buttons[NEXT_PAGE],
+			     viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
 			     _("Go to next page"), NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (new_bbar));
 
-  viewer_data->bb_buttons[ZOOM_IN] =
+  viewer_data->cmd_buttons[VIEW_ZOOM_IN] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("zoom_in.xpm"),
 			zoomin_cb, viewer_data);
   gtk_toolbar_append_widget (GTK_TOOLBAR (new_bbar),
-			     viewer_data->bb_buttons[ZOOM_IN],
+			     viewer_data->cmd_buttons[VIEW_ZOOM_IN],
 			     _("Zoom in"), NULL);
 
-  viewer_data->bb_buttons[ZOOM_OUT] =
+  viewer_data->cmd_buttons[VIEW_ZOOM_OUT] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("zoom_out.xpm"),
 			zoomout_cb, viewer_data);
   gtk_toolbar_append_widget (GTK_TOOLBAR (new_bbar),
-			     viewer_data->bb_buttons[ZOOM_OUT],
+			     viewer_data->cmd_buttons[VIEW_ZOOM_OUT],
 			     _("Zoom out"), NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (new_bbar));
 
-  viewer_data->ut_buttons[LEFT90] =
+  viewer_data->cmd_buttons[VIEW_ROTATE_LEFT90] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("left90.xpm"),
 			left90_cb, viewer_data);
   gtk_toolbar_append_widget
-    (GTK_TOOLBAR (new_bbar), viewer_data->ut_buttons[LEFT90],
+    (GTK_TOOLBAR (new_bbar), viewer_data->cmd_buttons[VIEW_ROTATE_LEFT90],
      _("Rotate 90 degrees counter-clockwise"), NULL);
 
-  viewer_data->ut_buttons[REVERSE] =
+  viewer_data->cmd_buttons[VIEW_ROTATE_REVERSE] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("reverse.xpm"),
 			reverse_cb, viewer_data);
   gtk_toolbar_append_widget
-    (GTK_TOOLBAR (new_bbar), viewer_data->ut_buttons[REVERSE],
+    (GTK_TOOLBAR (new_bbar), viewer_data->cmd_buttons[VIEW_ROTATE_REVERSE],
      _("Reverse image"), NULL);
 
-  viewer_data->ut_buttons[RIGHT90] =
+  viewer_data->cmd_buttons[VIEW_ROTATE_RIGHT90] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("right90.xpm"),
 			right90_cb, viewer_data);
   gtk_toolbar_append_widget
-    (GTK_TOOLBAR (new_bbar), viewer_data->ut_buttons[RIGHT90],
+    (GTK_TOOLBAR (new_bbar), viewer_data->cmd_buttons[VIEW_ROTATE_RIGHT90],
      _("Rotate 90 degrees clockwise"), NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (new_bbar));
 
-  viewer_data->ut_buttons[PRINT] =
+  viewer_data->cmd_buttons[FILE_PRINT] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("printer.xpm"),
 			GTK_SIGNAL_FUNC (print_cb), viewer_data);
   gtk_toolbar_append_widget
-    (GTK_TOOLBAR (new_bbar), viewer_data->ut_buttons[PRINT],
+    (GTK_TOOLBAR (new_bbar), viewer_data->cmd_buttons[FILE_PRINT],
      _("Print fax"), NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (new_bbar));
 
-  viewer_data->ut_buttons[INFO] =
+  viewer_data->cmd_buttons[FILE_PROPERTIES] =
     toolbar_button_new (viewer_data->viewer_window,
 			PIXMAP ("info.xpm"), info_cb, viewer_data);
 			
   gtk_toolbar_append_widget
-    (GTK_TOOLBAR (new_bbar), viewer_data->ut_buttons[INFO],
+    (GTK_TOOLBAR (new_bbar), viewer_data->cmd_buttons[FILE_PROPERTIES],
      _("Properties..."), NULL);
 
   return bbar_handle_box;

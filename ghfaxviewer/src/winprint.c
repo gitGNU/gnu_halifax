@@ -197,30 +197,27 @@ void print_cb (void *ignored, ViewerData *viewer_data)
   int result;
   PRINTDLG *fax_pdlg;
   
-  if (viewer_data->fax_file)
+  fax_pdlg = g_malloc0 (sizeof (PRINTDLG));
+      
+  fax_pdlg->hwndOwner = NULL;
+  fax_pdlg->hDevNames = NULL;
+  fax_pdlg->Flags = PD_RETURNDC | PD_PAGENUMS | PD_NOSELECTION;
+  fax_pdlg->nMinPage = 1;
+  fax_pdlg->nMaxPage = viewer_data->fax_file->nbr_pages + 1;
+  fax_pdlg->nFromPage = 1;
+  fax_pdlg->nToPage = viewer_data->fax_file->nbr_pages + 1;
+  fax_pdlg->nCopies = 1;
+  fax_pdlg->lStructSize = sizeof (PRINTDLG);
+  
+  result = PrintDlg (fax_pdlg);
+  
+  if (result)
     {
-      fax_pdlg = g_malloc0 (sizeof (PRINTDLG));
-      
-      fax_pdlg->hwndOwner = NULL;
-      fax_pdlg->hDevNames = NULL;
-      fax_pdlg->Flags = PD_RETURNDC | PD_PAGENUMS | PD_NOSELECTION;
-      fax_pdlg->nMinPage = 1;
-      fax_pdlg->nMaxPage = viewer_data->fax_file->nbr_pages + 1;
-      fax_pdlg->nFromPage = 1;
-      fax_pdlg->nToPage = viewer_data->fax_file->nbr_pages + 1;
-      fax_pdlg->nCopies = 1;
-      fax_pdlg->lStructSize = sizeof (PRINTDLG);
-      
-      result = PrintDlg (fax_pdlg);
-      
-      if (result)
-	{
-	  SetAbortProc (fax_pdlg->hDC, abort_proc);
-	  windows_print (viewer_data, fax_pdlg);
-	}
-      
-      DeleteDC(fax_pdlg->hDC); 
-      g_free (fax_pdlg);
+      SetAbortProc (fax_pdlg->hDC, abort_proc);
+      windows_print (viewer_data, fax_pdlg);
     }
+  
+  DeleteDC(fax_pdlg->hDC); 
+  g_free (fax_pdlg);
 }
 

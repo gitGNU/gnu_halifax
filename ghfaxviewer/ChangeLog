@@ -1,3 +1,16 @@
+2001-05-06  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/callbcks.c (nextpage_cb): the actions callbacks don't check
+	if a file is opened anymore since their widget are enabled or
+	disabled as needed.
+
+	* src/viewer.h (enum): ActionIndex is an enum to reference the
+	"command widgets" (print, rotate, go to next, ...).
+	
+	* src/viewer.c (viewer_set_cmd_widgets_sensitive): this functions
+	disables or enables the command widgets, when a file is opened or
+	closed
+
 2001-05-01  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/viewer.c (viewer_window_cfg_event_cb): flush the event queue

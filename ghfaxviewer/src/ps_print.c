@@ -951,9 +951,6 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
   DialogWindow *print_dlg;
 
-  if (viewer_data->fax_file)
-    {
-      print_dlg = print_dialog (viewer_data);
-      dialog_window_show (print_dlg, GTK_WINDOW (viewer_data->viewer_window));
-    }
+  print_dlg = print_dialog (viewer_data);
+  dialog_window_show (print_dlg, GTK_WINDOW (viewer_data->viewer_window));
 }

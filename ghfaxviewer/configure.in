@@ -22,6 +22,8 @@ CFLAGS=""
 GCONF_CFLAGS=""
 GCONF_LIBS=""
 
+MANPAGES=ghfaxviewer.1
+
 AC_PATH_PROG(LIBTOOL, "libtool")
 
 # FreeBSD hacks
@@ -247,6 +249,7 @@ else
     fi
 fi
 
+AC_SUBST(MANPAGES)
 AC_SUBST(WIN32_LIBS)
 AC_SUBST(RC_ICON_DIRECTIVE)
 AM_CONDITIONAL(TARGET_GNU, test $OS = GNU)
@@ -263,6 +266,7 @@ ghfaxviewer.spec
 debian/Makefile
 macros/Makefile
 intl/Makefile
+docs/Makefile
 src/Makefile
 src/ghfaxviewer-res.rc
 src/pixmaps/Makefile

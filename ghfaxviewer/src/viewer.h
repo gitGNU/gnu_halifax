@@ -29,6 +29,24 @@
 typedef struct _ViewerData ViewerData;
 typedef struct _MotionData MotionData;
 
+typedef enum
+{
+  FILE_CLOSE,
+  FILE_PRINT,
+  FILE_PROPERTIES,
+  VIEW_NEXT_PAGE,
+  VIEW_PREV_PAGE,
+  VIEW_ZOOM_IN,
+  VIEW_ZOOM_OUT,
+  VIEW_ROTATE_RIGHT90,
+  VIEW_ROTATE_REVERSE,
+  VIEW_ROTATE_LEFT90,
+  NBR_ACTIONS
+} ActionIndex;
+
+#define FIRST_BUTTON  1
+#define FIRST_MENU    0
+
 struct _ViewerData
 {
   FaxFile *fax_file;
@@ -43,9 +61,9 @@ struct _ViewerData
   /* File selection dialog */
   GtkWidget *file_dlg;
   
-  /* button bar */
-  GtkWidget *bb_buttons[4];
-  GtkWidget *ut_buttons[5]; 
+  /* action (command) widgets */
+  GtkWidget *cmd_buttons[NBR_ACTIONS];
+  GtkWidget *cmd_menus[NBR_ACTIONS]; 
 
   /* thumbnails */
   GtkWidget *thumbs_fixed;
@@ -61,23 +79,6 @@ struct _MotionData
   guint orig_x, orig_y;
   gfloat orig_adj_x, orig_adj_y;
 };
-
-typedef enum
-{
-  NEXT_PAGE,
-  PREV_PAGE,
-  ZOOM_IN,
-  ZOOM_OUT
-} VariableButtonIndex;
-
-typedef enum
-{
-  RIGHT90,
-  LEFT90,
-  REVERSE,
-  PRINT,
-  INFO,
-} FixedButtonIndex;
 
 GdkPixmap *pixmap_for_page (GtkWidget *ref_widget,
 			    gint ref_width, gint ref_height,

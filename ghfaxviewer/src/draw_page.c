@@ -108,32 +108,62 @@ refresh_widgets (ViewerData *viewer_data)
   int bcounter;
 
   if (viewer_data->current_page->next == NULL)
-    gtk_widget_set_sensitive(viewer_data->bb_buttons[NEXT_PAGE],
-			     FALSE);
-  else
-    gtk_widget_set_sensitive(viewer_data->bb_buttons[NEXT_PAGE],
-			     TRUE);
-	
-  if (viewer_data->current_page->prev == NULL)
-    gtk_widget_set_sensitive(viewer_data->bb_buttons[PREV_PAGE],
-			     FALSE);
-  else
-    gtk_widget_set_sensitive(viewer_data->bb_buttons[PREV_PAGE],
-			     TRUE);
-  
-  if (viewer_data->zoom_index == 0)
-    gtk_widget_set_sensitive (viewer_data->bb_buttons[ZOOM_OUT],
-			      FALSE);
+    {
+      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_NEXT_PAGE],
+			       FALSE);
+      gtk_widget_set_sensitive(viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
+			       FALSE);
+    }
   else
     {
-      gtk_widget_set_sensitive (viewer_data->bb_buttons[ZOOM_OUT],
+      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_NEXT_PAGE],
+			       TRUE);
+      gtk_widget_set_sensitive(viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
+			       TRUE);
+    }
+	
+  if (viewer_data->current_page->prev == NULL)
+    {
+      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_PREV_PAGE],
+			       FALSE);
+      gtk_widget_set_sensitive(viewer_data->cmd_buttons[VIEW_PREV_PAGE],
+			       FALSE);
+    }
+  else
+    {
+      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_PREV_PAGE],
+			       TRUE);
+      gtk_widget_set_sensitive(viewer_data->cmd_buttons[VIEW_PREV_PAGE],
+			       TRUE);
+    }
+  
+  if (viewer_data->zoom_index == 0)
+    {
+      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_ZOOM_OUT],
+			       FALSE);     
+      gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_OUT],
+				FALSE);
+    }
+  else
+    {
+      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_ZOOM_OUT],
+			       TRUE);     
+      gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_OUT],
 				TRUE);
       if (viewer_data->zoom_index == MAX_ZOOM_INDEX)
-	gtk_widget_set_sensitive (viewer_data->bb_buttons[ZOOM_IN],
-				  FALSE);
+	{
+	  gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_ZOOM_IN],
+				   FALSE);
+	  gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_IN],
+				    FALSE);
+	}
       else
-	gtk_widget_set_sensitive (viewer_data->bb_buttons[ZOOM_IN],
-				  TRUE);
+	{
+	  gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_ZOOM_IN],
+				   TRUE);     
+	  gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_IN],
+				    TRUE);
+	}
     }
   
   for (bcounter = 0; 
