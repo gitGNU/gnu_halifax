@@ -55,7 +55,7 @@ autoconf
   adding a new instance of a macro that was already called from
   configure.in, autoconf will need to be issued again;
 - for any changes made to any Makefile.am files, automake -a -c
-  gnu will need to be issued again;
+  --gnu will need to be issued again;
 - for more important changes like adding a new library dependency,
   aclocal, autoheader, automake -a -c --gnu and autoconf will have to
   be issued again;
