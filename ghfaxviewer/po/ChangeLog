@@ -1,3 +1,18 @@
+2001-04-27  gettextize  <bug-gnu-utils@gnu.org>
+
+	* Makefile.in.in: Upgrade to gettext-0.10.37.
+
+2001-04-27  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* pl.po: same as below
+
+	* zh_TW.Big5.po: same as below
+
+	* de.po: same as below
+
+	* fr.po: the degree sign was not an ascii character, it was
+	replaced with the word "degree" so that we avoid confusing gettext
+
 2001-04-12  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* de.po: Tilman Bubeck as last translator;
