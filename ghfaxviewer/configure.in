@@ -181,9 +181,21 @@ dnl ******************************
 dnl gnome-libs checking
 dnl ******************************
 if test "x$want_gnome" = "xyes"; then
-   AC_MSG_CHECKING([for gnome-libs >= 1.0.55])
+   AC_MSG_CHECKING([for gnome-libs >= 1.2.13])
    if gnome-config --version > /dev/null 2>&1; then
-      AC_MSG_RESULT([found])
+      gnome_version=`gnome-config --version | sed -e s/[[^0-9.]]//g`
+      gnome_major=`echo $gnome_version | cut -d . -f 1`
+      gnome_minor=`echo $gnome_version | cut -d . -f 2`
+      gnome_micro=`echo $gnome_version | cut -d . -f 3`
+
+      if test $gnome_major -lt 1 -o $gnome_minor -lt 2 -o $gnome_micro -lt 13;
+      then
+	 AC_MSG_RESULT([failed (found $gnome_version instead)])
+	 AC_MSG_ERROR([Please upgrade your version of the GNOME libraries to
+	               at least version 1.2.13 and try again.])
+      else
+         AC_MSG_RESULT([found $gnome_version])
+      fi
 
       USING_GNOME="yes"
       CFLAGS="$CFLAGS `gnome-config --cflags gnomeui`"
@@ -264,6 +276,10 @@ if test "$window_system" = "yes"; then
   fi
 fi
 
+AM_PATH_GHFW([0.0.0],[],[
+	AC_MSG_ERROR([You need the GNU HaliFAX Widgets library too.])
+	])
+
 # no_gnome_print
 fi
 
@@ -303,8 +319,6 @@ debian/Makefile
 macros/Makefile
 intl/Makefile
 docs/Makefile
-ghfaxwidgets/Makefile
-ghfaxwidgets/pixmaps/Makefile
 src/Makefile
 src/ghfaxviewer-res.rc
 src/pixmaps/Makefile

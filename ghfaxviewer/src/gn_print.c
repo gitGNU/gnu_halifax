@@ -32,8 +32,7 @@
 #include <libgnomeprint/gnome-print-dialog.h>
 #include <libgnomeprint/gnome-print-master.h>
 #include <libgnomeprint/gnome-print-master-preview.h>
-#include <ghfaxwidgets/ghfwprogress.h>
-#include <ghfaxwidgets/ghfwgtkutils.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "setup.h"
 #include "tiffimages.h"

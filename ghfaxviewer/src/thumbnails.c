@@ -27,16 +27,13 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "tiffimages.h"
 #include "zoom.h"
 #include "viewer.h"
 #include "draw_page.h"
 #include "errors.h"
-
-#include <ghfaxwidgets/ghfwprogress.h>
-#include <ghfaxwidgets/ghfwthumbbox.h>
-#include <ghfaxwidgets/ghfwgtkutils.h>
 
 typedef struct _DrawReqData DrawReqData;
 

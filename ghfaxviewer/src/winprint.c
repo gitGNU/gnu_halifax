@@ -26,7 +26,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <ghfaxwidgets/ghfwprogress.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include <windows.h>
 #include <tiffio.h>

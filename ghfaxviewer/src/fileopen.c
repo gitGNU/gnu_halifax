@@ -24,7 +24,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <ghfaxwidgets/ghfwgtkutils.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "tiffimages.h"
 #include "viewer.h"

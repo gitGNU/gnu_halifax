@@ -31,7 +31,7 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
-#include <ghfaxwidgets/ghfwdialogwindow.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "setup.h"
 #include "tiffimages.h"
@@ -312,27 +312,28 @@ create_info_table (GtkWidget *window, TiffInfo *file_info)
   return table;
 }
 
-static DialogWindow *
+static GtkWidget *
 create_info_dialog (GtkWidget *viewer_window, TiffInfo *file_info)
 {
-  DialogWindow *info_dialog;
-  GtkWidget *table, *ok_button;
+  GtkWidget  *info_dialog, *table, *ok_button;
 
-  info_dialog = dialog_window_new (_("Fax properties"));
+  info_dialog = ghfw_dlg_window_new (_("Fax properties"));
   table = create_info_table (viewer_window, file_info);
-  dialog_window_set_content_with_frame (info_dialog, table);
+  ghfw_dlg_window_set_content_with_frame ((GhfwDlgWindow *) info_dialog,
+					  table);
 
 #ifdef NEED_GNOMESUPPORT_H
   ok_button = gnome_stock_button (GNOME_STOCK_BUTTON_OK);
 #else /* NEED_GNOMESUPPORT_H */
   ok_button = gtk_button_new_with_label (_("Close"));
 #endif
-  gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
-		      dialog_window_destroy_from_signal, info_dialog);
+  gtk_signal_connect_object (GTK_OBJECT (ok_button), "clicked",
+			     gtk_widget_destroy,
+			     GTK_OBJECT (info_dialog));
 
-  dialog_window_set_button (info_dialog,
-			    ok_button);
-  dialog_window_set_escapable (info_dialog);
+  ghfw_dlg_window_set_button ((GhfwDlgWindow *) info_dialog,
+			      ok_button);
+  ghfw_dlg_window_set_escapable ((GhfwDlgWindow *) info_dialog);
 
   return info_dialog;
 }
@@ -340,7 +341,7 @@ create_info_dialog (GtkWidget *viewer_window, TiffInfo *file_info)
 void
 info_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
 {
-  DialogWindow *info_dialog;
+  GtkWidget *info_dialog;
   TiffInfo *file_info;
 
   if (viewer_data->fax_file)
@@ -348,8 +349,8 @@ info_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
       file_info = ti_get_file_info (viewer_data->fax_file);
       info_dialog = create_info_dialog (viewer_data->viewer_window,
 					file_info);
-      dialog_window_show (info_dialog,
-			  viewer_data->viewer_window);
+      transient_window_show (info_dialog,
+			     viewer_data->viewer_window);
 
       ti_destroy_file_info (file_info);
     }

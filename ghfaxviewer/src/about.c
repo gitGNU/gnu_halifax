@@ -38,9 +38,7 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
-#include <ghfaxwidgets/ghfwgtkutils.h>
-#include <ghfaxwidgets/ghfwdialogwindow.h>
-#include <ghfaxwidgets/ghfwurlzone.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "setup.h"
 #include "i18n.h"
@@ -93,21 +91,21 @@ about_content (GtkWidget *ref_window)
 void
 about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 {
-  DialogWindow *about_dialog;
-  GtkWidget *content, *ok_button;
+  GtkWidget *about_dialog, *content, *ok_button;
 
-  about_dialog = dialog_window_new (_("About..."));
+  about_dialog = ghfw_dlg_window_new (_("About..."));
   content = about_content (viewer_window);
 
-  dialog_window_set_content_with_frame (about_dialog, content);
+  ghfw_dlg_window_set_content_with_frame ((GhfwDlgWindow*) about_dialog,
+					  content);
 
   ok_button = gtk_button_new_with_label (_("Close"));
-  gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
-		      dialog_window_destroy_from_signal,
-		      about_dialog);
+  gtk_signal_connect_object (GTK_OBJECT (ok_button), "clicked",
+			     gtk_widget_destroy,
+			     GTK_OBJECT (about_dialog));
 
-  dialog_window_set_button (about_dialog, ok_button);
-  dialog_window_set_escapable (about_dialog);
+  ghfw_dlg_window_set_button ((GhfwDlgWindow*) about_dialog, ok_button);
+  ghfw_dlg_window_set_escapable ((GhfwDlgWindow*) about_dialog);
 
-  dialog_window_show (about_dialog, viewer_window);
+  transient_window_show (about_dialog, viewer_window);
 }

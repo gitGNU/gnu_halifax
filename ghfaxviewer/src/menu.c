@@ -35,7 +35,7 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
-#include <ghfaxwidgets/ghfwgtkutils.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "tiffimages.h"
 #include "viewer.h"

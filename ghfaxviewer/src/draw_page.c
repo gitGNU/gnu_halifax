@@ -28,8 +28,7 @@
 
 #include <gtk/gtk.h>
 
-#include <ghfaxwidgets/ghfwgtkutils.h>
-#include <ghfaxwidgets/ghfwgdkutils.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "tiffimages.h"
 #include "cursors.h"
