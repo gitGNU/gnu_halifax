@@ -302,5 +302,5 @@ if test x"$XPM2WICO" = x && test $OS = WIN32; then
 	To benefit from its functionalities, please get the latest version
 	of xpm2wico from:
 
-	http://www.ultim.net/~wolfgang/tools])
+	ftp://ftp.gnu.org/gnu/halifax/tools/])
 fi

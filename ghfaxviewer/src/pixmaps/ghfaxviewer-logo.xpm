@@ -1,5 +1,5 @@
 /* XPM */
-static char * ghfaxviewer_logo_new_xpm[] = {
+static char * ghfaxviewer_logo_xpm[] = {
 "351 300 2896 2",
 "  	c None",
 ". 	c #CBCDEA",
