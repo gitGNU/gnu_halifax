@@ -26,6 +26,12 @@
 
 #include <glib.h>
 
+const guint ghfw_major_version = GHFW_MAJOR_VERSION;
+const guint ghfw_minor_version = GHFW_MINOR_VERSION;
+const guint ghfw_micro_version = GHFW_MICRO_VERSION;
+const guint ghfw_binary_age = GHFW_BINARY_AGE;
+const guint ghfw_interface_age = GHFW_INTERFACE_AGE;
+
 gchar*
 ghfw_check_version (guint required_major,
 		    guint required_minor,
