@@ -41,6 +41,7 @@
 #include "viewer.h"
 #include "callbcks.h"
 #include "print.h"
+/* #include "prefs.h" */
 
 #ifdef NEED_GNOMESUPPORT_H
 void
@@ -110,7 +111,7 @@ gnome_menu_bar_new (ViewerData *viewer_data)
 
   GnomeUIInfo settings_menu_uiinfo[] =
   {
-    GNOMEUIINFO_MENU_PREFERENCES_ITEM (NULL, NULL),
+    GNOMEUIINFO_MENU_PREFERENCES_ITEM (prefs_cb, viewer_data->viewer_window),
     GNOMEUIINFO_END
   };
   
@@ -225,7 +226,7 @@ param_menu_new (ViewerData *viewer_data)
   param_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (param_menu_item), param_menu);
 
-  menu_item_new (param_menu, _("Preferences..."), NULL, NULL);
+  menu_item_new (param_menu, _("Preferences..."), prefs_cb, viewer_data->viewer_window);
  
   return param_menu_item;
 }

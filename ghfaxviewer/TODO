@@ -1,14 +1,18 @@
-Before version 1.0 (2001/10/14):
+Before version 1.0 (2001/11/06):
 
 - fix problems specific to IceWM;
+- add a "document" or "file" menu which would permit switching between
+  different fax files.
 - add better handling of paper size in both Win32 and UNIX versions;
 - add paper selection for common types of paper format,
   the viewer currently assumes that the output format is
   the same as the input file;
 - add support for plain G3 format and Winfax format; (->independent image library)
 - integration with libghfl (the GNU HaliFAX Library for transport);
+- write user documentation for ghfaxviewer and programmer's manual for
+  libghfaxwidgets;
 
-CONTINUOUS - checking for memleaks and bugs;
+CONTINUOUS - check for memleaks and bugs;
 
 D - implement Win32 printing;
 D - implement usage of gnome-print;

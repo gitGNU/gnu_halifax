@@ -115,6 +115,7 @@ gtk_screen_setup ()
 void
 vwindow_set_def_coords (GdkWindow *window)
 {
+  gint x, y;
 #ifdef CAN_SAVE_CONFIG
   gdk_window_move_resize (window,
 			  viewer_def_x, viewer_def_y,
@@ -124,6 +125,14 @@ vwindow_set_def_coords (GdkWindow *window)
 		     viewer_def_width,
 		     viewer_def_height);
 #endif
+  gdk_window_get_position (window, &x, &y);
+  g_print ("position: x: %d, y: %d\n", x, y);
+  gdk_window_get_origin (window, &x, &y);
+  g_print ("origin: x: %d, y: %d\n", x, y);
+  gdk_window_get_deskrelative_origin (window, &x, &y);
+  g_print ("deskrelative_origin: x: %d, y: %d\n", x, y);
+  gdk_window_get_root_origin (window, &x, &y);
+  g_print ("root_origin: x: %d, y: %d\n", x, y);
 }
 
 #if !defined (__WIN32__) && defined (ENABLE_NLS)
@@ -147,7 +156,7 @@ save_window_coords (GdkWindow *window)
   gdk_window_get_root_origin (window, &x, &y);
 /*    gdk_window_get_position (window, &x, &y);  */
   gdk_window_get_size (window, &width, &height);
-  g_print ("%d, %d, %d, %d\n", x, y, width, height);
+/*   g_print ("%d, %d, %d, %d\n", x, y, width, height); */
 
   gconf_client_set_int (gc_client,
 			CONFIG_KEY KEY_DEF_X,
@@ -166,8 +175,14 @@ save_window_coords (GdkWindow *window)
 			height,
 			&gerror);
 
-  gdk_window_get_position (window, &x, &y); 
-  g_print ("%d, %d, %d, %d\n", x, y, width, height);
+  gdk_window_get_position (window, &x, &y);
+  g_print ("position: x: %d, y: %d\n", x, y);
+  gdk_window_get_origin (window, &x, &y);
+  g_print ("origin: x: %d, y: %d\n", x, y);
+  gdk_window_get_deskrelative_origin (window, &x, &y);
+  g_print ("deskrelative_origin: x: %d, y: %d\n", x, y);
+  gdk_window_get_root_origin (window, &x, &y);
+  g_print ("root_origin: x: %d, y: %d\n", x, y);
 
 }
 

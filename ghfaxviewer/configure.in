@@ -12,9 +12,9 @@ AM_MAINTAINER_MODE
 AC_ISC_POSIX
 AC_PROG_CC
 
-AC_LIBTOOL_WIN32_DLL
-AC_PROG_LIBTOOL
-AC_SUBST(LIBTOOL_DEPS)
+dnl AC_LIBTOOL_WIN32_DLL
+dnl AC_PROG_LIBTOOL
+dnl AC_SUBST(LIBTOOL_DEPS)
 
 dnl AM_PROG_CC_STDC
 dnl AC_HEADER_STDC
@@ -229,8 +229,8 @@ if test "x$want_gnome" = "xyes"; then
       fi
 
       USING_GNOME="yes"
-      CFLAGS="$CFLAGS `gnome-config --cflags gnomeui`"
-      LDFLAGS="$LDFLAGS `gnome-config --libs gnomeui`"
+      CFLAGS="$CFLAGS `gnome-config --cflags gnomeui gdk_pixbuf`"
+      LDFLAGS="$LDFLAGS `gnome-config --libs gnomeui gdk_pixbuf`"
       PIXMAPS_DIR="`gnome-config --datadir`/pixmaps/ghfaxviewer"
       GNOME_GRAPH_APP_DIR="`gnome-config --datadir`/gnome/apps/Graphics"
 

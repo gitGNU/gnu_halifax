@@ -10,11 +10,13 @@ endif
 pixmapsdir = @PIXMAPS_DIR@
 
 if GNOME
-pixmaps_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm
+pixmaps_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm \
+	       viewer_prefs.xpm printer_prefs.xpm
 else
 pixmaps_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm \
 	      printer.xpm left90.xpm right90.xpm reverse.xpm \
-              right_arrow.xpm left_arrow.xpm zoom_in.xpm zoom_out.xpm
+              right_arrow.xpm left_arrow.xpm zoom_in.xpm zoom_out.xpm \
+	      viewer_prefs.xpm printer_prefs.xpm
 endif
 
 EXTRA_DIST = hand-closed-data.xbm hand-closed-mask.xbm \

@@ -30,6 +30,8 @@ void reverse_cb (GtkWidget *widget, ViewerData *viewer_data);
 void right90_cb (GtkWidget *widget, ViewerData *viewer_data);
 void left90_cb (GtkWidget *widget, ViewerData *viewer_data);
 
+void prefs_cb (GtkWidget *widget, GtkWidget *viewer_window);
+
 void widget_close_cb (GtkWidget *widget, ViewerData *viewer_data);
 
 gboolean progress_update (guint value, guint total, GhfwProgressWindow *progress_window);
