@@ -25,8 +25,10 @@
 
 #include "gtkutils.h"
 
-#include "pixmaps/up_arrow.xpm"
-#include "pixmaps/down_arrow.xpm"
+#include "pixmaps/layout_up_arrow.xpm"
+#include "pixmaps/layout_down_arrow.xpm"
+#include "pixmaps/layout_left_arrow.xpm"
+#include "pixmaps/layout_right_arrow.xpm"
 
 #define ADJUSTMENT_STEP 10
 #define ADJUSTMENT_DELAY 50
@@ -217,7 +219,6 @@ void win32_layout_changed_cb (GtkWidget *widget, LayoutData *layout_data)
   gtk_widget_size_allocate (layout_data->gtk_layout,
 			    &(layout_data->gtk_layout->allocation));
 }
-#endif
 
 static gint
 mouse_scroll_event_cb (GtkWidget *ref_widget,
@@ -319,19 +320,15 @@ widget_mouse_press_realize_cb (GtkWidget *widget, LayoutData *layout_data)
 #endif /* __WIN32__ */
 
 static LayoutData *
-layout_data_create (GtkWidget *ref_widget, GtkAdjustment *adjustment)
+layout_data_create (GtkWidget *ref_widget,
+		    GtkAdjustment *adjustment)
 {
-  GtkWidget *pixmap;
   LayoutData *layout_data;
 
   layout_data = g_malloc (sizeof (LayoutData));
   layout_data->adjustment = adjustment;
 
   layout_data->up = gtk_button_new ();
-  pixmap = pixmap_from_xpm_data (ref_widget,
-				 up_arrow_xpm);
-  gtk_container_add (GTK_CONTAINER (layout_data->up),
-		     pixmap);
   gtk_button_set_relief (GTK_BUTTON (layout_data->up), GTK_RELIEF_HALF);
   gtk_signal_connect (GTK_OBJECT (layout_data->up), "pressed",
 		      up_pressed_cb, layout_data);
@@ -339,10 +336,6 @@ layout_data_create (GtkWidget *ref_widget, GtkAdjustment *adjustment)
 		      button_released_cb, layout_data);
 
   layout_data->down = gtk_button_new ();
-  pixmap = pixmap_from_xpm_data (ref_widget,
-				 down_arrow_xpm);
-  gtk_container_add (GTK_CONTAINER (layout_data->down),
-		     pixmap);
   gtk_button_set_relief (GTK_BUTTON (layout_data->down), GTK_RELIEF_HALF);
   gtk_signal_connect (GTK_OBJECT (layout_data->down), "pressed",
 		      down_pressed_cb, layout_data);
@@ -353,35 +346,83 @@ layout_data_create (GtkWidget *ref_widget, GtkAdjustment *adjustment)
 }
 
 static void
+put_icons_on_buttons (GtkWidget *ref_widget, LayoutData *layout_data)
+{
+  GtkWidget *pixmap;
+
+  if (layout_data->orientation
+      == GTK_ORIENTATION_HORIZONTAL)
+    {
+      pixmap = pixmap_from_xpm_data (ref_widget,
+				     layout_left_arrow_xpm);
+      gtk_container_add (GTK_CONTAINER (layout_data->up),
+			 pixmap);
+      pixmap = pixmap_from_xpm_data (ref_widget,
+				     layout_right_arrow_xpm);
+      gtk_container_add (GTK_CONTAINER (layout_data->down),
+			 pixmap);
+    }
+  else
+    {
+      pixmap = pixmap_from_xpm_data (ref_widget,
+				     layout_up_arrow_xpm);
+      gtk_container_add (GTK_CONTAINER (layout_data->up),
+			 pixmap);
+      pixmap = pixmap_from_xpm_data (ref_widget,
+				     layout_down_arrow_xpm);
+      gtk_container_add (GTK_CONTAINER (layout_data->down),
+			 pixmap);
+    }
+}
+
+static void
 layout_set_width (LayoutData *layout_data, gint width)
 {
-  layout_data->width = width;
+  if (layout_data->orientation
+      == GTK_ORIENTATION_HORIZONTAL)
+    {
+      gtk_widget_set_usize (layout_data->up, -1, width);
+      gtk_widget_set_usize (layout_data->down, -1, width);
+      gtk_widget_set_usize (layout_data->gtk_layout,
+			    -1, width);
+    }
+  else
+    {
+      gtk_widget_set_usize (layout_data->up, width, -1);
+      gtk_widget_set_usize (layout_data->down, width, -1);
+      gtk_widget_set_usize (layout_data->gtk_layout,
+			    width, -1);
+    }
 
-  gtk_widget_set_usize (layout_data->up, width, -1);
-  gtk_widget_set_usize (layout_data->down, width, -1);
-  gtk_widget_set_usize (layout_data->gtk_layout,
-			width, -1);
+  layout_data->width = width;
 }
 
 GtkWidget *
-layout_new (GtkWidget *ref_widget, gint spacing, gint width)
+layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
+	    gint spacing, gint width)
 {
-  GtkWidget *vbox, *gtk_layout;
+  GtkWidget *box, *gtk_layout;
   GtkObject *adjustment;
   LayoutData *layout_data;  
 
   adjustment = gtk_adjustment_new (0.0, 0.0, 10.0, 1.0, 2.0, 0.0);
 
-  vbox = gtk_vbox_new (FALSE, 0);
+  if (orientation == GTK_ORIENTATION_HORIZONTAL)
+    box = gtk_hbox_new (FALSE, 0);
+  else
+    box = gtk_vbox_new (FALSE, 0);
 
-  layout_data = layout_data_create (ref_widget, (GtkAdjustment*) adjustment);
+  layout_data = layout_data_create (ref_widget,
+				    (GtkAdjustment*) adjustment);
+
+
   gtk_layout = gtk_layout_new (NULL, GTK_ADJUSTMENT (adjustment));
 
-  gtk_box_pack_start (GTK_BOX (vbox), layout_data->up,
+  gtk_box_pack_start (GTK_BOX (box), layout_data->up,
 		      FALSE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), gtk_layout,
+  gtk_box_pack_start (GTK_BOX (box), gtk_layout,
 		      TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), layout_data->down,
+  gtk_box_pack_start (GTK_BOX (box), layout_data->down,
 		      FALSE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT (gtk_layout),
@@ -399,9 +440,12 @@ layout_new (GtkWidget *ref_widget, gint spacing, gint width)
   layout_data->up_pressed = FALSE;
   layout_data->down_pressed = FALSE;
   layout_data->timeout_id = 0;
-  layout_set_width (layout_data, width);
+  layout_data->orientation = orientation;
 
-  gtk_object_set_data_full (GTK_OBJECT (vbox),
+  layout_set_width (layout_data, width);
+  put_icons_on_buttons (ref_widget, layout_data);
+
+  gtk_object_set_data_full (GTK_OBJECT (box),
 			    "_layout_data", layout_data,
 			    g_free);
 
@@ -410,7 +454,7 @@ layout_new (GtkWidget *ref_widget, gint spacing, gint width)
   		      win32_layout_changed_cb, layout_data);
 #endif
 
-  return vbox;
+  return box;
 }
 
 static gboolean
@@ -499,7 +543,7 @@ setup_usr_btn (GtkWidget *button, LayoutData *layout_data)
 }
 
 void
-layout_add_button (GtkWidget *layout, GtkWidget *button)
+layout_add_widget (GtkWidget *layout, GtkWidget *widget)
 {
   LayoutData *layout_data;
   GtkWidget *gtk_layout;
@@ -510,19 +554,38 @@ layout_add_button (GtkWidget *layout, GtkWidget *button)
 				     "_layout_data");
   gtk_layout = layout_data->gtk_layout;
 
-  gtk_widget_get_child_requisition (button, &requisition);
+  gtk_widget_get_child_requisition (widget, &requisition);
 
-  x = (gtk_layout->allocation.width - requisition.width) / 2;
-  layout_data->height += layout_data->spacing / 2;
+  if (layout_data->orientation
+      == GTK_ORIENTATION_HORIZONTAL)
+    {
+      x = (gtk_layout->allocation.height - requisition.height) / 2;
+      layout_data->height += layout_data->spacing / 2;
 
-  setup_usr_btn (button, layout_data);
+      gtk_layout_put (GTK_LAYOUT (gtk_layout),
+		      widget, layout_data->height, x);
+       
+      layout_data->height += requisition.width + layout_data->spacing / 2;
 
-  gtk_layout_put (GTK_LAYOUT (gtk_layout),
-		  button, x, layout_data->height);
+      gtk_layout_set_size (GTK_LAYOUT (gtk_layout),
+			   layout_data->width, layout_data->height);
+    }
+  else
+    {
+      x = (gtk_layout->allocation.width - requisition.width) / 2;
+      layout_data->height += layout_data->spacing / 2;
 
-  layout_data->height += requisition.height + layout_data->spacing / 2;
-  gtk_layout_set_size (GTK_LAYOUT (gtk_layout),
-		       layout_data->height, layout_data->width);
+      gtk_layout_put (GTK_LAYOUT (gtk_layout),
+		      widget, x, layout_data->height);
+
+      layout_data->height += requisition.height + layout_data->spacing / 2;
+      
+      gtk_layout_set_size (GTK_LAYOUT (gtk_layout),
+			   layout_data->height, layout_data->width);
+
+    }
+
+  setup_usr_btn (widget, layout_data);
 }
 
 static void

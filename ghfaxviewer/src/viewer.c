@@ -374,7 +374,10 @@ viewer_window_realize_cb (GtkWidget *viewer_window, ViewerData *viewer_data)
   viewer_set_cmd_widgets_sensitive (viewer_data, FALSE);
   gtk_widget_hide (viewer_data->page_area);
 
-  viewer_data->thumbs_layout = layout_new (viewer_window, 24, 80);
+  viewer_data->thumbs_layout = layout_new (viewer_window,
+					   GTK_ORIENTATION_VERTICAL,
+/* 					   GTK_ORIENTATION_HORIZONTAL, */
+					   24, 80);
   layout_set_bg_color (viewer_data->thumbs_layout,
 		       31488, 32000, 31488);
 

@@ -183,7 +183,7 @@ add_thumbs (ViewerData *viewer_data)
 				 cur_page, th_height, 48);
       ti_unload_fax_page (cur_page);
 
-      layout_add_button (viewer_data->thumbs_layout, cur_button);
+      layout_add_widget (viewer_data->thumbs_layout, cur_button);
       gtk_widget_show (cur_button);
 
       *b_arr_ptr++ = cur_button;

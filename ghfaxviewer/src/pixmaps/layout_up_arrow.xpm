@@ -1,5 +1,5 @@
 /* XPM */
-static char * up_arrow_xpm[] = {
+static char * layout_up_arrow_xpm[] = {
 "12 12 8 1",
 " 	c None",
 ".	c #8E8A8E",

@@ -24,10 +24,11 @@
 #ifndef THUMBLAYOUT_H
 #define THUMBLAYOUT_H
 
-GtkWidget *layout_new (GtkWidget *ref_widget, gint spacing, gint width);
+GtkWidget *layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
+		       gint spacing, gint width);
 void layout_reset (GtkWidget *layout);
 
-void layout_add_button (GtkWidget *layout, GtkWidget *button);
+void layout_add_widget (GtkWidget *layout, GtkWidget *widget);
 void layout_set_bg_color (GtkWidget *layout,
 			  gushort red, gushort green, gushort blue);
 
