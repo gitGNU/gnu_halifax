@@ -1,3 +1,10 @@
+2001-05-20  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/thumblayout.c: new file along with thumblayout.h. It creates
+	a pseudo widget with a scrolling container for the thumbnails.
+	Written to be "portable" to other projects. GAL has a similar
+	widget, but since I want to keep compatibility with GTK+...
+
 2001-05-15  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/callbcks.c (close_file_cb): this function was moved from

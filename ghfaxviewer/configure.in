@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(src/cursors.c)
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(ghfaxviewer, 0.22.0)
+AM_INIT_AUTOMAKE(ghfaxviewer, 0.29.9)
 
 AM_MAINTAINER_MODE
 
@@ -16,8 +16,6 @@ AC_EXEEXT
 AC_PROG_INSTALL
 
 ALL_LINGUAS="de fr pl zh_TW.Big5"
-
-CFLAGS=""
 
 MANPAGES=ghfaxviewer.1
 
@@ -38,6 +36,10 @@ fi
 AC_SUBST(SUPPSUBDIRS)
 
 AC_PATH_PROG(LIBTOOL, "libtool")
+
+AC_ARG_ENABLE(debug,
+  [  --enable-debug          warnings, debugging codes and messages],
+    debug="$enableval", debug="no")
 
 # FreeBSD hacks
 if test "`uname`" = "FreeBSD"; then
@@ -233,22 +235,20 @@ fi
 
 deps="$TIFF_LIBS"
 
-AC_ARG_ENABLE(debug,
-  [  --enable-debug          warnings, debugging codes and messages],
-    debug="$enableval", debug="no")
-
+AC_MSG_CHECKING(whether debugging is requested)
 if test "$debug" = "yes"; then
-    echo Debugging is enabled
-    CFLAGS="-Wall $CFLAGS -ggdb3 -O0"
+    AC_MSG_RESULT(yes)
+    CFLAGS="-Wall -ggdb3 -O0"
     if test "$OS" = "GNU"; then
         CFLAGS="-ggdb3 $CFLAGS"
     else
-    	WIN32_LIBS="$WIN32_LIBS -lgdi32"
+    	WIN32_LIBS="-lgdi32 $WIN32_LIBS"
     fi
 else
+    AC_MSG_RESULT(no)
     if test "$OS" = "WIN32"; then
     	CFLAGS="-mwindows $CFLAGS"
-	WIN32_LIBS="$WIN32_LIBS -mwindows"
+	WIN32_LIBS="-mwindows $WIN32_LIBS"
     fi
 fi
 
@@ -287,4 +287,3 @@ if test x"$XPM2WICO" = x && test $OS = WIN32; then
 
 	http://www.ultim.net/~wolfgang/tools])
 fi
-
