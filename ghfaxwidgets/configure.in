@@ -1,0 +1,237 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.50)
+AC_INIT(src/ghfwtest.c)
+
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(ghfaxwidgets, 0.0.0)
+
+AC_CANONICAL_HOST
+
+AM_MAINTAINER_MODE
+
+AC_ISC_POSIX
+AC_PROG_CC
+
+AC_LIBTOOL_WIN32_DLL
+AC_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+
+dnl AM_PROG_CC_STDC
+dnl AC_HEADER_STDC
+dnl AC_C_CONST
+dnl AC_C_INLINE
+
+AC_EXEEXT
+
+case $host_os in
+  *cygwin* ) CYGWIN=yes;
+             CYGWIN=no;;
+  *mingw32* ) MINGW32=yes;
+              MINGW32=no;;
+          * ) MINGW32=no;
+              CYGWIN=no;;
+esac
+
+AC_PROG_INSTALL
+
+WINDOWS_DETECTED=no
+
+ALL_LINGUAS="de fr pl zh_TW.Big5"
+
+MANPAGES=ghfaxviewer.1
+
+# are we configured from halifax parent dir or from independent ghfaxviewer
+# subdir ?
+if test "x$cache_file" == "x.././config.cache"; then
+  SUPPSUBDIRS= 
+  docsubdir=no
+  if test ! -f docs/Makefile.in; then
+    mkdir docs
+    echo "install clean distclean dist:" > docs/Makefile.in
+  fi
+else
+  SUPPSUBDIRS=docs
+  docsubdir=yes
+fi
+
+AC_SUBST(SUPPSUBDIRS)
+
+AC_ARG_ENABLE(debug,
+  [  --enable-debug          warnings, debugging codes and messages],
+    debug="$enableval", debug="no")
+
+# FreeBSD hacks
+if test "`uname`" = "FreeBSD"; then
+  AC_MSG_WARN([Compiling for FreeBSD])
+  if test -x /usr/X11R6/bin/gtk12-config; then
+    GTK_CONFIG=/usr/X11R6/bin/gtk12-config
+  fi
+  if test -x /usr/local/bin/glib12-config; then
+    GLIB_CONFIG=/usr/local/bin/glib12-config
+  fi 
+fi
+
+if test "$ac_cv_exeext" = ".exe"; then
+  WINDOWS_DETECTED=yes;
+fi
+
+case $ac_cv_build in
+  *cygwin*)
+    CYGWIN=yes
+    WINDOWS_DETECTED=yes;
+    ;;
+  *mingw*)
+    MINGW32=yes
+    WINDOWS_DETECTED=yes;
+    ;;
+esac
+
+if test "$WINDOWS_DETECTED" = yes; then
+# under Windows
+OS=WIN32
+AC_MSG_WARN([It seems we are compiling for WIN32...])
+window_system=yes;
+
+AC_MSG_CHECKING([how we adapt to gcc])
+GCC_VERSION="`gcc --version`"
+if test $? != 0; then
+  AC_MSG_ERROR([Your gcc executable couldn't be found.])
+else
+  case $GCC_VERSION in
+    2.95*) AC_MSG_RESULT([-fnative-struct will be used])
+           CFLAGS="$CFLAGS -fnative-struct"
+	   ;;
+    egcs*) AC_MSG_RESULT([using egcs (GCC 2.95.2 is recommended)])
+           ;;
+    *) AC_MSG_ERROR([What version of GCC are you using dude?!])
+  esac
+fi
+
+AC_MSG_CHECKING([which version of the GCC port you are using])
+if test "$CYGWIN" = yes; then
+	AC_MSG_RESULT([using cygwin, CFLAGS+=-mno-cygwin])
+	CFLAGS="$CFLAGS -mno-cygwin -I$includedir/w32api -I$includedir/mingw"
+	WINDRES_INCLUDE_DIR="$includedir/w32api"
+else
+	AC_MSG_RESULT([using mingw])
+	WINDRES_INCLUDE_DIR=$includedir
+fi
+
+AC_CHECK_TOOL(WINDRES, windres, false)
+WINDRES="$WINDRES"
+
+AC_MSG_WARN(*** libtiff and GTK assumed to be present)
+GTK_LIBS="-lgtk -lgdk -lglib"
+WIN32_LIBS="-lcomdlg32 -lgnu-intl"
+
+USE_INCLUDED_LIBINTL="no"
+BUILD_INCLUDED_LIBINTL="no"
+USE_NLS="yes"
+CATALOGS="`for cats in $ALL_LINGUAS; do echo -n "$cats.gmo "; done`"
+GMSGFMT="msgfmt"
+
+AC_PATH_PROG(XGETTEXT, "xgettext")
+AC_PATH_PROG(GETTEXT, "gettext")
+AC_PATH_PROG(MSGFMT, "msgfmt")
+AC_PATH_PROG(GENCAT, "gencat")
+AC_PATH_PROG(MSGMERGE, "msgmerge")
+
+AC_SUBST(WINDRES_INCLUDE_DIR)
+AC_SUBST(USE_INCLUDED_LIBINTL)
+AC_SUBST(BUILD_INCLUDED_LIBINTL)
+AC_SUBST(USE_NLS)
+AC_SUBST(CATALOGS)
+AC_SUBST(XGETTEXT)
+AC_SUBST(GETTEXT)
+AC_SUBST(MSGFMT)
+AC_SUBST(GMSGFMT)
+AC_SUBST(GENCAT)
+AC_SUBST(MSGMERGE)
+AC_SUBST(WIN32_LIBS)
+
+AC_DEFINE(ENABLE_NLS)
+AC_DEFINE(HAVE_GETTEXT)
+AC_DEFINE(HAVE_LC_MESSAGES)
+
+else
+# under GNU
+OS=GNU
+WIN32_LIBS=
+
+AM_GNU_GETTEXT
+
+AC_PATH_X
+window_system=$have_x;
+
+GNOME_INIT
+GNOME_COMPILE_WARNINGS
+GNOME_X_CHECKS
+
+dnl ******************************
+dnl gnome-libs checking
+dnl ******************************
+if test "x$want_gnome" = "xyes"; then
+   AC_MSG_CHECKING([for gnome-libs >= 1.0.55])
+   if gnome-config --version > /dev/null 2>&1; then
+      AC_MSG_RESULT([found])
+
+      USING_GNOME="yes"
+      PIXMAPS_DIR="`gnome-config --datadir`/pixmaps/ghfaxwidgets"
+   else
+      PIXMAPS_DIR="$datadir/pixmaps/ghfaxwidgets"
+
+      AC_MSG_WARN([Did not find gnome-libraries, falling back on GTK+])
+dnl Checks for libraries.
+      AM_PATH_GLIB([1.2.0],[],[
+	   AC_MSG_ERROR([You need GLib installed.])
+	   ])	
+      AM_PATH_GTK([1.2.8],[],[
+	   AC_MSG_ERROR([Argh... where did you get your system from ?!])
+	   ])
+   fi
+else
+   PIXMAPS_DIR="$datadir/pixmaps/ghfaxviewer"
+
+   AC_MSG_WARN([GNOME support disabled, falling back on GTK+])
+   AM_PATH_GLIB([1.2.0],[],[
+   	   AC_MSG_ERROR([You need GLib installed.])
+	   ])
+   AM_PATH_GTK([1.2.8],[],[
+   	   AC_MSG_ERROR([Argh... where did you get your system from ?!])
+	   ])
+fi
+fi
+
+AC_MSG_CHECKING([whether debugging is requested])
+if test "$debug" = "yes"; then
+    AC_MSG_RESULT([yes])
+    CFLAGS="$CFLAGS -Wall -O0 -ggdb3"
+    if test "$OS" = "WIN32"; then
+    	WIN32_LIBS="-lgdi32 $WIN32_LIBS"
+    fi
+else
+    AC_MSG_RESULT([no])
+    if test "$OS" = "WIN32"; then
+    	CFLAGS="-mwindows $CFLAGS"
+	WIN32_LIBS="-mwindows $WIN32_LIBS"
+    fi
+fi
+
+AC_SUBST(PIXMAPS_DIR)
+AC_SUBST(MANPAGES)
+AC_SUBST(RC_ICON_DIRECTIVE)
+
+AM_CONDITIONAL(TARGET_GNU, test $OS = GNU)
+AM_CONDITIONAL(TARGET_WIN32, test $OS = WIN32)
+AM_CONDITIONAL(GNOME, test x"$USING_GNOME" = xyes)
+
+AC_OUTPUT([
+Makefile
+intl/Makefile
+docs/Makefile
+src/Makefile
+src/pixmaps/Makefile
+po/Makefile.in
+po/Makefile
+])
+
