@@ -47,9 +47,6 @@ struct _ViewerData
   GtkWidget *bb_buttons[4];
   GtkWidget *ut_buttons[5]; 
 
-  /* print dialog */
-  GtkWidget *zoom_entry;
-  
   /* thumbnails */
   GtkWidget *thumbs_fixed;
   GtkWidget **th_buttons;
