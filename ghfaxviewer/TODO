@@ -1,15 +1,11 @@
 Before version 1.0 (2001/05/06):
 
-- add support for plain G3 format and Winfax format; (->independent image library)
 - add better handling of paper size in both Win32 and UNIX versions;
 - add paper selection for common types of paper format,
   the viewer currently assumes that the output format is
   the same as the input file;
-- fix problems and conflicts due to different BSD lpr versions and
-  behaviours (what a standard)
+- add support for plain G3 format and Winfax format; (->independent image library)
 - integration with libghfl (the GNU HaliFAX Library for transport);
-- LPSTAT_COMMAND and LPC_COMMAND are dirty static macros that should be
-  replaced with dynamic functions to handle the printing system.
 
 CONTINUOUS - checking for memleaks and bugs;
 
@@ -25,4 +21,8 @@ D - add progress dialogs;
 D - make dialogs rely on the DialogWindow pseudo-widget (gtkutils.c)
 D - all the relevant buttons and menus should be enabled/disabled when
     it is visually logical to do so (file opened/closed)
+D - fix problems and conflicts due to different BSD lpr versions and
+    behaviours (what a standard)
+D - LPSTAT_COMMAND and LPC_COMMAND are dirty static macros that should be
+    replaced with dynamic functions to handle the printing system.
 
