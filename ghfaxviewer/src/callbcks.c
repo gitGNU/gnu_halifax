@@ -149,3 +149,9 @@ void widget_close_cb (GtkWidget *widget, ViewerData *viewer_data)
 #endif
   gtk_widget_destroy (viewer_data->viewer_window);
 }
+
+void
+close_file_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
+{
+  fax_viewer_open_file (viewer_data, NULL);  
+}

@@ -1,3 +1,13 @@
+2001-05-15  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/callbcks.c (close_file_cb): this function was moved from
+	fileopen.c to here.
+
+	* src/fileopen.c (file_dlg_ok_cb): file_name was never freed.
+	(file_dlg_ok_cb): deletion of fail_list and fail_reason_list
+	                  (reminiscence from the past)
+	
+
 2001-05-10  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/gtkutils.c: treat all widgets as GtkWidget and not as their

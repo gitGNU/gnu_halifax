@@ -38,12 +38,9 @@ file_dlg_ok_cb (GtkWidget *ok_button, ViewerData *viewer_data)
 #ifdef CAN_SAVE_CONFIG
   gchar *last_directory;
 #endif
-  GSList *fail_list, *fail_reason_list;
 
   file_name = g_strdup (gtk_file_selection_get_filename
 			(GTK_FILE_SELECTION (viewer_data->file_dlg)));
-  fail_list = NULL;
-  fail_reason_list = NULL;
 
   if (file_name)
     {
@@ -54,6 +51,7 @@ file_dlg_ok_cb (GtkWidget *ok_button, ViewerData *viewer_data)
       save_last_directory (last_directory);
       g_free (last_directory);
 #endif
+      g_free (file_name);
     }
 }
 
@@ -97,10 +95,4 @@ void
 file_dialog_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
 {
   file_dialog (viewer_data);
-}
-
-void
-close_file_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
-{
-  fax_viewer_open_file (viewer_data, NULL);  
 }
