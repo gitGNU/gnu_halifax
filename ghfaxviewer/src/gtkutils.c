@@ -28,6 +28,9 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#ifdef __WIN32__
+#include <gdk/win32/gdkwin32.h>
+#endif
 
 #include "setup.h"
 
@@ -134,11 +137,30 @@ transient_destroy_cb (GtkWidget *window, gpointer data)
   decrease_win_count ();
 }
 
+#ifdef __WIN32__
+void win32gdk_window_set_transient_for (GdkWindow *window, GdkWindow *parent)
+{
+  HWND window_id, parent_id;
+  LONG style;
+
+  window_id = GDK_DRAWABLE_XID (window);
+  parent_id = GDK_DRAWABLE_XID (parent);
+
+  style = GetWindowLong (window_id, GWL_STYLE);
+  style |= WS_POPUP;
+
+  SetWindowLong (window_id, GWL_STYLE, style);
+  SetWindowLong (window_id, GWL_HWNDPARENT, (LONG) parent_id);
+}
+#endif
+
 void
 transient_window_show (GtkWidget *transient, GtkWidget *parent)
 {
+#ifndef __WIN32__
   gtk_window_set_transient_for (GTK_WINDOW (transient),
 				GTK_WINDOW (parent));
+#endif
 
   if (((GtkWindow *) parent)->modal)
     {
@@ -154,9 +176,15 @@ transient_window_show (GtkWidget *transient, GtkWidget *parent)
 		      transient_destroy_cb, NULL);
 
   gtk_widget_show_all (transient);
+
 #ifndef __WIN32__
   window_set_icon (transient,
 		   PIXMAP ("ghfaxviewer-icon.xpm"));
+#else
+  /* Have to call this here because the window is not realized at the
+     beginning of this function. With the next version of GTK+/GDK for
+     Windows we won't need this anymore. */
+  win32gdk_window_set_transient_for (transient->window, parent->window);
 #endif
 
   increase_win_count ();
@@ -372,6 +400,11 @@ handle_box_transient_cb (GtkHandleBox *handle_box, GtkWidget *hb_child,
   gtk_signal_disconnect_by_func (GTK_OBJECT (handle_box),
 				 GTK_SIGNAL_FUNC (handle_box_transient_cb),
 				 parent);
+#ifndef __WIN32__
   gdk_window_set_transient_for (handle_box->float_window,
 				parent);
+#else
+  win32gdk_window_set_transient_for (handle_box->float_window,
+				parent);
+#endif
 }

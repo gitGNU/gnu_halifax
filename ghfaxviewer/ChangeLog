@@ -2,6 +2,9 @@
 
 	* src/gtkutils.c: treat all widgets as GtkWidget and not as their
 	real type (GtkButton, ...).
+	(win32gdk_window_set_transient_for): new function to really
+	transientize our GdkWindow, waiting for a new version of GTK+ (>
+	Dec 2000)...
 
 	* src/ps_print.c (print_cb): when the printing system is
 	unavailable, display an error dialog only once and still permit

@@ -130,7 +130,8 @@ msgid "About..."
 msgstr "À propos..."
 
 #: src/about.c:47
-msgid "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
+#, fuzzy
+msgid "Copyright (C) 2000,2001 Wolfgang Sourdeau"
 msgstr "Copyright © 2000, 2001 Wolfgang Sourdeau"
 
 #: src/about.c:49
