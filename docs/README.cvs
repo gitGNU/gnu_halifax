@@ -1,5 +1,6 @@
 GNU HaliFAX and CVS
 -------------------
+(by Wolfgang Sourdeau, 04/13/2001)
 
 
 Downloading GNU HaliFAX
@@ -27,6 +28,12 @@ ghfaxviewer and gfax are not yet interdependent. To do this, just type:
 
 cvs -z3 co [submodulename]
 
+To receive subsequent updates, when you will have downloaded your
+chosen module, just issue...
+cvs -z3 update
+... from the module directory. This way you can avoid reloading the
+whole archive each time.
+
 
 Making patches
 --------------
@@ -50,7 +57,7 @@ If you use emacs, put those lines in you ~/.emacs file:
   (auto-fill-mode 1))
 (global-set-key "\C-c\S-a" 'changelog-virtual-hook)
 
-This will enable the Control-Shift-A key sequence to the function described
+This will enable the Control-C Shift-A key sequence to the function described
 above. I have chosen that combination to not clash with others, but feel free
 to modify the indicated sequence if you need or would like to do so.
 

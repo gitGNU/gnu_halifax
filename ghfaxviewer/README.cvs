@@ -28,6 +28,12 @@ ghfaxviewer and gfax are not yet interdependent. To do this, just type:
 
 cvs -z3 co [submodulename]
 
+To receive subsequent updates, when you will have downloaded your
+chosen module, just issue...
+cvs -z3 update
+... from the module directory. This way you can avoid reloading the
+whole archive each time.
+
 
 Making patches
 --------------

@@ -1,7 +1,8 @@
 2001-04-13  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* README.cvs: added an explanation on how to obtain GNU HaliFAX
-	from subversions.gnu.org + instructions on how to submit patches
+	from subversions.gnu.org + instructions on how to submit patches;
+	added a note about cvs update.
 
 2001-04-12  Wolfgang Sourdeau  <wolfgang@contre.com>
 
