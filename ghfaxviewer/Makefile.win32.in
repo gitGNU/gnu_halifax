@@ -6,7 +6,7 @@ default:
 	@echo "to automate the Win32 distribution packaging."
 
 DIST_ARCHIVE = @PACKAGE@-@VERSION@-win32.bin.tar.gz
-DIST_DOCFILES = NEWS ChangeLog COPYING docs/README docs/README.cvs HACKING AUTHORS
+DIST_DOCFILES = TODO NEWS ChangeLog COPYING docs/README docs/README.cvs HACKING AUTHORS
 ICONS = printer.xpm left90.xpm right90.xpm reverse.xpm \
 	right_arrow.xpm left_arrow.xpm \
         zoom_in.xpm zoom_out.xpm info.xpm \
