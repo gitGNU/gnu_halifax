@@ -66,15 +66,18 @@ reset_timeout (LayoutData *layout_data)
 
       grab_widget = gtk_grab_get_current ();
       if (grab_widget)
-	{
-	  gtk_button_released ((GtkButton*) grab_widget);
-	  gtk_grab_remove (grab_widget);
-	}
-
+	gtk_grab_remove (grab_widget);
       if (gdk_pointer_is_grabbed ())
-	gdk_pointer_ungrab (GDK_CURRENT_TIME);
+	gdk_keyboard_ungrab (GDK_CURRENT_TIME);
     }
 }
+
+/* static void */
+/* button_queue_hide (GtkWidget *button) */
+/* { */
+/*   gtk_signal_connect_object ((GtkObject*) button, "released", */
+/* 			     gtk_widget_hide, (GtkObject*) button); */
+/* } */
 
 static void
 refresh_buttons (LayoutData *layout_data)
@@ -93,8 +96,9 @@ refresh_buttons (LayoutData *layout_data)
     {
       if (condition) 
 	{
-	  reset_timeout (layout_data);
+	  gtk_button_released ((GtkButton*) layout_data->up);
 	  gtk_widget_hide (layout_data->up);
+	  reset_timeout (layout_data);
 	  gtk_adjustment_set_value (adjustment, adjustment->value - up_height);
 	  up_height = 0;
 	}
@@ -114,8 +118,9 @@ refresh_buttons (LayoutData *layout_data)
     {
       if (condition)
         {
+	  gtk_button_released ((GtkButton*) layout_data->down);
+	  gtk_widget_hide (layout_data->down);
 	  reset_timeout (layout_data);
-          gtk_widget_hide (layout_data->down);
         }
     }
   else
@@ -373,6 +378,8 @@ check_button_pos (GtkWidget *button, LayoutData *layout_data)
     gtk_adjustment_set_value (adjustment, (adjustment->value
 					   + delta
 					   - button_delta));
+
+  refresh_buttons (layout_data);
 
   return FALSE;
 }
