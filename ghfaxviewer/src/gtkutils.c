@@ -106,6 +106,23 @@ pixmap_from_xpm (GtkWidget *ref_widget, gchar *file_name)
   return gtk_pixmap;
 }
 
+GtkWidget *
+pixmap_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data)
+{
+  GtkWidget *gtk_pixmap;
+  GdkPixmap *pixmap;
+  GdkBitmap *mask;
+
+  pixmap = gdk_pixmap_create_from_xpm_d
+    (ref_widget->window, &mask,
+     &(ref_widget->style->bg[GTK_STATE_NORMAL]),
+     xpm_data);
+
+  gtk_pixmap = gtk_pixmap_new (pixmap, mask);
+
+  return gtk_pixmap;
+}
+
 #ifndef __WIN32__
 void
 window_set_icon (GtkWidget* ref_widget, gchar *file_name)
@@ -389,6 +406,23 @@ back_gtkstyle (GtkRcStyle *style, GtkStateType state,
   color.blue = blue;
   style->bg[state] = color;
   style->color_flags[state] = GTK_RC_BG;
+}
+
+gint
+widget_height (GtkWidget *widget)
+{
+  gint height;
+  GtkRequisition requisition;
+
+  if (GTK_WIDGET_VISIBLE (widget))
+    {
+      gtk_widget_get_child_requisition (widget, &requisition);
+      height = requisition.height;
+    }
+  else
+    height = 0;
+
+  return height;
 }
 
 /* Handle-box transientization */

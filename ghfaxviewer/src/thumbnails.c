@@ -34,6 +34,7 @@
 #include "draw_page.h"
 #include "errors.h"
 #include "progress.h"
+#include "thumblayout.h"
 #include "gtkutils.h"
 
 typedef struct _DrawReqData DrawReqData;
@@ -42,7 +43,6 @@ struct _DrawReqData
 {
   ViewerData *viewer_data;
   FaxPage *requested_page;
-/*   GtkPixmap *pixmap; */
 };
 
 inline static gint
@@ -71,42 +71,6 @@ draw_req_page_cb (GtkWidget *widget, DrawReqData *request)
   draw_page (request->viewer_data);
   
   return FALSE;
-}
-
-static void
-thumbs_fixed_update_size (ViewerData *viewer_data)
-{
-  FaxPage *cur_page;
-  guint height;
-
-  height = 10;
-  cur_page = viewer_data->fax_file->first;
-  
-  while (cur_page != NULL)
-    {
-      height += get_thumbed_height (viewer_data->fax_file,
-				    cur_page, 48) + 24;
-      cur_page = cur_page->next;
-    }
-
-  gtk_widget_set_usize (viewer_data->thumbs_fixed, 64, height - 10);
-}
-
-GtkWidget*
-thumbs_fixed_new ()
-{
-  GtkWidget *thumbs_fixed;
-  GtkRcStyle *bg_style;
-
-  bg_style = gtk_rc_style_new ();
-  back_gtkstyle (bg_style, GTK_STATE_NORMAL, 31488, 32000, 31488);
-  thumbs_fixed = gtk_fixed_new ();
-  gtk_widget_modify_style (thumbs_fixed, bg_style);
-  gtk_rc_style_unref (bg_style);
-
-  gtk_widget_set_usize (thumbs_fixed, 64, 0);
-
-  return thumbs_fixed;
 }
 
 GtkWidget *
@@ -145,10 +109,8 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
   button = gtk_button_new ();
   gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
   gtk_widget_set_usize (button, 60, th_height + 12);
-  gtk_container_add (GTK_CONTAINER (button),
-		     gtk_pixmap);
-     
- 
+  gtk_container_add (GTK_CONTAINER (button), gtk_pixmap);
+
   bg_style = gtk_rc_style_new ();
   back_gtkstyle (bg_style, GTK_STATE_ACTIVE, 31488, 32000, 31488);
   back_gtkstyle (bg_style, GTK_STATE_PRELIGHT, 31488, 32000, 31488);
@@ -158,7 +120,6 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
   draw_request = g_malloc (sizeof (DrawReqData));
   draw_request->viewer_data = viewer_data;
   draw_request->requested_page = cur_page;
-/*   draw_request->pixmap = GTK_PIXMAP (gtk_pixmap); */
 
   gtk_signal_connect (GTK_OBJECT(button), "destroy",
 		      GTK_SIGNAL_FUNC (free_data_on_destroy_cb),
@@ -176,6 +137,8 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
   
   ti_destroy_fax_page (thumbnail);
   g_free (draw_data);      
+
+  gtk_widget_show (gtk_pixmap);
 		
   return button;
 }
@@ -220,11 +183,9 @@ add_thumbs (ViewerData *viewer_data)
 				 cur_page, th_height, 48);
       ti_unload_fax_page (cur_page);
 
-      gtk_fixed_put (GTK_FIXED (viewer_data->thumbs_fixed),
-		     cur_button, 4, pos_in_fixed);
-      
-      gtk_widget_show_all (cur_button);
-      
+      layout_add_button (viewer_data->thumbs_layout, cur_button);
+      gtk_widget_show (cur_button);
+
       *b_arr_ptr++ = cur_button;
       pos_in_fixed += th_height + 24;
       cur_page = cur_page->next;
@@ -232,13 +193,4 @@ add_thumbs (ViewerData *viewer_data)
 
   ti_set_progress_func (NULL, NULL);
   gfv_progress_destroy (progress);
-
-  thumbs_fixed_update_size (viewer_data);
-}
-
-void
-destroy_thumb (gpointer fixed_child, gpointer container)
-{
-  gtk_container_remove (GTK_CONTAINER (container),
-			(GtkWidget *) fixed_child);
 }

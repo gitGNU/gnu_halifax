@@ -38,9 +38,10 @@ SUFFIXES = .rc .o
 
 noinst_HEADERS = setup.h tiffimages.h tiffinfo.h viewer.h cursors.h print.h \
 		 menu.h toolbar.h errors.h progress.h i18n.h gtkutils.h \
-		 callbcks.h draw_page.h zoom.h $(NOPRINTSRC)
+		 thumblayout.h callbcks.h draw_page.h zoom.h $(NOPRINTSRC)
 
-ghfaxviewer_SOURCES = setup.c fileopen.c cursors.c draw_page.c thumbnails.c \
+ghfaxviewer_SOURCES = setup.c fileopen.c cursors.c draw_page.c \
+		 thumbnails.c thumblayout.c \
 		 tiffimages.c tiffinfo.c zoom.c viewer.c callbcks.c toolbar.c \
 		 menu.c about.c errors.c progress.c gtkutils.c info.c \
 		 $(PRINTSRC) $(RCSRC)

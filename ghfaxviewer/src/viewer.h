@@ -66,7 +66,7 @@ struct _ViewerData
   GtkWidget *cmd_menus[NBR_ACTIONS]; 
 
   /* thumbnails */
-  GtkWidget *thumbs_fixed;
+  GtkWidget *thumbs_layout;
   GtkWidget **th_buttons;
   
   /* Cursor motion data */

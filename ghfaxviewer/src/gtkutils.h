@@ -60,6 +60,7 @@ void dialog_window_add_destroy_callback (DialogWindow *window,
 void transient_window_show (GtkWidget *transient, GtkWidget *parent);
 
 GtkWidget *pixmap_from_xpm (GtkWidget *ref_widget, gchar *file_name);
+GtkWidget *pixmap_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data);
 
 void back_gtkstyle (GtkRcStyle *style, GtkStateType state,
 		    gushort red, gushort green, gushort blue);
@@ -69,6 +70,8 @@ void back_gtkstyle (GtkRcStyle *style, GtkStateType state,
 void handle_box_transient_cb (GtkHandleBox *handle_box,
 			      GtkWidget *hb_child,
 			      GdkWindow *parent);
+
+gint widget_height (GtkWidget *widget);
 
 #ifndef __WIN32__
 void window_set_icon (GtkWidget *window, gchar *file_name);

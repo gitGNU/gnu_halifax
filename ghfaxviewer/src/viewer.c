@@ -45,6 +45,7 @@
 #include "toolbar.h"
 #include "menu.h"
 #include "viewer.h"
+#include "thumblayout.h"
 #include "setup.h"
 #include "gtkutils.h"
 
@@ -243,13 +244,7 @@ viewer_set_cmd_widgets_sensitive (ViewerData *viewer_data, gboolean state)
 static void
 viewer_window_unset_file (ViewerData *viewer_data)
 {
-  GList *fixed_children;
-
-  fixed_children =
-    gtk_container_children (GTK_CONTAINER
-			    (viewer_data->thumbs_fixed));
-  g_list_foreach (fixed_children, destroy_thumb,
-		  viewer_data->thumbs_fixed);
+  layout_reset (viewer_data->thumbs_layout);
 
   viewer_set_cmd_widgets_sensitive (viewer_data, FALSE);
 
@@ -349,7 +344,6 @@ viewer_window_realize_cb (GtkWidget *viewer_window, ViewerData *viewer_data)
 #endif
   GtkWidget *view_hbox;
   GtkWidget *page_table, *page_sc_win;
-  GtkWidget *thumbs_sc_win;
 
   view_hbox = gtk_hbox_new (FALSE, 2);
 
@@ -380,19 +374,13 @@ viewer_window_realize_cb (GtkWidget *viewer_window, ViewerData *viewer_data)
   viewer_set_cmd_widgets_sensitive (viewer_data, FALSE);
   gtk_widget_hide (viewer_data->page_area);
 
-  thumbs_sc_win = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
-				  (thumbs_sc_win),
-				  GTK_POLICY_NEVER,
-				  GTK_POLICY_ALWAYS);
+  viewer_data->thumbs_layout = layout_new (viewer_window, 24, 80);
+  layout_set_bg_color (viewer_data->thumbs_layout,
+		       31488, 32000, 31488);
 
-  gtk_box_pack_start (GTK_BOX (view_hbox), thumbs_sc_win,
+  gtk_box_pack_start (GTK_BOX (view_hbox),
+		      viewer_data->thumbs_layout,
 		      FALSE, FALSE, 0);
-
-  viewer_data->thumbs_fixed = thumbs_fixed_new (viewer_data->fax_file);
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW
-					 (thumbs_sc_win),
-					 viewer_data->thumbs_fixed);
 
   page_sc_win = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (page_sc_win),

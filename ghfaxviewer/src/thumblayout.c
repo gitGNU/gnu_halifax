@@ -1,0 +1,339 @@
+/* gtkutils.h - this file is part of the GNU HaliFAX Viewer
+ *
+ * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ *
+ * Author: Wolfgang Sourdeau <wolfgang@contre.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+/* A pseudo-widget to create the thumbnail area */
+
+#include <gtk/gtk.h>
+
+#include "gtkutils.h"
+
+#include "pixmaps/up_arrow.xpm"
+#include "pixmaps/down_arrow.xpm"
+
+#define ADJUSTMENT_STEP 10
+
+typedef struct _LayoutData LayoutData;
+
+struct _LayoutData
+{
+  GtkAdjustment *adjustment;
+
+  GtkWidget *gtk_layout;
+  gint height, width, spacing;
+
+  /* Control buttons */
+  GtkWidget *up, *down;
+
+  /* Timeout data */
+  gboolean up_pressed, down_pressed;
+  guint timeout_id;
+};
+
+static void
+reset_timeout (LayoutData *layout_data)
+{
+  if (layout_data->timeout_id)
+    {
+      layout_data->up_pressed = FALSE;
+      layout_data->down_pressed = FALSE;
+      gtk_timeout_remove (layout_data->timeout_id);
+      layout_data->timeout_id = 0;
+    }
+}
+
+static void
+refresh_buttons (LayoutData *layout_data)
+{
+  GtkAdjustment *adjustment;
+  gint up_height, down_height;
+  gboolean down_condition;
+
+  adjustment = layout_data->adjustment;
+  down_height = widget_height (layout_data->down);
+  up_height = widget_height (layout_data->up);
+
+  if (!GTK_WIDGET_VISIBLE (layout_data->up)
+      && (adjustment->value > 0.0))
+    {
+      gtk_widget_show (layout_data->up);
+      up_height = widget_height (layout_data->up);
+      gtk_adjustment_set_value (adjustment,
+				adjustment->value
+				+ up_height);
+    }
+  else if (GTK_WIDGET_VISIBLE (layout_data->up))
+    {
+      if (adjustment->value <= up_height)
+	{
+	  reset_timeout (layout_data);
+	  gtk_widget_hide (layout_data->up);
+	  gtk_adjustment_set_value (adjustment, adjustment->value - up_height);
+	  up_height = 0;
+	}
+    }
+
+  down_condition = (adjustment->page_size + adjustment->value
+		    + up_height + down_height
+		    >= layout_data->height);
+
+  if (GTK_WIDGET_VISIBLE (layout_data->down) && down_condition)
+    {
+      reset_timeout (layout_data);
+      gtk_widget_hide (layout_data->down);
+    }
+  else if (!GTK_WIDGET_VISIBLE (layout_data->down) && !down_condition)
+    {
+      gtk_widget_show (layout_data->down);
+      down_height = widget_height (layout_data->down);
+      gtk_adjustment_set_value (adjustment,
+				adjustment->value
+				- down_height
+				+ up_height);
+    }
+}
+
+static gboolean
+layout_timeout_cb (LayoutData *layout_data)
+{
+  GtkAdjustment *adjustment;
+  gint new_value;
+
+  adjustment = layout_data->adjustment;
+
+  if (layout_data->up_pressed)
+    new_value = adjustment->value - ADJUSTMENT_STEP;
+  else if (layout_data->down_pressed)
+    new_value = adjustment->value + ADJUSTMENT_STEP;
+  else
+    reset_timeout (layout_data);
+
+  gtk_adjustment_set_value (adjustment, new_value);
+  gtk_adjustment_value_changed (adjustment);
+
+  refresh_buttons (layout_data);
+
+  return TRUE;
+}
+
+static void
+up_pressed_cb (GtkWidget *button, LayoutData *layout_data)
+{
+  layout_data->up_pressed = TRUE;
+  layout_timeout_cb (layout_data);
+  layout_data->timeout_id = gtk_timeout_add (250,
+					     (GtkFunction) layout_timeout_cb,
+					     layout_data);
+}
+
+static void
+down_pressed_cb (GtkWidget *button, LayoutData *layout_data)
+{
+  layout_data->down_pressed = TRUE;
+  layout_timeout_cb (layout_data);
+  layout_data->timeout_id = gtk_timeout_add (250,
+					     (GtkFunction) layout_timeout_cb,
+					     layout_data);
+}
+
+static void
+button_released_cb (GtkWidget *button, LayoutData *layout_data)
+{
+  reset_timeout (layout_data);
+}
+
+static void
+layout_resize_cb (GtkWidget *layout,
+		  GtkAllocation *allocation,
+		  LayoutData *layout_data)
+{
+  GtkAdjustment *adjustment;
+  gint delta;
+
+  adjustment = layout_data->adjustment;
+
+  delta = (layout_data->height - (gint) adjustment->page_size);
+
+  if ((adjustment->value > delta)
+      && (delta >= 0))
+    {
+      adjustment->value = delta;
+      gtk_adjustment_value_changed (adjustment);
+    }
+
+  adjustment->upper = delta;
+  
+  if (adjustment->upper < 0.0)
+    adjustment->upper = 0.0;
+  
+  gtk_adjustment_changed (adjustment);
+
+  refresh_buttons (layout_data);
+}
+
+static LayoutData *
+layout_data_create (GtkWidget *ref_widget, GtkObject *adjustment)
+{
+  GtkWidget *pixmap;
+  LayoutData *layout_data;
+
+  layout_data = g_malloc (sizeof (LayoutData));
+  layout_data->adjustment = GTK_ADJUSTMENT (adjustment);
+
+  layout_data->up = gtk_button_new ();
+  pixmap = pixmap_from_xpm_data (ref_widget,
+				 up_arrow_xpm);
+  gtk_container_add (GTK_CONTAINER (layout_data->up),
+		     pixmap);
+  gtk_signal_connect (GTK_OBJECT (layout_data->up), "pressed",
+		      up_pressed_cb, layout_data);
+  gtk_signal_connect (GTK_OBJECT (layout_data->up), "released",
+		      button_released_cb, layout_data);
+
+  layout_data->down = gtk_button_new ();
+  pixmap = pixmap_from_xpm_data (ref_widget,
+				 down_arrow_xpm);
+  gtk_container_add (GTK_CONTAINER (layout_data->down),
+		     pixmap);
+  gtk_signal_connect (GTK_OBJECT (layout_data->down), "pressed",
+		      down_pressed_cb, layout_data);
+  gtk_signal_connect (GTK_OBJECT (layout_data->down), "released",
+		      button_released_cb, layout_data);
+
+  return layout_data;
+}
+
+static void
+layout_set_width (LayoutData *layout_data, gint width)
+{
+  layout_data->width = width;
+
+  gtk_widget_set_usize (layout_data->up, width, -1);
+  gtk_widget_set_usize (layout_data->down, width, -1);
+  gtk_widget_set_usize (layout_data->gtk_layout,
+			width, -1);
+}
+
+GtkWidget *
+layout_new (GtkWidget *ref_widget, gint spacing, gint width)
+{
+  GtkWidget *vbox, *gtk_layout;
+  GtkObject *adjustment;
+  LayoutData *layout_data;  
+
+  adjustment = gtk_adjustment_new (0.0, 0.0, 10.0, 1.0, 2.0, 0.0);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+
+  layout_data = layout_data_create (ref_widget, adjustment);
+
+  gtk_box_pack_start (GTK_BOX (vbox), layout_data->up,
+		      FALSE, TRUE, 0);
+
+  gtk_layout = gtk_layout_new (NULL, GTK_ADJUSTMENT (adjustment));
+  gtk_box_pack_start (GTK_BOX (vbox), gtk_layout,
+		      TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), layout_data->down,
+		      FALSE, TRUE, 0);
+
+  layout_data->gtk_layout = gtk_layout;
+  gtk_object_set_data_full (GTK_OBJECT (vbox),
+			    "layout_data", layout_data,
+			    g_free);
+  gtk_signal_connect (GTK_OBJECT (gtk_layout),
+		      "size-allocate",
+		      (GtkSignalFunc) layout_resize_cb,
+		      layout_data);
+
+  layout_data->spacing = spacing;
+  layout_data->height = 0;
+  layout_data->up_pressed = FALSE;
+  layout_data->down_pressed = FALSE;
+  layout_data->timeout_id = 0;
+
+  layout_set_width (layout_data, width);
+
+  return vbox;
+}
+
+void
+layout_add_button (GtkWidget *layout, GtkWidget *button)
+{
+  LayoutData *layout_data;
+  GtkWidget *gtk_layout;
+  gint x;
+  GtkRequisition requisition;
+
+  layout_data = gtk_object_get_data (GTK_OBJECT (layout),
+				     "layout_data");
+
+  gtk_widget_get_child_requisition (button, &requisition);
+
+  gtk_layout = layout_data->gtk_layout;
+
+  x = (gtk_layout->allocation.width - requisition.width) / 2;
+
+  layout_data->height += layout_data->spacing / 2;
+
+  gtk_layout_put (GTK_LAYOUT (gtk_layout),
+		  button, x, layout_data->height);
+
+  layout_data->height += requisition.height + layout_data->spacing / 2;
+
+  gtk_layout_set_size (GTK_LAYOUT (gtk_layout),
+		       layout_data->height, layout_data->width);
+}
+
+static void
+destroy_thumb (gpointer layout_child, gpointer container)
+{
+  gtk_container_remove (GTK_CONTAINER (container), layout_child);
+/*   gtk_widget_destroy (layout_child); */
+}
+
+void
+layout_reset (GtkWidget *layout)
+{
+  LayoutData *layout_data;
+  GtkContainer *gtk_layout;
+  GList *children;
+
+  layout_data = gtk_object_get_data (GTK_OBJECT (layout), "layout_data");
+  layout_data->height = 0;
+  gtk_layout = (GtkContainer*) layout_data->gtk_layout;
+  children = gtk_container_children (gtk_layout);
+
+  g_list_foreach (children, destroy_thumb, gtk_layout);
+}
+
+void
+layout_set_bg_color (GtkWidget *layout,
+		     gushort red, gushort green, gushort blue)
+{
+  LayoutData *layout_data;
+  GtkRcStyle *bg_style;
+
+  layout_data = gtk_object_get_data (GTK_OBJECT (layout), "layout_data");
+
+  bg_style = gtk_rc_style_new ();
+  back_gtkstyle (bg_style, GTK_STATE_NORMAL, red, green, blue);
+  gtk_widget_modify_style (layout_data->gtk_layout, bg_style);
+  gtk_rc_style_unref (bg_style);
+}
