@@ -32,4 +32,6 @@ void left90_cb (GtkWidget *widget, ViewerData *viewer_data);
 
 void widget_close_cb (GtkWidget *widget, ViewerData *viewer_data);
 
+gboolean progress_update (guint value, guint total, GhfwProgressWindow *progress_window);
+
 #endif

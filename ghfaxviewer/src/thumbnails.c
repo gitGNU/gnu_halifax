@@ -34,6 +34,7 @@
 #include "viewer.h"
 #include "draw_page.h"
 #include "errors.h"
+#include "callbcks.h"
 
 typedef struct _DrawReqData DrawReqData;
 
@@ -145,19 +146,19 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
 void
 add_thumbs (ViewerData *viewer_data)
 {
-  GtkWidget *cur_button;
+  GtkWidget *progress, *cur_button;
   GtkWidget **b_arr_ptr;
   FaxPage *cur_page;
   gint pos_in_fixed;
-  GfvProgressData *progress;
   gchar *p_action;
   gint th_height;
   
-  progress = gfv_progress_new (viewer_data->viewer_window,
-			       _("Please wait..."),
-			       NULL,
-			       DISPLAY_WHEN_NEEDED);
-  ti_set_progress_func (gfv_progress_update_with_value, progress);
+  progress = ghfw_progress_window_new (_("Please wait..."), NULL);
+  ghfw_progress_window_set_abortable (GHFW_PROGRESS_WINDOW (progress), FALSE);
+
+  transient_window_show (progress, viewer_data->viewer_window);
+
+  ti_set_progress_func ((TiProgressFunc) progress_update, progress);
   
   cur_page = viewer_data->fax_file->first;
   
@@ -171,7 +172,8 @@ add_thumbs (ViewerData *viewer_data)
       p_action = g_strdup_printf (_("Computing index for page "
 				    "%d of %d..."), cur_page->nbr + 1,
 				  viewer_data->fax_file->nbr_pages + 1);
-      gfv_progress_set_action (progress, p_action);
+      ghfw_progress_window_set_action (GHFW_PROGRESS_WINDOW (progress),
+				       p_action);
       g_free (p_action);
 
       th_height = get_thumbed_height (viewer_data->fax_file,
@@ -191,5 +193,5 @@ add_thumbs (ViewerData *viewer_data)
     }
 
   ti_set_progress_func (NULL, NULL);
-  gfv_progress_destroy (progress);
+  gtk_widget_destroy (progress);
 }

@@ -38,6 +38,7 @@
 #include "tiffimages.h"
 #include "zoom.h"
 #include "viewer.h"
+#include "callbcks.h"
 
 /* Damn, I hate those
    very-long-names-that-just-serve-no-purpose-at-all-except-filling-a-whole-line-just-for-pleasure */
@@ -96,7 +97,7 @@ send_pages_to_pc (GnomePrintContext *context,
 		  FaxFile *fax_file,
 		  gint from, gint to,
 		  gint copies, gint collate,
-		  GfvProgressData *p_data)
+		  GtkWidget *progress_win)
 {
   FaxPage *orig_page, *gray_page;
   gint page_nbr, copy_nbr, count, max_page_nbr;
@@ -120,7 +121,8 @@ send_pages_to_pc (GnomePrintContext *context,
 					  count,
 					  max_page_nbr
 					  - count);
-	      gfv_progress_set_action (p_data, p_action);
+	      ghfw_progress_window_set_action (GHFW_PROGRESS_WINDOW (progress_win),
+					       p_action);
 	      g_free (p_action);
 	      
 	      orig_page = ti_seek_fax_page (fax_file, page_nbr);
@@ -133,8 +135,8 @@ send_pages_to_pc (GnomePrintContext *context,
 	      ti_destroy_fax_page (gray_page);
 	      ti_unload_fax_page (orig_page);
 	      
-	      aborted = gfv_progress_update_with_value (count, max_page_nbr,
-							0, p_data);
+	      aborted = progress_update (count, max_page_nbr,
+					 GHFW_PROGRESS_WINDOW (progress_win));
 	    }
 	}
   else
@@ -154,20 +156,21 @@ send_pages_to_pc (GnomePrintContext *context,
 					count,
 					max_page_nbr
 					- count);
-	    gfv_progress_set_action (p_data, p_action);
+	    ghfw_progress_window_set_action (GHFW_PROGRESS_WINDOW (progress_win),
+					     p_action);
 	    g_free (p_action);
 	    
 	    print_page (context, fax_file, gray_page);
-	    aborted = gfv_progress_update_with_value (count, max_page_nbr,
-						      0, p_data);
-	    
+	    aborted = progress_update (count, max_page_nbr,
+				       GHFW_PROGRESS_WINDOW (progress_win));
 	  }
 	ti_destroy_fax_page (gray_page);
 	ti_unload_fax_page (orig_page);
       }
 
   if (!aborted)
-    gfv_progress_set_done (p_data);
+    ghfw_progress_window_set_done (GHFW_PROGRESS_WINDOW (progress_win),
+				   TRUE);
 
   return aborted;
 }
@@ -182,10 +185,11 @@ prepare_print_master (GtkWidget *print_dlg,
   GnomeFont *def_font;
   gint copies, collate, range, aborted;
   gint from, to;
-  GfvProgressData *p_data;
+  GtkWidget *progress_win;
 
-  p_data = gfv_progress_new (print_dlg, _("Please wait..."),
-			     NULL, ABORT_BTN);
+  progress_win = ghfw_progress_window_new (_("Please wait..."), NULL);
+  ghfw_progress_window_set_abortable (GHFW_PROGRESS_WINDOW (progress_win), TRUE);
+  transient_window_show (progress_win, print_dlg);
 
   print_master =
     gnome_print_master_new_from_dialog (GPD (print_dlg));
@@ -208,7 +212,7 @@ prepare_print_master (GtkWidget *print_dlg,
 
   aborted = send_pages_to_pc (print_context, fax_file,
 			      from, to, copies, collate,
-			      p_data);
+			      progress_win);
   gnome_print_context_close (print_context);
 
   if (aborted)
@@ -217,7 +221,7 @@ prepare_print_master (GtkWidget *print_dlg,
       print_master = NULL;
     }
 
-  gfv_progress_destroy (p_data);
+  gtk_widget_destroy (progress_win);
 
   return print_master;
 }

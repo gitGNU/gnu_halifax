@@ -1,3 +1,13 @@
+2001-10-05  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/errors.c: Adapted to the new GhfwDlgWindow widget.
+
+	* src/ps_print.c: Adapted to the new GhfwDlgWindow and
+	GhfwProgressWindow widgets.
+
+	* src/gn_print.c: Adapted to the new GhfwDlgWindow and
+	GhfwProgressWindow widgets.
+
 2001-07-26  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/dialog_window.c: new file containing all the dialog_window_*

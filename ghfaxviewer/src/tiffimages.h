@@ -32,8 +32,7 @@ typedef struct _FaxPage FaxPage;
 
 /* A hook to permit displaying progress bars or any progress display
    while tiffimage is busy... */
-typedef gboolean (*TiProgressFunc) (guint value, guint total,
-				    guint percentage, gpointer data);
+typedef gboolean (*TiProgressFunc) (guint value, guint total, gpointer data);
 
 typedef enum
 {

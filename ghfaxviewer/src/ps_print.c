@@ -1,4 +1,4 @@
-/* ps_print.c - this file is part of the GNU HaliFAX Viewer
+/* us_print.c - this file is part of the GNU HaliFAX Viewer
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
@@ -41,6 +41,7 @@
 #include "i18n.h"
 #include "errors.h"
 #include "setup.h"
+#include "callbcks.h"
 
 /* Shorthand for type of comparison functions.  */
 #ifndef __GLIBC__
@@ -81,8 +82,7 @@ struct _PrintData
   FaxPage *current_page;
   gint first_page, last_page;
   PDlgWidgets widgets;
-  DialogWindow *print_dialog;
-  GtkWidget *parent_window;
+  GtkWidget *parent_window, *print_dialog;
 };
 
 struct _OutputData
@@ -91,8 +91,7 @@ struct _OutputData
   FaxFile *document;
   gchar *out_file_name;
   gint from_page, to_page;
-  DialogWindow *print_dialog, *err_dialog;
-  GtkWidget *parent_window;
+  GtkWidget *parent_window, *print_dialog, *err_dialog;;
 };
 
 #define MAX_PLIST 8
@@ -650,7 +649,7 @@ size_of_output (OutputData *output_data)
 
 static guint
 print_image (FILE *print_file, FaxPage *fax_image,
-	     GfvProgressData *p_data,
+	     GtkWidget *progress_win,
 	     guint progress, guint unit, guint total_bytes)
 {
   gboolean aborted;
@@ -666,10 +665,8 @@ print_image (FILE *print_file, FaxPage *fax_image,
     {
       new_progress++;
       if ((new_progress % unit) == 0)
-	aborted = gfv_progress_update_with_value (new_progress,
-						  total_bytes,
-						  0,
-						  p_data);
+	aborted = ghfw_progress_window_update_with_value
+	  (GHFW_PROGRESS_WINDOW (progress_win), new_progress, total_bytes);
       if (!aborted)
 	{
 	  cur_char = *(fax_image->image + counter);
@@ -696,7 +693,7 @@ output_document (OutputData *output_data)
   gboolean success;
   gchar *time_string, *ps_title, *ps_creator, *p_action;
   FaxPage *cur_page;
-  GfvProgressData *p_data;
+  GtkWidget *progress_win;
   time_t cur_time;
 
 #ifdef ENABLE_NLS
@@ -739,16 +736,19 @@ output_document (OutputData *output_data)
   g_free (ps_title);
   g_free (ps_creator);
   
-  p_data = gfv_progress_new (output_data->parent_window,
-			     _("Please wait..."), NULL, ABORT_BTN);
-  
+  progress_win = ghfw_progress_window_new (_("Please wait..."), NULL);
+  ghfw_progress_window_set_abortable (GHFW_PROGRESS_WINDOW (progress_win),
+				      TRUE);
+  transient_window_show (progress_win, output_data->print_dialog);
+
   while (cur_page_nbr <= output_data->to_page && success)
     {
       p_action = g_strdup_printf (_("Printing page %d (%d left)"),
 				  cur_page_nbr,
 				  output_data->to_page
 				  - cur_page_nbr);
-      gfv_progress_set_action (p_data, p_action);
+      ghfw_progress_window_set_action (GHFW_PROGRESS_WINDOW (progress_win),
+				       p_action);
       g_free (p_action);
       cur_page = ti_seek_fax_page (output_data->document,
 				   cur_page_nbr - 1);
@@ -783,7 +783,7 @@ output_document (OutputData *output_data)
       
       ti_load_fax_page (output_data->document, cur_page);
       cur_byte = print_image (output_data->output_stream,
-			      cur_page, p_data,
+			      cur_page, progress_win,
 			      cur_byte, unit, total_bytes);
 
       if (!cur_byte)
@@ -811,8 +811,7 @@ output_document (OutputData *output_data)
   setlocale (LC_NUMERIC, "");
 #endif
 
-  gfv_progress_destroy (p_data);
-
+  gtk_widget_destroy (progress_win);
 
   return success;
 }
@@ -822,7 +821,7 @@ print_to_file_anyway_cb (GtkWidget *yes_button,
 			 OutputData *output_data)
 {
   gboolean success;
-  DialogWindow *print_dialog;
+  GtkWidget *print_dialog;
   
   output_data->output_stream = fopen (output_data->out_file_name, "w+");
   success = output_document (output_data);
@@ -832,13 +831,13 @@ print_to_file_anyway_cb (GtkWidget *yes_button,
 
   if (success)
     {
-      dialog_window_destroy (output_data->err_dialog);
-      dialog_window_destroy (print_dialog);
+      gtk_widget_destroy (output_data->err_dialog);
+      gtk_widget_destroy (print_dialog);
     }
   else
     {
       unlink (output_data->out_file_name);
-      dialog_window_destroy (output_data->err_dialog);
+      gtk_widget_destroy(output_data->err_dialog);
     }
 }
 
@@ -850,29 +849,30 @@ file_exists_dialog_destroy_cb (GtkWidget *window, OutputData *output_data)
 }
 
 static void
-file_exists_dialog (OutputData *output_data, DialogWindow *print_dialog)
+file_exists_dialog (OutputData *output_data, GtkWidget *print_dialog)
 {
-  DialogWindow *err_dialog;
-  GtkWidget *button_box, *msg_lbl, *yes_but, *no_but;
+  GtkWidget *err_dialog, *button_box, *msg_lbl, *yes_but, *no_but;
   gchar *message;
   
   message = g_strdup_printf (_("%s already exists.\n"
 			       "Do you want to overwrite it?"),
 			     output_data->out_file_name);
 
-  err_dialog = dialog_window_new (_("Please answer..."));
-  dialog_window_add_destroy_callback (err_dialog,
-				      GTK_SIGNAL_FUNC (file_exists_dialog_destroy_cb),
-				      output_data);
+  err_dialog = ghfw_dlg_window_new (_("Please answer..."));
+  gtk_signal_connect (GTK_OBJECT (err_dialog), "destroy",
+		      GTK_SIGNAL_FUNC (file_exists_dialog_destroy_cb),
+		      output_data);
 
   msg_lbl = gtk_label_new (message);
   g_free (message);
   gtk_label_set_justify (GTK_LABEL (msg_lbl), GTK_JUSTIFY_LEFT);
-  dialog_window_set_content_with_frame (err_dialog, msg_lbl);
+  ghfw_dlg_window_set_content_with_frame (GHFW_DLG_WINDOW (err_dialog),
+					  msg_lbl);
   
-  button_box = dialog_window_bbox ();
-  dialog_window_set_button_box (err_dialog, button_box);
-  dialog_window_set_escapable (err_dialog);
+  button_box = ghfw_dlg_window_button_box ();
+  ghfw_dlg_window_set_button_box (GHFW_DLG_WINDOW (err_dialog),
+				  button_box);
+  ghfw_dlg_window_set_escapable (GHFW_DLG_WINDOW (err_dialog));
 
   yes_but = gtk_button_new_with_label (_("Yes, please do"));
   gtk_signal_connect (GTK_OBJECT (yes_but), "clicked",
@@ -883,9 +883,9 @@ file_exists_dialog (OutputData *output_data, DialogWindow *print_dialog)
   GTK_WIDGET_SET_FLAGS (yes_but, GTK_CAN_DEFAULT);
 
   no_but = gtk_button_new_with_label (_("No thanks"));
-  gtk_signal_connect (GTK_OBJECT (no_but), "clicked",
-		      GTK_SIGNAL_FUNC (dialog_window_destroy_from_signal),
-		      err_dialog);
+  gtk_signal_connect_object (GTK_OBJECT (no_but), "clicked",
+			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			     GTK_OBJECT (err_dialog));
   gtk_box_pack_start (GTK_BOX (button_box), no_but,
 		      FALSE, FALSE, 5);
   GTK_WIDGET_SET_FLAGS(no_but, GTK_CAN_DEFAULT);
@@ -894,8 +894,7 @@ file_exists_dialog (OutputData *output_data, DialogWindow *print_dialog)
   output_data->err_dialog = err_dialog;
   output_data->print_dialog = print_dialog;
 
-  dialog_window_show (err_dialog,
-		      dialog_window_get_gtkwin (print_dialog));
+  transient_window_show (err_dialog, print_dialog);
 }
 
 static gint
@@ -955,7 +954,7 @@ launch_print_job_cb (GtkWidget *widget,
 	  system (command);
 	  g_free (command);
 
-	  dialog_window_destroy (print_data->print_dialog);
+	  gtk_widget_destroy (print_data->print_dialog);
 	}
 
       unlink (output_data->out_file_name);
@@ -981,7 +980,7 @@ launch_print_job_cb (GtkWidget *widget,
 	  g_free (output_data->out_file_name);
 	  g_free (output_data);
 
-	  dialog_window_destroy (print_data->print_dialog);
+	  gtk_widget_destroy (print_data->print_dialog);
 	}
       else
 	file_exists_dialog (output_data, print_data->print_dialog);
@@ -995,10 +994,10 @@ print_dialog_bbox (PrintData *print_data)
 {
   GtkWidget *button_box, *print_but, *cancel_but;
 
-  button_box = dialog_window_bbox ();
-  dialog_window_set_button_box (print_data->print_dialog,
-				button_box);
-  dialog_window_set_escapable (print_data->print_dialog);
+  button_box = ghfw_dlg_window_button_box ();
+  ghfw_dlg_window_set_button_box (GHFW_DLG_WINDOW (print_data->print_dialog),
+				  button_box);
+  ghfw_dlg_window_set_escapable (GHFW_DLG_WINDOW (print_data->print_dialog));
 
   print_but = gtk_button_new_with_label (_("Print"));
   GTK_WIDGET_SET_FLAGS(print_but, GTK_CAN_DEFAULT);
@@ -1011,21 +1010,20 @@ print_dialog_bbox (PrintData *print_data)
   cancel_but = gtk_button_new_with_label (_("Cancel"));
   GTK_WIDGET_SET_FLAGS(cancel_but, GTK_CAN_DEFAULT);
   gtk_box_pack_start (GTK_BOX (button_box), cancel_but, FALSE, FALSE, 0);
-  gtk_signal_connect (GTK_OBJECT (cancel_but), "clicked",
-		      GTK_SIGNAL_FUNC (dialog_window_destroy_from_signal),
-		      print_data->print_dialog);
+  gtk_signal_connect_object (GTK_OBJECT (cancel_but), "clicked",
+			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			     GTK_OBJECT (print_data->print_dialog));
 
   gtk_widget_show (button_box);
 }
 
-static DialogWindow *
+static GtkWidget *
 print_dialog (ViewerData *viewer_data)
 {
-  DialogWindow *print_dialog;
-  GtkWidget *table, *output_frame, *page_frame;
+  GtkWidget *print_dialog, *table, *output_frame, *page_frame;
   PrintData *print_data;
 
-  print_dialog = dialog_window_new (_("Print..."));
+  print_dialog = ghfw_dlg_window_new (_("Print..."));
 
   print_data = g_malloc (sizeof (PrintData));
   print_data->document = viewer_data->fax_file;
@@ -1046,10 +1044,9 @@ print_dialog (ViewerData *viewer_data)
 
   print_dialog_bbox (print_data);
 
-  dialog_window_set_content (print_dialog, table);
-  dialog_window_add_destroy_callback (print_dialog,
-				      GTK_SIGNAL_FUNC (free_data_on_destroy_cb),
-				      print_data);
+  ghfw_dlg_window_set_content (GHFW_DLG_WINDOW (print_dialog), table);
+  gtk_signal_connect (GTK_OBJECT (print_dialog), "destroy",
+		      GTK_SIGNAL_FUNC (free_data_on_destroy_cb), print_data);
 
   return print_dialog;
 }
@@ -1057,17 +1054,17 @@ print_dialog (ViewerData *viewer_data)
 void
 print_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
-  DialogWindow *print_dlg;
+  GtkWidget *print_dlg;
   static gboolean error_dialog_shown = FALSE;
 
   ensure_commands (viewer_data->viewer_window);
 
   print_dlg = print_dialog (viewer_data);
-  dialog_window_show (print_dlg, viewer_data->viewer_window);
+  transient_window_show (print_dlg, viewer_data->viewer_window);
 
   if (!printer_enabled && !error_dialog_shown)
     {
-      display_failure (dialog_window_get_gtkwin (print_dlg),
+      display_failure (print_dlg,
 		       _("This is weird..."),
 		       _("I was not able to determine how to work\n"
 			 "with your printing system appropriately.\n\n"

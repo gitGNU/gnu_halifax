@@ -22,6 +22,7 @@
 /* This file contains menu and toolbar callbacks only */
 
 #include <gtk/gtk.h>
+#include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "tiffimages.h"
 #include "viewer.h"
@@ -154,4 +155,10 @@ void
 close_file_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
 {
   fax_viewer_open_file (viewer_data, NULL);  
+}
+
+gboolean progress_update (guint value, guint total,
+			  GhfwProgressWindow *progress_window)
+{
+  return (ghfw_progress_window_update_with_value (progress_window, value, total));
 }

@@ -326,7 +326,6 @@ fill_index (FaxPage *fax_page)
 	    {
 	      progress_func (char_ptr - fax_page->image,
 			     fax_page->limit - fax_page->image,
-			     0,
 			     progress_func_data);
 	      prev_prog_step = char_ptr;
 	    }

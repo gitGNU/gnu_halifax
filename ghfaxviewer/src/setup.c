@@ -144,8 +144,11 @@ save_window_coords (GdkWindow *window)
 
   gerror = NULL;
 
-  gdk_window_get_root_origin (window, &x, &y);
-  gdk_window_get_size (window, &width, &height);
+/*   gdk_window_get_root_origin (window, &x, &y); */
+/*   gdk_window_get_position (window, &x, &y); */ 
+/*   gdk_window_get_size (window, &width, &height); */
+  gdk_window_get_geometry (window, &x, &y, &width, &height, NULL);
+  g_print ("%d, %d, %d, %d\n", x, y, width, height);
 
   gconf_client_set_int (gc_client,
 			CONFIG_KEY KEY_DEF_X,
