@@ -24,8 +24,6 @@
 #ifndef PROGRESS_H
 #define PROGRESS_H
 
-#include <ghfwdlgwindow.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -43,10 +41,11 @@ struct _GhfwProgressWindow
 {
   GhfwDlgWindow window;
 
-  GtkWidget *vbox, *content, *button_box;
   GtkWidget *label, *progress_bar, *abort_btn;
 
   gchar *action_string;
+  guint value;
+  guint max;
 
   /* flags */
   gboolean done;
@@ -64,14 +63,22 @@ struct _GhfwProgressWindowClass
 GtkType   ghfw_progress_window_get_type (void);
 
 GtkWidget *ghfw_progress_window_new (gchar *title,
-					   gchar *action_string);
+				     gchar *action_string);
 
 /* convenient callback functions */
 
-gboolean ghfw_progress_window_update_with_percentage (GhfwProgressWindow *progress_window,
-						      guint percentage);
-gboolean ghfw_progress_window_update_with_value (GhfwProgressWindow *progress_window,
-						 guint value, guint total);
+gboolean
+ghfw_progress_window_update_with_percentage (GhfwProgressWindow *progress_window,
+					     guint percentage);
+
+gboolean
+ghfw_progress_window_update_with_value (GhfwProgressWindow *progress_window,
+					guint value, guint total);
+
+void ghfw_progress_window_set_max (GhfwProgressWindow *progress_window,
+				   guint max);
+void ghfw_progress_window_increment (GhfwProgressWindow *progress_window,
+				     guint increment);
 
 /* convenient functions */
 void ghfw_progress_window_set_action (GhfwProgressWindow *progress_win,

@@ -66,6 +66,8 @@ void ghfw_dlg_window_set_button (GhfwDlgWindow *window,
 
 void ghfw_dlg_window_set_escapable (GhfwDlgWindow *window);
 
+GtkWidget *ghfw_dlg_window_button_box ();
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

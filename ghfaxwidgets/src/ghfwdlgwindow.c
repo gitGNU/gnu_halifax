@@ -65,8 +65,8 @@ ghfw_dlg_window_key_press_event (GtkWidget *widget,
 
 /* local functions */
 
-static GtkWidget *
-ghfw_dlg_window_bbox ()
+GtkWidget *
+ghfw_dlg_window_button_box ()
 {
   GtkWidget *button_box;
 
@@ -124,7 +124,7 @@ ghfw_dlg_window_get_arg (GtkObject *object,
       break;
     case ARG_BUTTON_BOX:
       if (!dlg_window->button_box)
-	GTK_VALUE_POINTER (*arg) = ghfw_dlg_window_bbox ();
+	GTK_VALUE_POINTER (*arg) = ghfw_dlg_window_button_box ();
       else
 	GTK_VALUE_POINTER (*arg) = dlg_window->button_box;
       break;
@@ -291,7 +291,7 @@ ghfw_dlg_window_set_button (GhfwDlgWindow *window,
 {
   GtkWidget *button_box;
 
-  button_box = ghfw_dlg_window_bbox ();
+  button_box = ghfw_dlg_window_button_box ();
   gtk_box_pack_start (GTK_BOX (button_box), button,
 		      FALSE, FALSE, 0);
 

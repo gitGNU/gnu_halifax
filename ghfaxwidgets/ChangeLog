@@ -1,7 +1,13 @@
 2001-10-05  Wolfgang Sourdeau  <wolfgang@contre.com>
 
+	* src/ghfwdlgwindow.c: added show and show_all callbacks to avoid
+	displaying the abort button when not needed.
+	(ghfw_dlg_window_button_box): this function made public.
+
 	* src/ghfwprogress.c: the GhfwProgressWindows's are now GTK
 	widgets too, GhfwDlgWindow being its parent class.
+	(ghfw_progress_window_destroy): new destroy method to avoid a leak
+	with action_string;
 
 2001-10-01  Wolfgang Sourdeau  <wolfgang@contre.com>
 
