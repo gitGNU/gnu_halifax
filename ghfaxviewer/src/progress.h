@@ -32,7 +32,7 @@ typedef enum
   DISPLAY_WHEN_NEEDED = 2,
 } GfvProgressTag;
 
-GfvProgressData *gfv_progress_new (GtkWindow *parent_window,
+GfvProgressData *gfv_progress_new (GtkWidget *parent_window,
 				   gchar *title,
 				   gchar *action_string,
 				   GfvProgressTag tag);

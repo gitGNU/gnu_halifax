@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-04-27 13:53-0400\n"
+"POT-Creation-Date: 2001-05-10 03:10-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,17 +14,17 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: src/thumbnails.c:191
+#: src/thumbnails.c:171
 #, c-format
 msgid "Page %d"
 msgstr ""
 
-#: src/gn_print.c:189 src/ps_print.c:643 src/thumbnails.c:215
+#: src/gn_print.c:189 src/ps_print.c:768 src/thumbnails.c:195
 #: src/winprint.c:167
 msgid "Please wait..."
 msgstr ""
 
-#: src/thumbnails.c:229
+#: src/thumbnails.c:209
 #, c-format
 msgid "Computing index for page %d of %d..."
 msgstr ""
@@ -54,79 +54,79 @@ msgstr ""
 msgid "permission to read %s is missing"
 msgstr ""
 
-#: src/about.c:82 src/viewer.c:266 src/viewer.c:445 src/viewer.c:450
+#: src/about.c:82 src/viewer.c:277 src/viewer.c:455 src/viewer.c:460
 msgid "GNU HaliFAX - Viewer"
 msgstr ""
 
-#: src/menu.c:70 src/menu.c:168 src/toolbar.c:69 src/toolbar.c:182
+#: src/menu.c:70 src/menu.c:191 src/toolbar.c:70 src/toolbar.c:187
 msgid "Go to previous page"
 msgstr ""
 
-#: src/menu.c:64 src/menu.c:167 src/toolbar.c:75 src/toolbar.c:189
+#: src/menu.c:64 src/menu.c:188 src/toolbar.c:76 src/toolbar.c:194
 msgid "Go to next page"
 msgstr ""
 
-#: src/menu.c:77 src/menu.c:170 src/toolbar.c:82 src/toolbar.c:198
+#: src/menu.c:77 src/menu.c:197 src/toolbar.c:83 src/toolbar.c:203
 msgid "Zoom in"
 msgstr ""
 
-#: src/menu.c:83 src/menu.c:171 src/toolbar.c:88 src/toolbar.c:205
+#: src/menu.c:83 src/menu.c:200 src/toolbar.c:89 src/toolbar.c:210
 msgid "Zoom out"
 msgstr ""
 
-#: src/menu.c:96 src/menu.c:175 src/toolbar.c:95 src/toolbar.c:214
+#: src/menu.c:96 src/menu.c:209 src/toolbar.c:96 src/toolbar.c:219
 msgid "Rotate 90 degrees counter-clockwise"
 msgstr ""
 
-#: src/menu.c:102 src/menu.c:177 src/toolbar.c:101 src/toolbar.c:221
+#: src/menu.c:102 src/menu.c:212 src/toolbar.c:102 src/toolbar.c:226
 msgid "Reverse image"
 msgstr ""
 
-#: src/menu.c:90 src/menu.c:173 src/toolbar.c:107 src/toolbar.c:228
+#: src/menu.c:90 src/menu.c:206 src/toolbar.c:108 src/toolbar.c:233
 msgid "Rotate 90 degrees clockwise"
 msgstr ""
 
-#: src/menu.c:149 src/toolbar.c:114 src/toolbar.c:237
+#: src/menu.c:164 src/toolbar.c:115 src/toolbar.c:242
 msgid "Print fax"
 msgstr ""
 
-#: src/menu.c:151 src/toolbar.c:121 src/toolbar.c:247
+#: src/menu.c:169 src/toolbar.c:122 src/toolbar.c:252
 msgid "Properties..."
 msgstr ""
 
-#: src/menu.c:142 src/ps_print.c:329 src/ps_print.c:340
+#: src/menu.c:153 src/ps_print.c:453 src/ps_print.c:465
 msgid "File"
 msgstr ""
 
-#: src/menu.c:146
+#: src/menu.c:157
 msgid "Open..."
 msgstr ""
 
-#: src/about.c:189 src/info.c:327 src/menu.c:147
+#: src/about.c:189 src/info.c:327 src/menu.c:159
 msgid "Close"
 msgstr ""
 
-#: src/menu.c:153
+#: src/menu.c:173
 msgid "Quit"
 msgstr ""
 
-#: src/menu.c:163
+#: src/menu.c:183
 msgid "View"
 msgstr ""
 
-#: src/menu.c:188
+#: src/menu.c:223
 msgid "Settings"
 msgstr ""
 
-#: src/menu.c:192
+#: src/menu.c:227
 msgid "Preferences..."
 msgstr ""
 
-#: src/menu.c:202
+#: src/menu.c:237
 msgid "Help"
 msgstr ""
 
-#: src/about.c:185 src/menu.c:206
+#: src/about.c:185 src/menu.c:241
 msgid "About..."
 msgstr ""
 
@@ -286,15 +286,15 @@ msgstr ""
 msgid "Fax properties"
 msgstr ""
 
-#: src/fileopen.c:72
+#: src/fileopen.c:69
 msgid "Please choose a FAX G3 file to open..."
 msgstr ""
 
-#: src/errors.c:112
+#: src/errors.c:113
 msgid "Something strange happened..."
 msgstr ""
 
-#: src/errors.c:114
+#: src/errors.c:115
 #, c-format
 msgid ""
 "The specified file, %s, could not be opened\n"
@@ -302,15 +302,15 @@ msgid ""
 "Please fix this and try again later."
 msgstr ""
 
-#: src/errors.c:118
+#: src/errors.c:119
 msgid "I am sorry"
 msgstr ""
 
-#: src/progress.c:94 src/ps_print.c:940
+#: src/progress.c:94 src/ps_print.c:1036
 msgid "Cancel"
 msgstr ""
 
-#: src/progress.c:216
+#: src/progress.c:218
 #, c-format
 msgid "%s (done)"
 msgstr ""
@@ -323,82 +323,107 @@ msgstr ""
 msgid "Device Error"
 msgstr ""
 
-#: src/ps_print.c:618 src/ps_print.c:620 src/winprint.c:157
+#: src/ps_print.c:743 src/ps_print.c:745 src/winprint.c:157
 msgid "The GNU HaliFAX Viewer"
 msgstr ""
 
-#: src/gn_print.c:118 src/gn_print.c:152 src/ps_print.c:647 src/winprint.c:176
+#: src/gn_print.c:118 src/gn_print.c:152 src/ps_print.c:772 src/winprint.c:176
 #, c-format
 msgid "Printing page %d (%d left)"
 msgstr ""
 
-#: src/ps_print.c:315
+#: src/ps_print.c:439
 msgid "Output to"
 msgstr ""
 
-#: src/ps_print.c:324
+#: src/ps_print.c:448
 msgid "Printer"
 msgstr ""
 
-#: src/ps_print.c:338
+#: src/ps_print.c:462
 msgid "Command"
 msgstr ""
 
-#: src/ps_print.c:348
+#: src/ps_print.c:473
 msgid "Fax Output.ps"
 msgstr ""
 
-#: src/ps_print.c:418
+#: src/ps_print.c:545
 msgid "Page selection"
 msgstr ""
 
-#: src/ps_print.c:426
+#: src/ps_print.c:553
 msgid "All pages"
 msgstr ""
 
-#: src/ps_print.c:439
+#: src/ps_print.c:566
 msgid "From"
 msgstr ""
 
-#: src/ps_print.c:461
+#: src/ps_print.c:588
 msgid "to"
 msgstr ""
 
-#: src/gn_print.c:298 src/ps_print.c:478
+#: src/gn_print.c:296 src/ps_print.c:605
 msgid "Current page only"
 msgstr ""
 
-#: src/ps_print.c:762
+#: src/ps_print.c:884
 #, c-format
 msgid ""
 "%s already exists.\n"
 "Do you want to overwrite it?"
 msgstr ""
 
-#: src/ps_print.c:767
+#: src/ps_print.c:888
 msgid "Please answer..."
 msgstr ""
 
-#: src/ps_print.c:784
+#: src/ps_print.c:902
 msgid "Yes, please do"
 msgstr ""
 
-#: src/ps_print.c:790
+#: src/ps_print.c:910
 msgid "No thanks"
 msgstr ""
 
-#: src/gn_print.c:287 src/ps_print.c:916
+#: src/ps_print.c:1028
+msgid "Print"
+msgstr ""
+
+#: src/gn_print.c:287 src/ps_print.c:1053
 msgid "Print..."
 msgstr ""
 
-#: src/ps_print.c:932
-msgid "Print"
+#: src/ps_print.c:1096
+msgid "This is weird..."
+msgstr ""
+
+#: src/ps_print.c:1097
+msgid ""
+"I was not able to determine how to work\n"
+"with your printing system appropriately.\n"
+"\n"
+"You will therefore only be able to export\n"
+"your data to a PostScript file.\n"
+"\n"
+"Please have your administrator verify if\n"
+"a descent printing system is installed.\n"
+"\n"
+"If this is so, there must be a bug in\n"
+"ghfaxviewer. Please fill a bug report\n"
+"accordingly and send it to\n"
+"halifax-bugs@gnu.org."
+msgstr ""
+
+#: src/ps_print.c:1107
+msgid "I promise!"
 msgstr ""
 
 #: src/gn_print.c:246
 msgid "Print preview..."
 msgstr ""
 
-#: src/gn_print.c:299
+#: src/gn_print.c:297
 msgid "Range"
 msgstr ""

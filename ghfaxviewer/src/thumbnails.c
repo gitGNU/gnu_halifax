@@ -191,7 +191,7 @@ add_thumbs (ViewerData *viewer_data)
   gchar *p_action;
   gint th_height;
   
-  progress = gfv_progress_new (GTK_WINDOW (viewer_data->viewer_window),
+  progress = gfv_progress_new (viewer_data->viewer_window,
 			       _("Please wait..."),
 			       NULL,
 			       DISPLAY_WHEN_NEEDED);
@@ -239,8 +239,6 @@ add_thumbs (ViewerData *viewer_data)
 void
 destroy_thumb (gpointer fixed_child, gpointer container)
 {
-  GtkWidget *widget;
-
-  widget = GTK_WIDGET (fixed_child);
-  gtk_container_remove (GTK_CONTAINER (container), widget);
+  gtk_container_remove (GTK_CONTAINER (container),
+			(GtkWidget *) fixed_child);
 }

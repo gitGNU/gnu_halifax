@@ -102,7 +102,7 @@ display_failure (GtkWidget *window,
   dialog_window_set_escapable (fail_dialog);
 
   dialog_window_show (fail_dialog,
-		      GTK_WINDOW (window));
+		      window);
 }
 
 static void

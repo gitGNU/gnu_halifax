@@ -68,7 +68,7 @@ file_dialog (ViewerData *viewer_data)
   open_dialog =
     gtk_file_selection_new (_("Please choose a FAX "
 			      "G3 file to open..."));
-  gtk_window_set_escapable (GTK_WINDOW (open_dialog));
+  gtk_window_set_escapable (open_dialog);
   viewer_data->file_dlg = open_dialog;
 
 #ifdef CAN_SAVE_CONFIG
@@ -89,8 +89,8 @@ file_dialog (ViewerData *viewer_data)
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			     GTK_OBJECT (open_dialog));
 
-  transient_window_show (GTK_WINDOW (open_dialog),
-			 GTK_WINDOW (viewer_data->viewer_window));
+  transient_window_show (open_dialog,
+			 viewer_data->viewer_window);
 }
 
 void

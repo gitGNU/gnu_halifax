@@ -242,9 +242,9 @@ print_or_preview (GtkWidget *print_dlg,
       else
 	{
 	  preview =
-	    GTK_WIDGET (gnome_print_master_preview_new (print_master,
-							_("Print"
-							  " preview...")));
+	    (GtkWidget *) gnome_print_master_preview_new (print_master,
+							  _("Print"
+							    " preview..."));
 	  
 	  transient_window_show (GTK_WINDOW (preview),
 				 GTK_WINDOW (print_dlg));

@@ -50,7 +50,7 @@ struct _GfvProgressData
   GfvProgressTag tag;
   GtkWidget *label, *progress_bar, *abort_btn;
   DialogWindow *progress_win;
-  GtkWindow *parent_window;
+  GtkWidget *parent_window;
 };
 
 static void
@@ -60,7 +60,7 @@ progress_abort (GtkWidget *widget, GfvProgressData *progress_data)
 }
 
 GfvProgressData *
-gfv_progress_new (GtkWindow *parent_window,
+gfv_progress_new (GtkWidget *parent_window,
 		  gchar *title, gchar *action_string,
 		  GfvProgressTag tag)
 {

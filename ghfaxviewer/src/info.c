@@ -348,7 +348,7 @@ info_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
       info_dialog = create_info_dialog (viewer_data->viewer_window,
 					file_info);
       dialog_window_show (info_dialog,
-			  GTK_WINDOW (viewer_data->viewer_window));
+			  viewer_data->viewer_window);
 
       ti_destroy_file_info (file_info);
     }

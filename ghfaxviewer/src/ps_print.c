@@ -67,7 +67,8 @@ struct _PList
 struct _PDlgWidgets
 {
   GtkWidget *print_window;
-  GtkWidget *printer_rb, *printer_opt_menu, *printer_cmd_en;
+  GtkWidget *printer_rb, *printer_opt_menu;
+  GtkWidget *printer_cmd_lbl, *printer_cmd_en;
   GtkWidget *file_rb, *output_file_en;
   GtkWidget *all_pages_rb, *cur_page_rb;
   GtkWidget *from_to_rb, *from_sp_but, *to_sp_but;
@@ -97,6 +98,7 @@ struct _OutputData
 #define MAX_PLIST 8
 static gchar *lpc_command = NULL;
 static gchar *lpstat_command = NULL;
+static gboolean printer_enabled;
 
 /* Do various tests to determine how to get the list of printers.
    There are so many veriants of the lpr system... */
@@ -205,31 +207,26 @@ test_lpstat (gchar *lpstat)
   return ret_code;
 }
 
-static gboolean
-ensure_commands ()
+static void
+ensure_commands (GtkWidget *viewer_window)
 {
-  gboolean ret_code;
   gchar *lpc, *lpstat;
   
-  if (lpc_command || lpstat_command)
-    ret_code = TRUE;
-  else
+  if (!lpc_command && !lpstat_command)
     {
       lpc = where_is ("lpc");
       lpstat = where_is ("lpstat");
          
       if (lpc)
-	ret_code = test_lpc (lpc);
+	printer_enabled = test_lpc (lpc);
       else if (lpstat)
-	ret_code = test_lpstat (lpstat);
+	printer_enabled = test_lpstat (lpstat);
       else
-	ret_code = FALSE;
+	printer_enabled = FALSE;
 
       g_free (lpc);
       g_free (lpstat);
     }
-
-  return ret_code;
 }
 
 static int
@@ -435,7 +432,7 @@ make_output_frame (PrintData *print_data)
 {
   GtkWidget *output_frame, *table, *output_separator;
   GtkWidget *printer_menu;
-  GtkWidget *printer_cmd_lbl, *output_file_lbl;
+  GtkWidget *output_file_lbl;
   GSList *rb_group;
   gchar *output_file_txt;
 
@@ -462,8 +459,9 @@ make_output_frame (PrintData *print_data)
 		      "clicked", GTK_SIGNAL_FUNC (toggle_entries_cb),
 		      &(print_data->widgets));			     
 
-  printer_cmd_lbl = gtk_label_new (_("Command"));
-  gtk_misc_set_alignment (GTK_MISC (printer_cmd_lbl), 0.0, 0.5);
+  print_data->widgets.printer_cmd_lbl = gtk_label_new (_("Command"));
+  gtk_misc_set_alignment (GTK_MISC (print_data->widgets.printer_cmd_lbl),
+			  0.0, 0.5);
   output_file_lbl = gtk_label_new (_("File"));
   gtk_misc_set_alignment (GTK_MISC (output_file_lbl), 0.0, 0.5);
   
@@ -494,7 +492,7 @@ make_output_frame (PrintData *print_data)
 			     print_data->widgets.printer_opt_menu,
 			     1, 2, 0, 1);
   gtk_table_attach_defaults (GTK_TABLE (table),
-			     printer_cmd_lbl,
+			     print_data->widgets.printer_cmd_lbl,
 			     0, 1, 1, 2);
   gtk_table_attach_defaults (GTK_TABLE (table),
 			     print_data->widgets.printer_cmd_en,
@@ -525,6 +523,8 @@ make_output_frame (PrintData *print_data)
     {
       gtk_button_clicked (GTK_BUTTON (print_data->widgets.file_rb));
       gtk_widget_set_sensitive (print_data->widgets.printer_opt_menu,
+				FALSE);
+      gtk_widget_set_sensitive (print_data->widgets.printer_cmd_lbl,
 				FALSE);
       gtk_widget_set_sensitive (print_data->widgets.printer_rb,
 				FALSE);
@@ -764,7 +764,7 @@ output_document (OutputData *output_data)
   g_free (ps_title);
   g_free (ps_creator);
   
-  p_data = gfv_progress_new (GTK_WINDOW (output_data->parent_window),
+  p_data = gfv_progress_new (output_data->parent_window,
 			     _("Please wait..."), NULL, ABORT_BTN);
   
   while (cur_page_nbr <= output_data->to_page && success)
@@ -896,7 +896,7 @@ file_exists_dialog (OutputData *output_data, DialogWindow *print_dialog)
   dialog_window_set_content_with_frame (err_dialog, msg_lbl);
   
   button_box = dialog_window_bbox ();
-  dialog_window_set_button_box (err_dialog, GTK_HBUTTON_BOX (button_box));
+  dialog_window_set_button_box (err_dialog, button_box);
   dialog_window_set_escapable (err_dialog);
 
   yes_but = gtk_button_new_with_label (_("Yes, please do"));
@@ -919,7 +919,8 @@ file_exists_dialog (OutputData *output_data, DialogWindow *print_dialog)
   output_data->err_dialog = err_dialog;
   output_data->print_dialog = print_dialog;
 
-  dialog_window_show (err_dialog, dialog_window_get_gtkwin (print_dialog));
+  dialog_window_show (err_dialog,
+		      dialog_window_get_gtkwin (print_dialog));
 }
 
 static gint
@@ -1021,7 +1022,7 @@ print_dialog_bbox (PrintData *print_data)
 
   button_box = dialog_window_bbox ();
   dialog_window_set_button_box (print_data->print_dialog,
-				GTK_HBUTTON_BOX (button_box));
+				button_box);
   dialog_window_set_escapable (print_data->print_dialog);
 
   print_but = gtk_button_new_with_label (_("Print"));
@@ -1082,24 +1083,29 @@ void
 print_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
   DialogWindow *print_dlg;
+  static gboolean error_dialog_shown = FALSE;
 
-  if (ensure_commands ())
+  ensure_commands (viewer_data->viewer_window);
+
+  print_dlg = print_dialog (viewer_data);
+  dialog_window_show (print_dlg, viewer_data->viewer_window);
+
+  if (!printer_enabled && !error_dialog_shown)
     {
-      print_dlg = print_dialog (viewer_data);
-      dialog_window_show (print_dlg, GTK_WINDOW (viewer_data->viewer_window));
-    }
-  else
-    {
-      display_failure (viewer_data->viewer_window,
+      display_failure (dialog_window_get_gtkwin (print_dlg),
 		       _("This is weird..."),
 		       _("I was not able to determine how to work\n"
 			 "with your printing system appropriately.\n\n"
+			 "You will therefore only be able to export\n"
+			 "your data to a PostScript file.\n\n"
 			 "Please have your administrator verify if\n"
-			 "a descent printing system is installed.\n"
+			 "a descent printing system is installed.\n\n"
 			 "If this is so, there must be a bug in\n"
-			 "ghfaxviewer.\n"
-			 "In this case, please fill a bug report\n"
-			 "and send it to halifax-bugs@gnu.org."),
+			 "ghfaxviewer. Please fill a bug report\n"
+			 "accordingly and send it to\n"
+			 "halifax-bugs@gnu.org."),
 		       _("I promise!"));
+
+      error_dialog_shown = TRUE;
     }
 }

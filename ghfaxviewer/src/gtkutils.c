@@ -36,10 +36,8 @@ typedef struct _EscCallbackData EscCallbackData;
 
 struct _DialogWindow
 {
-  GtkWidget *window;
-  GtkWidget *vbox;
-  GtkWidget *content;
-  GtkHButtonBox *button_box;
+  GtkWidget *window, *vbox;
+  GtkWidget *content, *button_box;
 };
 
 struct _EscCallbackData
@@ -137,26 +135,27 @@ transient_destroy_cb (GtkWidget *window, gpointer data)
 }
 
 void
-transient_window_show (GtkWindow *transient, GtkWindow *parent)
+transient_window_show (GtkWidget *transient, GtkWidget *parent)
 {
-  gtk_window_set_transient_for (transient, parent);
+  gtk_window_set_transient_for (GTK_WINDOW (transient),
+				GTK_WINDOW (parent));
 
-  if (parent->modal)
+  if (((GtkWindow *) parent)->modal)
     {
       gtk_object_set_data (GTK_OBJECT (transient), "parent_was_modal",
 			   parent);
-      gtk_window_set_modal (parent, FALSE);
+      gtk_window_set_modal ((GtkWindow *) parent, FALSE);
     }
 
-  gtk_window_set_modal (transient, TRUE);
-  gtk_window_set_policy (GTK_WINDOW (transient), FALSE, FALSE, TRUE);
+  gtk_window_set_modal ((GtkWindow *) transient, TRUE);
+  gtk_window_set_policy ((GtkWindow *) transient, FALSE, FALSE, TRUE);
 
   gtk_signal_connect (GTK_OBJECT (transient), "destroy",
 		      transient_destroy_cb, NULL);
 
-  gtk_widget_show_all (GTK_WIDGET (transient));
+  gtk_widget_show_all (transient);
 #ifndef __WIN32__
-  window_set_icon (GTK_WIDGET (transient),
+  window_set_icon (transient,
 		   PIXMAP ("ghfaxviewer-icon.xpm"));
 #endif
 
@@ -293,11 +292,11 @@ dialog_window_add_destroy_callback (DialogWindow *window,
 
 void
 dialog_window_set_button_box (DialogWindow *window,
-			      GtkHButtonBox *button_box)
+			      GtkWidget *button_box)
 {
   if (!window->button_box)
     {
-      gtk_box_pack_end (GTK_BOX (window->vbox), GTK_WIDGET (button_box),
+      gtk_box_pack_end (GTK_BOX (window->vbox), button_box,
 			FALSE, FALSE, 0);
       window->button_box = button_box;
     }
@@ -317,22 +316,22 @@ dialog_window_set_button (DialogWindow *window,
 		      FALSE, FALSE, 0);
 
   dialog_window_set_button_box (window,
-				GTK_HBUTTON_BOX (button_box));
+				button_box);
 
   GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (button);
 }
 
-GtkWindow *
+GtkWidget *
 dialog_window_get_gtkwin (DialogWindow *window)
 {
-  return ((GtkWindow*) window->window);
+  return (window->window);
 }
 
 void
-dialog_window_show (DialogWindow *dialog, GtkWindow *parent)
+dialog_window_show (DialogWindow *dialog, GtkWidget *parent)
 {
-  transient_window_show (GTK_WINDOW (dialog->window), parent);
+  transient_window_show (dialog->window, parent);
 }
 
 void
