@@ -1,18 +1,28 @@
 Before version 1.0 (03/29/2001):
 
-DONE - implement Win32 printing;
-D - implement usage of gnome-print;
-D (PARTIALLY) - "gnomification";
-DONE - printing to an existing file needs to be reported;
+- add support for plain G3 format and Winfax format; (->independent image library)
 - add better handling of paper size in both Win32 and UNIX versions;
 - add paper selection for common types of paper format,
   the viewer currently assumes that the output format is
   the same as the input file;
-DONE - add checks for tiff files:
+- fix problems and conflicts due to different BSD lpr versions and
+  behaviours (what a standard)
+- all the relevant buttons and menus should be enabled/disabled when
+  it is visually logical to do so (file opened/closed)
+- integration with libghfl (the GNU HaliFAX Library for transport);
+- LPSTAT_COMMAND and LPC_COMMAND are dirty static macros that should be
+  replaced with dynamic functions to handle the printing system.
+
+CONTINUOUS - checking for memleaks and bugs;
+
+D - implement Win32 printing;
+D - implement usage of gnome-print;
+D - "gnomification";
+D - printing to an existing file needs to be reported;
+D - add checks for tiff files:
 D      - check for file magic;
 D      - check for coherence between images infos and actual image data;
-DONE - add error dialogs;
-DONE (partially) - add progress dialogs;
-- integration with libghfl (the GNU HaliFAX Library);
-CONTINUOUS - checking for memleaks and bugs;
-- add support for plain G3 format and Winfax format;
+D - add error dialogs;
+D - add progress dialogs;
+D - make dialogs rely on the DialogWindow pseudo-widget (gtkutils.c)
+

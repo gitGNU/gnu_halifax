@@ -284,8 +284,9 @@ dialog_window_add_destroy_callback (DialogWindow *window,
 				    GtkSignalFunc callback,
 				    gpointer data)
 {
-  gtk_signal_connect (GTK_OBJECT (window->window), "destroy",
-		      GTK_SIGNAL_FUNC (callback), data);
+  gtk_signal_connect (GTK_OBJECT (window->window),
+		      "destroy",
+		      callback, data);
 }
 
 void
@@ -359,4 +360,17 @@ back_gtkstyle (GtkRcStyle *style, GtkStateType state,
   color.blue = blue;
   style->bg[state] = color;
   style->color_flags[state] = GTK_RC_BG;
+}
+
+/* Handle-box transientization */
+
+void
+handle_box_transient_cb (GtkHandleBox *handle_box, GtkWidget *hb_child,
+			 GdkWindow *parent)
+{
+  gtk_signal_disconnect_by_func (GTK_OBJECT (handle_box),
+				 GTK_SIGNAL_FUNC (handle_box_transient_cb),
+				 parent);
+  gdk_window_set_transient_for (handle_box->float_window,
+				parent);
 }

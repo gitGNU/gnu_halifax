@@ -219,6 +219,9 @@ menu_bar_new (ViewerData *viewer_data)
   /* To give a GNOMEish look to those poor users with only GTK+
      available */
   menu_handle_box = gtk_handle_box_new ();
+  gtk_signal_connect (GTK_OBJECT (menu_handle_box), "child-detached",
+		      GTK_SIGNAL_FUNC (handle_box_transient_cb),
+		      viewer_data->viewer_window->window);
 
   viewer_menu = gtk_menu_bar_new ();
   gtk_container_add (GTK_CONTAINER (menu_handle_box), viewer_menu);

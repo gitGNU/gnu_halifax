@@ -167,6 +167,10 @@ toolbar_new (ViewerData *viewer_data)
 
   /* To give a GNOMEish look to those poor users without GNOME */
   bbar_handle_box = gtk_handle_box_new ();
+  gtk_signal_connect (GTK_OBJECT (bbar_handle_box), "child-detached",
+		      GTK_SIGNAL_FUNC (handle_box_transient_cb),
+		      viewer_data->viewer_window->window);
+
   new_bbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL,
 			      GTK_TOOLBAR_ICONS);
   gtk_container_add (GTK_CONTAINER (bbar_handle_box), new_bbar);

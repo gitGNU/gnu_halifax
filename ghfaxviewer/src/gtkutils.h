@@ -63,6 +63,10 @@ GtkWidget *pixmap_from_xpm (GtkWidget *ref_widget, gchar *file_name);
 void back_gtkstyle (GtkRcStyle *style, GtkStateType state,
 		    gushort red, gushort green, gushort blue);
 
+void handle_box_transient_cb (GtkHandleBox *handle_box,
+			      GtkWidget *hb_child,
+			      GdkWindow *parent);
+
 #ifndef __WIN32__
 void window_set_icon (GtkWidget *window, gchar *file_name);
 #endif /* __WIN32__ */

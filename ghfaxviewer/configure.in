@@ -24,6 +24,17 @@ GCONF_LIBS=""
 
 AC_PATH_PROG(LIBTOOL, "libtool")
 
+# FreeBSD hacks
+if test "`uname`" = "FreeBSD"; then
+  AC_MSG_WARN(Compiling for FreeBSD)
+  if test -x /usr/X11R6/bin/gtk12-config; then
+    GTK_CONFIG=/usr/X11R6/bin/gtk12-config
+  fi
+  if test -x /usr/local/bin/glib12-config; then
+    GLIB_CONFIG=/usr/local/bin/glib12-config
+  fi 
+fi
+
 if test "$CYGWIN" = yes || test "$MINGW32" = yes; then
 # under Windows
 OS=WIN32
@@ -162,10 +173,10 @@ if test "$window_system" = "yes"; then
     old_ld_flags="${LDFLAGS}"
     if test "x${x_includes}" != "x"; then
       CPPFLAGS="${CPPFLAGS} -I${x_includes}"
-      CFLAGS="${CFLAGS} -I${x_includes}"
+      CFLAGS="${CFLAGS} -I${x_includes} -I/usr/local/include"
     fi
     if test "x${x_libraries}" != "x"; then
-      LDFLAGS="${LDFLAGS} -L${x_libraries} -Wl,-rpath-link -Wl,${x_libraries}"
+      LDFLAGS="${LDFLAGS} -L${x_libraries} -L/usr/local/lib -Wl,-rpath-link -Wl,${x_libraries}"
     fi
   fi
   if test -z "$TIFF_LIBS"; then
