@@ -67,7 +67,7 @@ remaining-installation:
 	done
 	cp gfv_gtkrc $(DIST_DIR)
 	cp src/@PACKAGE@.exe $(DIST_DIR)
-	$(STRIP) $(DIST_DIR)/@PACKAGE@.exe
+	$(STRIP) --remove-section=.comment --remove-section=.note $(DIST_DIR)/@PACKAGE@.exe
 
 $(DIST_ARCHIVE): src/@PACKAGE@.exe dir-skeleton conversions remaining-installation
 

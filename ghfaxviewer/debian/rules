@@ -63,6 +63,7 @@ binary-arch: build install
 	#dh_installinit
 	#dh_installcron
 	dh_installman docs/ghfaxviewer.1
+	rm -f `pwd`/debian/$(package)/usr/share/man/man1/halifax.1
 	#dh_installinfo
 	#dh_undocumented ghfaxviewer.1.gz
 	dh_installchangelogs ChangeLog
