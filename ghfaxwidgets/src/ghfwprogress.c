@@ -181,6 +181,9 @@ ghfw_progress_window_class_init (GhfwProgressWindowClass *klass)
   object_class = (GtkObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
+  gobject_class->set_property = ghfw_progress_window_set_property;
+  gobject_class->get_property = ghfw_progress_window_get_property;
+
   g_object_class_install_property
     (gobject_class, DONE,
      g_param_spec_boolean ("done",
@@ -211,9 +214,6 @@ ghfw_progress_window_class_init (GhfwProgressWindowClass *klass)
 
 /*   gtk_object_class_add_signals (object_class, */
 /* 				&progress_window_aborted_signal, 1); */
-
-  gobject_class->set_property = ghfw_progress_window_set_property;
-  gobject_class->get_property = ghfw_progress_window_get_property;
 
   klass->aborted = ghfw_progress_window_real_aborted;
   object_class->destroy = ghfw_progress_window_destroy;

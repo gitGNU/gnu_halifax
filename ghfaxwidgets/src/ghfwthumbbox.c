@@ -67,10 +67,8 @@ widget_height (GtkWidget *widget, GtkOrientation orientation)
   if (GTK_WIDGET_VISIBLE (widget))
     {
       gtk_widget_get_child_requisition (widget, &requisition);
-      if (orientation == GTK_ORIENTATION_HORIZONTAL)
-	height = requisition.width;
-      else
-	height = requisition.height;
+      height = (orientation == GTK_ORIENTATION_HORIZONTAL) ?
+	requisition.width : requisition.height;
     }
   else
     height = 0;
@@ -119,7 +117,7 @@ refresh_buttons (LayoutData *layout_data)
 	{
 	  g_print ("condition (%d, %d) 1\n", up_height, down_height);
 	  gtk_button_released ((GtkButton*) layout_data->up);
-	  gtk_widget_hide (layout_data->up);
+ 	  gtk_widget_hide (layout_data->up);
 	  reset_timeout (layout_data);
 	  gtk_adjustment_set_value (adjustment, adjustment->value - up_height);
 	  up_height = 0;
@@ -144,7 +142,7 @@ refresh_buttons (LayoutData *layout_data)
         {
 	  g_print ("condition (%d, %d) 3\n", up_height, down_height);
 	  gtk_button_released ((GtkButton*) layout_data->down);
-	  gtk_widget_hide (layout_data->down);
+ 	  gtk_widget_hide (layout_data->down);
 	  reset_timeout (layout_data);
         }
     }
@@ -226,6 +224,10 @@ layout_resize_cb (GtkWidget *layout,
   g_print ("layout_resize_cb\n");
 
   delta = (layout_data->height - (gint) adjustment->page_size);
+  g_print ("delta: %d\n", delta);
+  g_print ("adjustment->page_size: %f\n", adjustment->page_size);
+  g_print ("adjustment->value: %f\n", adjustment->value);
+  g_print ("layout_data->height: %d\n", layout_data->height);
 
   if ((adjustment->value > delta)
       && (delta >= 0))
@@ -594,10 +596,8 @@ layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
   layout_set_width (layout_data, width);
 
   /* signal stuff */
-  g_signal_connect (G_OBJECT (gtk_layout),
-		    "size-allocate",
-		    G_CALLBACK (layout_resize_cb),
-		    layout_data);
+  g_signal_connect (G_OBJECT (gtk_layout), "size-allocate",
+		    G_CALLBACK (layout_resize_cb), layout_data);
   gtk_widget_add_events (gtk_layout, GDK_BUTTON_PRESS_MASK);
   widget_mouse_scroll_prepare (gtk_layout, layout_data);
   if (GTK_WIDGET_REALIZED (ref_widget))
@@ -606,8 +606,8 @@ layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
     g_signal_connect (G_OBJECT (ref_widget), "realize",
 		      G_CALLBACK (put_icons_on_buttons), layout_data);
 /* #ifdef __WIN32__ */
-  g_signal_connect (adjustment, "value_changed",
-		    G_CALLBACK (win32_layout_changed_cb), layout_data);
+/*   g_signal_connect (adjustment, "value_changed", */
+/* 		    G_CALLBACK (win32_layout_changed_cb), layout_data); */
 /* #endif */
 
   g_object_set_data_full (G_OBJECT (box),
@@ -839,13 +839,13 @@ void
 layout_set_bg_color (GtkWidget *layout,
 		     gushort red, gushort green, gushort blue)
 {
-  LayoutData *layout_data;
-  GtkRcStyle *bg_style;
+/*   LayoutData *layout_data; */
+/*   GtkRcStyle *bg_style; */
 
-  layout_data = g_object_get_data (G_OBJECT (layout), "_layout_data");
+/*   layout_data = g_object_get_data (G_OBJECT (layout), "_layout_data"); */
 
-  bg_style = gtk_rc_style_new ();
-  back_gtkstyle (bg_style, GTK_STATE_NORMAL, red, green, blue);
-  gtk_widget_modify_style (layout_data->gtk_layout, bg_style);
-  gtk_rc_style_unref (bg_style);
+/*   bg_style = gtk_rc_style_new (); */
+/*   back_gtkstyle (bg_style, GTK_STATE_NORMAL, red, green, blue); */
+/*   gtk_widget_modify_style (layout_data->gtk_layout, bg_style); */
+/*   gtk_rc_style_unref (bg_style); */
 }
