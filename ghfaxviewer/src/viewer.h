@@ -39,6 +39,9 @@ struct _ViewerData
   GtkWidget *viewer_window;
   GtkWidget *page_area;
   int rotation;
+
+  /* File selection dialog */
+  GtkWidget *file_dlg;
   
   /* button bar */
   GtkWidget *bb_buttons[4];
@@ -46,9 +49,6 @@ struct _ViewerData
 
   /* print dialog */
   GtkWidget *zoom_entry;
-  
-  /* print dialog */
-  GtkWidget *print_dialog;
   
   /* thumbnails */
   GtkWidget *thumbs_fixed;

@@ -37,7 +37,6 @@ struct _DialogWindow
 {
   GtkWidget *window;
   GtkWidget *vbox;
-  GtkWidget *frame;
   GtkWidget *content;
   GtkHButtonBox *button_box;
 };
@@ -147,7 +146,7 @@ transient_window_show (GtkWindow *transient, GtkWindow *parent)
   increase_win_count ();
 }
 
-/* dialog windows */
+/* ESC-key handling */
 
 static gboolean
 key_press_event_cb (GtkWidget *window, GdkEventKey *event,
@@ -166,30 +165,51 @@ key_press_event_cb (GtkWidget *window, GdkEventKey *event,
   return ret_code;
 }
 
+void
+gtk_window_set_escapable (GtkWindow *window)
+{
+  gtk_signal_connect (GTK_OBJECT (window), "key-press-event",
+		      GTK_SIGNAL_FUNC (key_press_event_cb), NULL);
+}
+
+/* dialog windows */
+
 DialogWindow *
 dialog_window_new (gchar *title)
 {
-  DialogWindow *dialog_win;
+  DialogWindow *window;
 
-  dialog_win = g_malloc (sizeof (DialogWindow));
-  dialog_win->window = gtk_window_new (GTK_WINDOW_DIALOG);
-  gtk_window_set_title (GTK_WINDOW (dialog_win->window), title);
-  gtk_window_set_position (GTK_WINDOW (dialog_win->window), GTK_WIN_POS_CENTER);
-  gtk_signal_connect (GTK_OBJECT (dialog_win->window), "key-press-event",
-		      GTK_SIGNAL_FUNC (key_press_event_cb), NULL);		      
-  dialog_win->vbox = gtk_vbox_new (FALSE, 5);
-  gtk_container_add (GTK_CONTAINER (dialog_win->window),
-		     dialog_win->vbox);
+  window = g_malloc (sizeof (DialogWindow));
+  window->window = gtk_window_new (GTK_WINDOW_DIALOG);
+  gtk_window_set_title (GTK_WINDOW (window->window), title);
+  gtk_window_set_position (GTK_WINDOW (window->window), GTK_WIN_POS_CENTER);
+  window->vbox = gtk_vbox_new (FALSE, 5);
+  gtk_container_add (GTK_CONTAINER (window->window),
+		     window->vbox);
 
-  dialog_win->frame = gtk_frame_new (NULL);
-  gtk_box_pack_start (GTK_BOX (dialog_win->vbox), dialog_win->frame,
-		      TRUE, FALSE, 2);
-  gtk_container_set_border_width (GTK_CONTAINER (dialog_win->frame), 10);
+  window->content = NULL;
+  window->button_box = NULL;
 
-  dialog_win->content = NULL;
-  dialog_win->button_box = NULL;
+  return window;
+}
 
-  return dialog_win;
+void
+dialog_window_set_escapable (DialogWindow *window)
+{
+  gtk_window_set_escapable ((GtkWindow*) window->window);
+}
+
+GtkWidget *
+dialog_window_bbox ()
+{
+  GtkWidget *button_box;
+
+  button_box = gtk_hbutton_box_new ();
+  gtk_container_set_border_width (GTK_CONTAINER (button_box), 5);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (button_box), GTK_BUTTONBOX_END);
+  gtk_button_box_set_spacing (GTK_BUTTON_BOX (button_box), 5);
+
+  return button_box;
 }
 
 void
@@ -197,7 +217,8 @@ dialog_window_set_content (DialogWindow *window, GtkWidget *content)
 {
   if (!window->content)
     {
-      gtk_container_add (GTK_CONTAINER (window->frame), content);
+      gtk_box_pack_start (GTK_BOX (window->vbox), content,
+			  TRUE, FALSE, 2);
       window->content = content;
     }
   else
@@ -206,13 +227,36 @@ dialog_window_set_content (DialogWindow *window, GtkWidget *content)
 }
 
 void
+dialog_window_set_content_with_frame (DialogWindow *window, GtkWidget *content)
+{
+  GtkWidget *frame;
+
+  frame = gtk_frame_new (NULL);
+  gtk_container_set_border_width (GTK_CONTAINER (frame), 10);
+  gtk_container_add (GTK_CONTAINER (frame), content);
+  dialog_window_set_content (window, frame);
+  
+  window->content = content;
+}
+
+void
+dialog_window_add_destroy_callback (DialogWindow *window,
+				    GtkSignalFunc callback,
+				    gpointer data)
+{
+  gtk_signal_connect (GTK_OBJECT (window->window), "destroy",
+		      GTK_SIGNAL_FUNC (callback), data);
+}
+
+void
 dialog_window_set_button_box (DialogWindow *window,
 			      GtkHButtonBox *button_box)
 {
   if (!window->button_box)
     {
+      dialog_window_set_escapable (window);
       gtk_box_pack_end (GTK_BOX (window->vbox), GTK_WIDGET (button_box),
-			TRUE, FALSE, 5);
+			FALSE, FALSE, 0);
       window->button_box = button_box;
     }
   else
@@ -226,14 +270,21 @@ dialog_window_set_button (DialogWindow *window,
 {
   GtkWidget *button_box;
 
-  button_box = gtk_hbutton_box_new ();
+  button_box = dialog_window_bbox ();
   gtk_box_pack_start (GTK_BOX (button_box), button,
-		      FALSE, FALSE, 5);
+		      FALSE, FALSE, 0);
+
   dialog_window_set_button_box (window,
 				GTK_HBUTTON_BOX (button_box));
 
-  GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT | GTK_HAS_DEFAULT);
+  GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (button);
+}
+
+GtkWindow *
+dialog_window_get_gtkwin (DialogWindow *window)
+{
+  return ((GtkWindow*) window->window);
 }
 
 void

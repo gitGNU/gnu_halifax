@@ -19,7 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 /* Some useful GTK+-related functions used all around the program */
 
 #ifndef GTKUTILS_H
@@ -31,15 +30,26 @@ GtkWidget* menu_separator_new (GtkWidget *menu);
 void menu_item_new (GtkWidget *menu, gchar *label,
 		    GtkSignalFunc callback, gpointer data);
 
+void gtk_window_set_escapable (GtkWindow *window);
+
+void dialog_window_set_escapable (DialogWindow *window);
+GtkWidget *dialog_window_bbox ();
+
 DialogWindow *dialog_window_new (gchar *title);
 void dialog_window_set_content (DialogWindow *window, GtkWidget *content);
+void dialog_window_set_content_with_frame (DialogWindow *window,
+					   GtkWidget *content);
 void dialog_window_set_button_box (DialogWindow *window,
 				   GtkHButtonBox *button_box);
 void dialog_window_set_button (DialogWindow *window,
 			       GtkWidget *button);
+GtkWindow *dialog_window_get_gtkwin (DialogWindow *window);
 void dialog_window_show (DialogWindow *dialog, GtkWindow *parent);
 void dialog_window_destroy (DialogWindow *dialog);
 void dialog_window_destroy_from_signal (GtkWidget *widget, gpointer dialog);
+void dialog_window_add_destroy_callback (DialogWindow *window,
+					 GtkSignalFunc callback,
+					 gpointer data);
 
 void transient_window_show (GtkWindow *transient, GtkWindow *parent);
 

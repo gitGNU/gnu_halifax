@@ -1,3 +1,24 @@
+2001-04-30  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/gtkutils.c (dialog_window_get_gtkwin): new function to
+	return the GtkWindow of a DialogWindow;
+	(dialog_window_set_content): this function doesn't add a frame
+	around the dialog content anymore.
+	dialog_window_set_content_with_frame does this instead.
+
+	* src/ps_print.c: converted all the dialogs to DialogWindow's.
+	Deleted all references to parent->parent->... (really dirty) and
+	used real widget reference instead.
+
+2001-04-29  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/ps_print.c (no_overwrite_cb): non-event signal callbacks
+	should be void
+
+	* src/gtkutils.c (dialog_window_set_button_box): handling of the ESC
+	key put here. If your dialog has no button, you probably don't
+	want to be able to close it (progress, temporary dialog...).
+
 2001-04-28  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/viewer.c (viewer_window_cfg_event_cb): this function serves

@@ -252,7 +252,6 @@ viewer_window_unset_file (ViewerData *viewer_data)
   viewer_data->zoom_index = 5;
   viewer_data->rotation = ROT_NONE;
   viewer_data->page_pixmap = NULL;
-  viewer_data->print_dialog = NULL;
 }
 
 void
@@ -504,7 +503,6 @@ fax_viewer_new ()
   new_viewer->current_page = NULL;
   new_viewer->page_area = NULL;
   new_viewer->page_pixmap = NULL;
-  new_viewer->print_dialog = NULL;
   new_viewer->zoom_index = 4;
   new_viewer->rotation = ROT_NONE;
   new_viewer->motion_data = g_malloc (sizeof (MotionData));

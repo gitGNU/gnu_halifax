@@ -89,6 +89,7 @@ struct _PrintData
   FaxPage *current_page;
   gint first_page, last_page;
   PDlgWidgets widgets;
+  DialogWindow *print_dlg;
   GtkWidget *parent_window;
 };
 
@@ -98,7 +99,8 @@ struct _OutputData
   FaxFile *document;
   gchar *out_file_name;
   gint from_page, to_page;
-  GtkWidget *print_dlg, *err_dlg, *parent_window;
+  DialogWindow *print_dlg, *err_dlg;
+  GtkWidget *parent_window;
 };
 
 #define MAX_PLIST 8
@@ -573,17 +575,17 @@ print_image (FILE *print_file, FaxPage *fax_image,
       if (!aborted)
 	{
 	  cur_char = *(fax_image->image + counter);
-	  fprintf(print_file, "%.2x", (unsigned char) ~cur_char);
+	  fprintf (print_file, "%.2x", (unsigned char) ~cur_char);
 		
 	  if ((counter + 1) % 40 == 0)
-	    fprintf(print_file, "\n");
+	    fprintf (print_file, "\n");
 	}
       else
 	new_progress = 0;
     }
 
   if (!aborted && ((counter + 1) % 40 != 0))
-    fprintf(print_file, "\n");
+    fprintf (print_file, "\n");
 
   return new_progress;
 }
@@ -621,20 +623,20 @@ output_document (OutputData *output_data)
 			      VERSION,
 			      output_data->document->file_name);
 
-  fprintf(output_data->output_stream,
-	  "%%!PS-Adobe-3.0\n"
-	  "%%%%Creator: %s\n"
-	  "%%%%Title: %s\n"
-	  "%%%%CreationDate: %s"
-	  "%%%%DocumentData: Clean7Bit\n"
-	  "%%%%Origin: 0 0\n"
-	  "%%%%BoundingBox: 0 0 612 792\n"
-	  "%%%%LanguageLevel: 1\n"
-	  "%%%%Pages: (atend)\n"
-	  "%%%%EndComments\n"
-	  "%%%%BeginSetup\n"
-	  "%%%%EndSetup\n",
-	  ps_creator, ps_title, time_string);
+  fprintf (output_data->output_stream,
+	   "%%!PS-Adobe-3.0\n"
+	   "%%%%Creator: %s\n"
+	   "%%%%Title: %s\n"
+	   "%%%%CreationDate: %s"
+	   "%%%%DocumentData: Clean7Bit\n"
+	   "%%%%Origin: 0 0\n"
+	   "%%%%BoundingBox: 0 0 612 792\n"
+	   "%%%%LanguageLevel: 1\n"
+	   "%%%%Pages: (atend)\n"
+	   "%%%%EndComments\n"
+	   "%%%%BeginSetup\n"
+	   "%%%%EndSetup\n",
+	   ps_creator, ps_title, time_string);
   
   g_free (ps_title);
   g_free (ps_creator);
@@ -653,33 +655,33 @@ output_document (OutputData *output_data)
       cur_page = ti_seek_fax_page (output_data->document,
 				   cur_page_nbr - 1);
 
-      fprintf(output_data->output_stream,
-	      "%%%%Page: %d %d\n",
-	      cur_page_nbr,
-	      cur_page_nbr);
-      fprintf(output_data->output_stream,
-	      "gsave\n"
-	      "100 dict begin\n"
-	      "%f %f scale\n",
-	      ((float) cur_page->width * 72.0
-	       / (float) output_data->document->x_res),
-	      ((float) cur_page->height
-	       * 72.0
-	       / (float) output_data->document->y_res));
-      fprintf(output_data->output_stream,
-	      "%%ImageData: %d %d 1 1 0 1 2 \"image\"\n",
-	      cur_page->width, cur_page->height);
-      fprintf(output_data->output_stream,
-	      "/scanLine %d string def\n",
-	      (int) (cur_page->width / 8));
-      fprintf(output_data->output_stream,
-	      "%d %d 1\n", cur_page->width, cur_page->height);
-      fprintf(output_data->output_stream,
-	      "[%d 0 0 -%d 0 %d]\n", cur_page->width,
-	      cur_page->height, cur_page->height);
-      fprintf(output_data->output_stream,
-	      "{currentfile scanLine readhexstring pop} bind\n"
-	      "image\n");
+      fprintf (output_data->output_stream,
+	       "%%%%Page: %d %d\n",
+	       cur_page_nbr,
+	       cur_page_nbr);
+      fprintf (output_data->output_stream,
+	       "gsave\n"
+	       "100 dict begin\n"
+	       "%f %f scale\n",
+	       ((float) cur_page->width * 72.0
+		/ (float) output_data->document->x_res),
+	       ((float) cur_page->height
+		* 72.0
+		/ (float) output_data->document->y_res));
+      fprintf (output_data->output_stream,
+	       "%%ImageData: %d %d 1 1 0 1 2 \"image\"\n",
+	       cur_page->width, cur_page->height);
+      fprintf (output_data->output_stream,
+	       "/scanLine %d string def\n",
+	       (int) (cur_page->width / 8));
+      fprintf (output_data->output_stream,
+	       "%d %d 1\n", cur_page->width, cur_page->height);
+      fprintf (output_data->output_stream,
+	       "[%d 0 0 -%d 0 %d]\n", cur_page->width,
+	       cur_page->height, cur_page->height);
+      fprintf (output_data->output_stream,
+	       "{currentfile scanLine readhexstring pop} bind\n"
+	       "image\n");
       
       ti_load_fax_page (output_data->document, cur_page);
       cur_byte = print_image (output_data->output_stream,
@@ -690,10 +692,10 @@ output_document (OutputData *output_data)
 	success = FALSE;
       else
 	{
-	  fprintf(output_data->output_stream,
-		  "end\n"
-		  "grestore\n"
-		  "showpage\n");
+	  fprintf (output_data->output_stream,
+		   "end\n"
+		   "grestore\n"
+		   "showpage\n");
 
 	  cur_page_nbr++;
 	}
@@ -717,84 +719,86 @@ output_document (OutputData *output_data)
   return success;
 }
 
-static gint
-print_to_file_anyway_cb (GtkWidget *yes_button, OutputData
-			 *output_data)
+static void
+print_to_file_anyway_cb (GtkWidget *yes_button,
+			 OutputData *output_data)
 {
   gboolean success;
-  
-  gtk_widget_destroy (output_data->err_dlg);
+  DialogWindow *print_dlg;
   
   while (gtk_events_pending ())
     gtk_main_iteration ();
   
   output_data->output_stream = fopen (output_data->out_file_name, "w+");
   success = output_document (output_data);
-  
-  if (success)
-    gtk_widget_destroy (output_data->print_dlg);
-  else
-    unlink (output_data->out_file_name);
-
   fclose (output_data->output_stream);
-  g_free (output_data->out_file_name);
-  g_free (output_data);
   
-  return FALSE;
-}
+  print_dlg = output_data->print_dlg;
 
-static gint
-no_overwrite_cb (GtkWidget *no_button, OutputData *output_data)
-{
-  gtk_widget_destroy (output_data->err_dlg);
-  g_free (output_data->out_file_name);
-  g_free (output_data);
-
-  return FALSE;
+  if (success)
+    {
+      dialog_window_destroy (output_data->err_dlg);
+      dialog_window_destroy (print_dlg);
+    }
+  else
+    {
+      unlink (output_data->out_file_name);
+      dialog_window_destroy (output_data->err_dlg);
+    }
 }
 
 static void
-file_exists_dlg (OutputData *output_data, GtkWidget *print_dlg)
+file_exists_dlg_destroy_cb (GtkWidget *window, OutputData *output_data)
 {
-  GtkWidget *err_win, *vbox, *hbox, *msg_lbl, *yes_but, *no_but;
+  g_free (output_data->out_file_name);
+  g_free (output_data);
+}
+
+static void
+file_exists_dlg (OutputData *output_data, DialogWindow *print_dlg)
+{
+  DialogWindow *err_dlg;
+  GtkWidget *button_box, *msg_lbl, *yes_but, *no_but;
   gchar *message;
   
   message = g_strdup_printf (_("%s already exists.\n"
 			       "Do you want to overwrite it?"),
 			     output_data->out_file_name);
 
-  err_win = gtk_window_new (GTK_WINDOW_DIALOG);
-  gtk_window_set_title (GTK_WINDOW (err_win), _("Please answer..."));
-  gtk_container_set_border_width (GTK_CONTAINER (err_win), 10);
-  
-  vbox = gtk_vbox_new (FALSE, 1);
-  gtk_container_add (GTK_CONTAINER (err_win), vbox);
-	
+  err_dlg = dialog_window_new (_("Please answer..."));
+  dialog_window_add_destroy_callback (err_dlg,
+				      GTK_SIGNAL_FUNC (file_exists_dlg_destroy_cb),
+				      output_data);
+
   msg_lbl = gtk_label_new (message);
   g_free (message);
-  gtk_box_pack_start (GTK_BOX (vbox), msg_lbl, TRUE, FALSE, 3);
   gtk_label_set_justify (GTK_LABEL (msg_lbl), GTK_JUSTIFY_LEFT);
+  dialog_window_set_content_with_frame (err_dlg, msg_lbl);
   
-  hbox = gtk_hbox_new (FALSE, 3);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, FALSE, 0);
-  
-  output_data->err_dlg = err_win;
-  output_data->print_dlg = print_dlg;
+  button_box = dialog_window_bbox ();
+  dialog_window_set_button_box (err_dlg, GTK_HBUTTON_BOX (button_box));
 
   yes_but = gtk_button_new_with_label (_("Yes, please do"));
   gtk_signal_connect (GTK_OBJECT (yes_but), "clicked",
 		      GTK_SIGNAL_FUNC (print_to_file_anyway_cb),
 		      output_data);
-  gtk_box_pack_start (GTK_BOX (hbox), yes_but, TRUE, FALSE, 2);
-  
+  gtk_box_pack_start (GTK_BOX (button_box), yes_but,
+		      FALSE, FALSE, 5);
+  GTK_WIDGET_SET_FLAGS (yes_but, GTK_CAN_DEFAULT);
+
   no_but = gtk_button_new_with_label (_("No thanks"));
   gtk_signal_connect (GTK_OBJECT (no_but), "clicked",
-		      GTK_SIGNAL_FUNC (no_overwrite_cb),
-		      output_data);
-  gtk_box_pack_start (GTK_BOX (hbox), no_but, TRUE, FALSE, 2);
+		      GTK_SIGNAL_FUNC (dialog_window_destroy_from_signal),
+		      err_dlg);
+  gtk_box_pack_start (GTK_BOX (button_box), no_but,
+		      FALSE, FALSE, 5);
+  GTK_WIDGET_SET_FLAGS(no_but, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default (no_but);
 
-  transient_window_show (GTK_WINDOW (err_win),
-			 GTK_WINDOW (print_dlg));
+  output_data->err_dlg = err_dlg;
+  output_data->print_dlg = print_dlg;
+
+  dialog_window_show (err_dlg, dialog_window_get_gtkwin (print_dlg));
 }
 
 static gint
@@ -835,7 +839,6 @@ launch_print_job_cb (GtkWidget *widget,
       output_data->from_page = output_data->to_page =
 	print_data->current_page->nbr + 1;
 
-
   if (direction == PRINT_TO_PRINTER)
     {
       print_command = gtk_entry_get_text
@@ -855,7 +858,7 @@ launch_print_job_cb (GtkWidget *widget,
 	  system (command);
 	  g_free (command);
 
-	  gtk_widget_destroy (widget->parent->parent);
+	  dialog_window_destroy (print_data->print_dlg);
 	}
 
       unlink (output_data->out_file_name);
@@ -881,71 +884,80 @@ launch_print_job_cb (GtkWidget *widget,
 	  g_free (output_data->out_file_name);
 	  g_free (output_data);
 
-	  gtk_widget_destroy (widget->parent->parent);
+	  dialog_window_destroy (print_data->print_dlg);
 	}
       else
-	file_exists_dlg (output_data, widget->parent->parent);
+	file_exists_dlg (output_data, print_data->print_dlg);
     }
 
-
   return FALSE;
 }
 
-static gint
-cancel_print_cb (GtkWidget *widget, gpointer null)
+static void
+print_dlg_bbox (PrintData *print_data)
 {
-  gtk_widget_destroy (widget->parent->parent);
+  GtkWidget *button_box, *print_but, *cancel_but;
 
-  return FALSE;
+  button_box = dialog_window_bbox ();
+  dialog_window_set_button_box (print_data->print_dlg,
+				GTK_HBUTTON_BOX (button_box));
+
+  print_but = gtk_button_new_with_label (_("Print"));
+  GTK_WIDGET_SET_FLAGS(print_but, GTK_CAN_DEFAULT);
+  gtk_box_pack_start (GTK_BOX (button_box), print_but, FALSE, FALSE, 0);
+  gtk_widget_grab_default (print_but);
+  gtk_signal_connect (GTK_OBJECT (print_but), "clicked",
+		      GTK_SIGNAL_FUNC (launch_print_job_cb),
+		      print_data);
+
+  cancel_but = gtk_button_new_with_label (_("Cancel"));
+  GTK_WIDGET_SET_FLAGS(cancel_but, GTK_CAN_DEFAULT);
+  gtk_box_pack_start (GTK_BOX (button_box), cancel_but, FALSE, FALSE, 0);
+  gtk_signal_connect (GTK_OBJECT (cancel_but), "clicked",
+		      GTK_SIGNAL_FUNC (dialog_window_destroy_from_signal),
+		      print_data->print_dlg);
+
+  gtk_widget_show (button_box);
 }
 
-static GtkWidget*
+static void
+print_dlg_destroy_cb (GtkWidget *widget, PrintData *print_data)
+{
+  g_free (print_data);
+}
+
+static DialogWindow *
 print_dialog (ViewerData *viewer_data)
 {
-  GtkWidget *print_dlg, *table,
-    *output_frame, *page_frame,
-    *print_but, *cancel_but;
+  DialogWindow *print_dlg;
+  GtkWidget *table, *output_frame, *page_frame, *button_box;
   PrintData *print_data;
+
+  print_dlg = dialog_window_new (_("Print..."));
 
   print_data = g_malloc (sizeof (PrintData));
   print_data->document = viewer_data->fax_file;
   print_data->current_page = viewer_data->current_page;
   print_data->parent_window = viewer_data->viewer_window;
-
-  print_dlg = gtk_window_new (GTK_WINDOW_DIALOG);
-  gtk_window_set_title (GTK_WINDOW (print_dlg), _("Print..."));
-  gtk_container_set_border_width (GTK_CONTAINER (print_dlg), 3);
+  print_data->print_dlg = print_dlg;
 
   table = gtk_table_new (3, 2, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 5);
   gtk_table_set_col_spacings (GTK_TABLE (table), 5);
-  gtk_container_add (GTK_CONTAINER (print_dlg), table);
-
   output_frame = make_output_frame (print_data);
+  page_frame = make_page_frame (print_data);
+
   gtk_table_attach_defaults (GTK_TABLE (table), output_frame,
 			     0, 2, 0, 1); 
-
-  page_frame = make_page_frame (print_data);
   gtk_table_attach_defaults (GTK_TABLE (table), page_frame,
 			     0, 2, 1, 2); 
 
-  print_but = gtk_button_new_with_label (_("Print"));
-  gtk_signal_connect (GTK_OBJECT (print_but), "clicked",
-		      GTK_SIGNAL_FUNC (launch_print_job_cb),
-		      print_data);
-  gtk_table_attach_defaults (GTK_TABLE (table),
-			     print_but,
-			     0, 1, 2, 3); 
-  
-  cancel_but = gtk_button_new_with_label (_("Cancel"));
-  gtk_signal_connect (GTK_OBJECT (cancel_but), "clicked",
-		      GTK_SIGNAL_FUNC (cancel_print_cb),
-		      NULL);
-  gtk_table_attach_defaults (GTK_TABLE (table), cancel_but,
-			     1, 2, 2, 3); 
+  print_dlg_bbox (print_data);
 
-  gtk_object_set_data_full (GTK_OBJECT (print_dlg),
-			    "print_data", print_data, g_free);
+  dialog_window_set_content (print_dlg, table);
+  dialog_window_add_destroy_callback (print_dlg,
+				      GTK_SIGNAL_FUNC (print_dlg_destroy_cb),
+				      print_data);
 
   return print_dlg;
 }
@@ -953,12 +965,11 @@ print_dialog (ViewerData *viewer_data)
 void
 print_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
+  DialogWindow *print_dlg;
+
   if (viewer_data->fax_file)
     {
-      viewer_data->print_dialog =
-	print_dialog (viewer_data);
-      
-      transient_window_show (GTK_WINDOW (viewer_data->print_dialog),
-			     GTK_WINDOW (viewer_data->viewer_window));
+      print_dlg = print_dialog (viewer_data);
+      dialog_window_show (print_dlg, GTK_WINDOW (viewer_data->viewer_window));
     }
 }

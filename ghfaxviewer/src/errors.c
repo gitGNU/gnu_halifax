@@ -97,7 +97,7 @@ display_failure (GtkWidget *window,
 		      dialog_window_destroy_from_signal,
 		      fail_window);
 
-  dialog_window_set_content (fail_window, vbox);
+  dialog_window_set_content_with_frame (fail_window, vbox);
   dialog_window_set_button (fail_window, ok_but);
 
   dialog_window_show (fail_window,

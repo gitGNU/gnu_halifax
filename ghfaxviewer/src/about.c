@@ -184,7 +184,7 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 
   about_dialog = dialog_window_new (_("About..."));
   content = about_content (viewer_window);
-  dialog_window_set_content (about_dialog, content);
+  dialog_window_set_content_with_frame (about_dialog, content);
 
   ok_button = gtk_button_new_with_label (_("Close"));
   gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",

@@ -319,7 +319,7 @@ create_info_window (GtkWidget *viewer_window, TiffInfo *file_info)
 
   info_window = dialog_window_new (_("Fax properties"));
   table = create_info_table (viewer_window, file_info);
-  dialog_window_set_content (info_window, table);
+  dialog_window_set_content_with_frame (info_window, table);
 
 #ifdef NEED_GNOMESUPPORT_H
   ok_button = gnome_stock_button (GNOME_STOCK_BUTTON_OK);

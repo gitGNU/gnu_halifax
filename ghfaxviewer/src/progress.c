@@ -77,7 +77,7 @@ gfv_progress_new (GtkWindow *parent_window,
 
   vbox = gtk_vbox_new (FALSE, 3);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-  dialog_window_set_content (dlg_window, vbox);
+  dialog_window_set_content_with_frame (dlg_window, vbox);
 	
   label = gtk_label_new (action_string);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, FALSE, 3);

@@ -32,26 +32,23 @@
 #include "setup.h"
 
 static void
-file_dlg_ok_cb (GtkWidget *ok_button, GtkWidget *file_dlg)
+file_dlg_ok_cb (GtkWidget *ok_button, ViewerData *viewer_data)
 {
   gchar *file_name;
 #ifdef CAN_SAVE_CONFIG
   gchar *last_directory;
 #endif
   GSList *fail_list, *fail_reason_list;
-  ViewerData *viewer_data;
 
   file_name = g_strdup (gtk_file_selection_get_filename
-			(GTK_FILE_SELECTION (file_dlg)));
+			(GTK_FILE_SELECTION (viewer_data->file_dlg)));
   fail_list = NULL;
   fail_reason_list = NULL;
 
   if (file_name)
     {
-      viewer_data = gtk_object_get_user_data (GTK_OBJECT (file_dlg));
-      gtk_widget_destroy (file_dlg);
       fax_viewer_open_file (viewer_data, file_name);
-
+      gtk_widget_destroy (viewer_data->file_dlg);
 #ifdef CAN_SAVE_CONFIG
       last_directory = g_dirname (file_name);
       save_last_directory (last_directory);
@@ -71,6 +68,8 @@ file_dialog (ViewerData *viewer_data)
   open_dialog =
     gtk_file_selection_new (_("Please choose a FAX "
 			      "G3 file to open..."));
+  gtk_window_set_escapable (GTK_WINDOW (open_dialog));
+  viewer_data->file_dlg = open_dialog;
 
 #ifdef CAN_SAVE_CONFIG
   last_dir = load_last_directory ();
@@ -83,14 +82,12 @@ file_dialog (ViewerData *viewer_data)
 				  (open_dialog)->ok_button),
 		      "clicked",
 		      GTK_SIGNAL_FUNC (file_dlg_ok_cb),
-		      (gpointer) open_dialog);
+		      viewer_data);
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION
 					 (open_dialog)->cancel_button),
 			     "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			     GTK_OBJECT (open_dialog));
-  gtk_object_set_user_data (GTK_OBJECT (open_dialog),
-			    (gpointer) viewer_data);
 
   transient_window_show (GTK_WINDOW (open_dialog),
 			 GTK_WINDOW (viewer_data->viewer_window));
