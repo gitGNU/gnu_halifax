@@ -19,7 +19,9 @@ of them have not yet been written.
 
 Currently, are available from the CVS repository:
 - ghfaxviewer
+- ghfaxwidgets
 - gfax (soon)
+- halifax (not recommended)
 
 Instead of downloading the big halifax module, we have setup CVS so that
 you can download each one separately. This is currently useful because
