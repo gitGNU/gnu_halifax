@@ -1,6 +1,6 @@
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
-SUBDIRS = @SUPPSUBDIRS@ intl po src tests debian
+SUBDIRS = @SUPPSUBDIRS@ intl po src tests
 
 bin_SCRIPTS = ghfw-config
 

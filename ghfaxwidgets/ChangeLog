@@ -1,3 +1,8 @@
+2001-10-16  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/ghfwdlgwindow.c (ghfw_dlg_window_new): Dialog windows are
+	GTK_WINDOW_DIALOG's
+
 2001-10-12  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/ghfwthumbbox.c (layout_data_create): removed unused

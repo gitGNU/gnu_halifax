@@ -229,7 +229,7 @@ ghfw_dlg_window_new (gchar *title)
   GtkWidget *dlg_window;
   
   dlg_window = GTK_WIDGET (gtk_type_new (ghfw_dlg_window_get_type ()));
-  GTK_WINDOW (dlg_window)->type = GTK_WINDOW_TOPLEVEL;
+  GTK_WINDOW (dlg_window)->type = GTK_WINDOW_DIALOG;
   gtk_window_set_title (GTK_WINDOW (dlg_window), title);
 
   return dlg_window;
@@ -256,7 +256,8 @@ ghfw_dlg_window_set_content (GhfwDlgWindow *window, GtkWidget *content)
 }
 
 void
-ghfw_dlg_window_set_content_with_frame (GhfwDlgWindow *window, GtkWidget *content)
+ghfw_dlg_window_set_content_with_frame (GhfwDlgWindow *window,
+					GtkWidget *content)
 {
   GtkWidget *frame;
 

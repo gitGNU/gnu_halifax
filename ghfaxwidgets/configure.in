@@ -311,6 +311,5 @@ src/pixmaps/Makefile
 tests/Makefile
 po/Makefile.in
 po/Makefile
-debian/Makefile
 ])
 
