@@ -1,7 +1,41 @@
+2001-04-27  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* configure.in: reversed dependency from gnome-print 0.28 to 0.25.
+	release 0.21.1.
+
+	* src/gtkutils.c (dialog_window_new): automatically display
+	dialogs at the center of the screen
+
+	* ghfaxviewer.1: we now have a manpage describing ghfaxviewer
+
+	* src/progress.c (gfv_progress_new): the cancel button is a
+	GNOME_STOCK_BUTTON_CANCEL if compiled for GNOME
+
+	* src/gn_print.c (prepare_print_master): display a progress dialog
+	to show print status as well as to permit to cancel the operation
+
+	* src/errors.c (display_failure): same thing as below for error
+	dialogs
+
+	* src/progress.c (gfv_progress_new): the progress windows are now
+	using the DialogWindow facility from gtkutils.c
+
+	* src/gtkutils.c (dialog_window_set_button): new function to make
+	it shorter to create dialog boxes with only one button;
+
 2001-04-26  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/viewer.c (fax_viewer_open_file): added a reference to the
+	parent window so that the file open error msgbox is transient for
+	it.
+
+	* src/errors.c: added a short description for the file.
+	(display_failure): the error message is now transient for the
+	viewer window
 
 	* src/setup.c: "viewer_def_*" and "default_dir" replaced with
 	macros, for cleanliness.
+	(CONFIG_KEY): added an ending '/' because of previous change
 
 	* src/menu.c (gnome_menu_bar_new): same thing as below.
 

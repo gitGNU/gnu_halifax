@@ -24,12 +24,6 @@
 
 #include "i18n.h"
 
-#ifdef __WIN32__
-#define DEGREES "Â°"
-#else
-#define DEGREES "°"
-#endif
-
 #define MAX_ZOOM_INDEX 8
 
 typedef struct _ViewerData ViewerData;

@@ -1,4 +1,7 @@
 # Note that this is NOT a relocatable package
+
+# for Mandrake, you might want to change the .gz extension to .bz2
+# for the manpage (at the end of the file)
 %define ver      @VERSION@
 %define rel      1
 %define prefix   /usr
@@ -11,7 +14,7 @@ Obsoletes: gfaxviewer
 Copyright: GPL
 Group: Applications/GNOME
 Vendor: Wolfgang Sourdeau <wolfgang@ultim.net>
-Source: http://www.ultim.net/~wolfgang/gnu_halifax/ghfaxviewer-%{ver}.tar.gz
+Source: ftp://ftp.gnu.org/gnu/halifax/ghfaxviewer-%{ver}.tar.gz
 
 BuildRoot: /var/tmp/ghfaxviewer-%{PACKAGE_VERSION}-root
 
@@ -38,7 +41,8 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{prefix}
-make prefix=$RPM_BUILD_ROOT%{prefix} install
+make mandir=%{?buildroot:%{buildroot}}%{_mandir} install-man
+%{makeinstall}
 
 %post
 
@@ -55,3 +59,4 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/share/locale/*/LC_MESSAGES/%{name}.mo
 %{prefix}/share/pixmaps/ghfaxviewer/*
 %{prefix}/share/gnome/apps/Graphics/*
+%(_mandir}/man1/ghfaxviewer.1.gz

@@ -1,3 +1,11 @@
+ghfaxviewer (0.21.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * First release uploaded to the Debian machines (closes: #95485)
+  * We now have a manpage for ghfaxviewer
+
+ -- Wolfgang Sourdeau <was@debian.org>  Fri, 27 Apr 2001 12:35:16 -0400
+
 ghfaxviewer (0.21.0-1) unstable; urgency=low
 
   * New upstream release.

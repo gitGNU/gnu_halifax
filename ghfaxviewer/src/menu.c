@@ -87,13 +87,13 @@ gnome_menu_bar_new (ViewerData *viewer_data)
     },
     GNOMEUIINFO_SEPARATOR,
     {
-      GNOME_APP_UI_ITEM, N_("Rotate 90" DEGREES " clockwise"),
+      GNOME_APP_UI_ITEM, N_("Rotate 90 degrees clockwise"),
       NULL, (gpointer) right90_cb, viewer_data, NULL,
       GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_REDO,
       0, (GdkModifierType) 0, NULL
     },
     {
-      GNOME_APP_UI_ITEM, N_("Rotate 90" DEGREES " counter-clockwise"),
+      GNOME_APP_UI_ITEM, N_("Rotate 90 degrees counter-clockwise"),
       NULL, (gpointer) left90_cb, viewer_data, NULL,
       GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_MENU_UNDO,
       0, (GdkModifierType) 0, NULL
@@ -170,9 +170,9 @@ view_menu_new (ViewerData *viewer_data)
   menu_item_new (view_menu, _("Zoom in"), zoomin_cb, viewer_data);
   menu_item_new (view_menu, _("Zoom out"), zoomout_cb, viewer_data);
   menu_separator_new (view_menu);
-  menu_item_new (view_menu, _("Rotate 90" DEGREES " clockwise"),
+  menu_item_new (view_menu, _("Rotate 90 degrees clockwise"),
 		 right90_cb, viewer_data);
-  menu_item_new (view_menu, _("Rotate 90" DEGREES " counter-clockwise"),
+  menu_item_new (view_menu, _("Rotate 90 degrees counter-clockwise"),
 		 left90_cb, viewer_data);
   menu_item_new (view_menu, _("Reverse image"),
 		 reverse_cb, viewer_data);

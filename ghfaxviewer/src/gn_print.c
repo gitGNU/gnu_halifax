@@ -36,6 +36,7 @@
 #include "tiffimages.h"
 #include "zoom.h"
 #include "viewer.h"
+#include "progress.h"
 #include "gtkutils.h"
 
 /* Damn, I hate those
@@ -90,33 +91,54 @@ print_page (GnomePrintContext *context,
   g_free (page_name);
 }
 
-static void
+static gboolean
 send_pages_to_pc (GnomePrintContext *context,
 		  FaxFile *fax_file,
 		  gint from, gint to,
-		  gint copies, gint collate)
+		  gint copies, gint collate,
+		  GfvProgressData *p_data)
 {
   FaxPage *orig_page, *gray_page;
-  gint page_nbr, copy_nbr;
+  gint page_nbr, copy_nbr, count, max_page_nbr;
+  gboolean aborted;
+  gchar *p_action;
 
   ti_set_draw_func (NULL);
+  aborted = FALSE;
+  count = 0;
+  max_page_nbr = copies * (to - from + 1);
 
   if (collate)
     for (copy_nbr = 0; copy_nbr < copies; copy_nbr++)
       for (page_nbr = from - 1; page_nbr < to; page_nbr++)
 	{
-	  orig_page = ti_seek_fax_page (fax_file, page_nbr);
-	  ti_load_fax_page (fax_file, orig_page);
-	  gray_page = ti_zoomed_fax_page (orig_page,
-					  orig_page->width,
-					  orig_page->height,
-					  ROT_NONE);
-	  print_page (context, fax_file, gray_page);
-	  ti_destroy_fax_page (gray_page);
-	  ti_unload_fax_page (orig_page);
+	  while (!aborted)
+	    {
+	      count++;
+	      p_action = g_strdup_printf (_("Printing page"
+					    " %d (%d left)"),
+					  count,
+					  max_page_nbr
+					  - count);
+	      gfv_progress_set_action (p_data, p_action);
+	      g_free (p_action);
+	      
+	      orig_page = ti_seek_fax_page (fax_file, page_nbr);
+	      ti_load_fax_page (fax_file, orig_page);
+	      gray_page = ti_zoomed_fax_page (orig_page,
+					      orig_page->width,
+					      orig_page->height,
+					      ROT_NONE);
+	      print_page (context, fax_file, gray_page);
+	      ti_destroy_fax_page (gray_page);
+	      ti_unload_fax_page (orig_page);
+	      
+	      aborted = gfv_progress_update_with_value (count, max_page_nbr,
+							0, p_data);
+	    }
 	}
   else
-    for (page_nbr = from - 1; page_nbr < to; page_nbr++)
+    for (page_nbr = from - 1; page_nbr < to && !aborted; page_nbr++)
       {
 	orig_page = ti_seek_fax_page (fax_file, page_nbr);
 	ti_load_fax_page (fax_file, orig_page);
@@ -124,11 +146,30 @@ send_pages_to_pc (GnomePrintContext *context,
 					orig_page->width,
 					orig_page->height,
 					ROT_NONE);
-	for (copy_nbr = 0; copy_nbr < copies; copy_nbr++)
-	  print_page (context, fax_file, gray_page);
+	for (copy_nbr = 0; copy_nbr < copies && !aborted; copy_nbr++)
+	  {
+	    count++;
+	    p_action = g_strdup_printf (_("Printing page"
+					  " %d (%d left)"),
+					count,
+					max_page_nbr
+					- count);
+	    gfv_progress_set_action (p_data, p_action);
+	    g_free (p_action);
+	    
+	    print_page (context, fax_file, gray_page);
+	    aborted = gfv_progress_update_with_value (count, max_page_nbr,
+						      0, p_data);
+	    
+	  }
 	ti_destroy_fax_page (gray_page);
 	ti_unload_fax_page (orig_page);
       }
+
+  if (!aborted)
+    gfv_progress_set_done (p_data);
+
+  return aborted;
 }
 
 static GnomePrintMaster *
@@ -139,8 +180,13 @@ prepare_print_master (GtkWidget *print_dlg,
   GnomePrintContext *print_context;
   GnomePrintMaster *print_master;
   GnomeFont *def_font;
-  gint copies, collate, range;
+  gint copies, collate, range, aborted;
   gint from, to;
+  GfvProgressData *p_data;
+
+  p_data = gfv_progress_new
+    (GTK_WINDOW (print_dlg),
+     _("Please wait..."), NULL, ABORT_BTN);
 
   print_master =
     gnome_print_master_new_from_dialog (GPD (print_dlg));
@@ -161,8 +207,18 @@ prepare_print_master (GtkWidget *print_dlg,
       to = fax_file->nbr_pages + 1;
     }
 
-  send_pages_to_pc (print_context, fax_file, from, to, copies, collate);
+  aborted = send_pages_to_pc (print_context, fax_file,
+			      from, to, copies, collate,
+			      p_data);
   gnome_print_context_close (print_context);
+
+  if (aborted)
+    {
+      gnome_print_master_close (print_master);
+      print_master = NULL;
+    }
+
+  gfv_progress_destroy (p_data);
 
   return print_master;
 }
@@ -179,22 +235,25 @@ print_or_preview (GtkWidget *print_dlg,
 				       viewer_data->fax_file,
 				       viewer_data->current_page);
 
-  if (button == GNOME_PRINT_PRINT)
-    gnome_print_master_print (print_master);
-  else
+  if (print_master)
     {
-      preview =
-	GTK_WIDGET (gnome_print_master_preview_new (print_master,
-						    _("Print"
-						      " preview...")));
+      if (button == GNOME_PRINT_PRINT)
+	gnome_print_master_print (print_master);
+      else
+	{
+	  preview =
+	    GTK_WIDGET (gnome_print_master_preview_new (print_master,
+							_("Print"
+							  " preview...")));
+	  
+	  transient_window_show (GTK_WINDOW (preview),
+				 GTK_WINDOW (print_dlg));
+	  
+	  gtk_widget_show (preview);
+	}
 
-      transient_window_show (GTK_WINDOW (preview),
-			     GTK_WINDOW (print_dlg));
-
-      gtk_widget_show (preview);
+      gnome_print_master_close (print_master);
     }
-
-  gnome_print_master_close (print_master);
 }
 
 static void

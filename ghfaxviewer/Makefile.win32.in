@@ -34,7 +34,7 @@ dir-skeleton:
 doc-conversion:
 	@for text in $(DIST_DOCFILES); do \
 		if [ -f $$text ]; then \
-			todos < $$text > $(DIST_DOCDIR)/$$text.txt; \
+			todos < $$text > $(DIST_DOCDIR)/`basename $$text.txt`; \
 			echo $$text.txt generated; \
 		else \
 			echo $$text.txt skipped; \

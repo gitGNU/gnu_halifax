@@ -107,7 +107,8 @@ window_set_icon (GtkWidget* ref_widget, gchar *file_name)
 
 /* transient windows */
 
-static void transient_destroy_cb (GtkWidget *window, gpointer data)
+static void
+transient_destroy_cb (GtkWidget *window, gpointer data)
 {
   GtkWindow *parent;
 
@@ -155,6 +156,7 @@ dialog_window_new (gchar *title)
   dialog_win = g_malloc (sizeof (DialogWindow));
   dialog_win->window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_window_set_title (GTK_WINDOW (dialog_win->window), title);
+  gtk_window_set_position (GTK_WINDOW (dialog_win->window), GTK_WIN_POS_CENTER);
 
   dialog_win->vbox = gtk_vbox_new (FALSE, 5);
   gtk_container_add (GTK_CONTAINER (dialog_win->window),
@@ -184,8 +186,9 @@ dialog_window_set_content (DialogWindow *window, GtkWidget *content)
 	     (int) window, (int) window->content);
 }
 
-void dialog_window_set_button_box (DialogWindow *window, GtkHButtonBox
-				   *button_box)
+void
+dialog_window_set_button_box (DialogWindow *window,
+			      GtkHButtonBox *button_box)
 {
   if (!window->button_box)
     {
@@ -196,6 +199,22 @@ void dialog_window_set_button_box (DialogWindow *window, GtkHButtonBox
   else
     g_print ("DialogWindow->button_box (%x->%x) is not free\n",
 	     (int) window, (int) window->button_box);
+}
+
+void
+dialog_window_set_button (DialogWindow *window,
+			  GtkWidget *button)
+{
+  GtkWidget *button_box;
+
+  button_box = gtk_hbutton_box_new ();
+  gtk_box_pack_start (GTK_BOX (button_box), button,
+		      FALSE, FALSE, 5);
+  dialog_window_set_button_box (window,
+				GTK_HBUTTON_BOX (button_box));
+
+  GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT | GTK_HAS_DEFAULT);
+  gtk_widget_grab_default (button);
 }
 
 void

@@ -315,26 +315,22 @@ static DialogWindow *
 create_info_window (GtkWidget *viewer_window, TiffInfo *file_info)
 {
   DialogWindow *info_window;
-  GtkWidget *table, *button_box, *ok_button;
+  GtkWidget *table, *ok_button;
 
   info_window = dialog_window_new (_("Fax properties"));
   table = create_info_table (viewer_window, file_info);
   dialog_window_set_content (info_window, table);
 
-  button_box = gtk_hbutton_box_new ();
-
 #ifdef NEED_GNOMESUPPORT_H
-  ok_button = gnome_stock_button (GNOME_STOCK_BUTTON_CLOSE);
+  ok_button = gnome_stock_button (GNOME_STOCK_BUTTON_OK);
 #else /* NEED_GNOMESUPPORT_H */
   ok_button = gtk_button_new_with_label (_("Close"));
 #endif
   gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
 		      dialog_window_destroy_from_signal, info_window);
-  gtk_box_pack_start (GTK_BOX (button_box), ok_button,
-		      TRUE, FALSE, 5);
 
-  dialog_window_set_button_box (info_window,
-				GTK_HBUTTON_BOX (button_box));
+  dialog_window_set_button (info_window,
+			    ok_button);
 
   return info_window;
 }

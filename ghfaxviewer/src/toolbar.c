@@ -92,7 +92,7 @@ gnome_toolbar_new (ViewerData *viewer_data)
     },
     GNOMEUIINFO_SEPARATOR,
     {
-      GNOME_APP_UI_ITEM, NULL, N_("Rotate 90" DEGREES " counter-clockwise"),
+      GNOME_APP_UI_ITEM, NULL, N_("Rotate 90 degrees counter-clockwise"),
       (gpointer) left90_cb, viewer_data, NULL,
       GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_UNDO,
       0, (GdkModifierType) 0, NULL
@@ -104,7 +104,7 @@ gnome_toolbar_new (ViewerData *viewer_data)
       0, (GdkModifierType) 0, NULL
     },
     {
-      GNOME_APP_UI_ITEM, NULL, N_("Rotate 90" DEGREES " clockwise"),
+      GNOME_APP_UI_ITEM, NULL, N_("Rotate 90 degrees clockwise"),
       (gpointer) right90_cb, viewer_data, NULL,
       GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_REDO,
       0, (GdkModifierType) 0, NULL
@@ -211,7 +211,7 @@ toolbar_new (ViewerData *viewer_data)
 			left90_cb, viewer_data);
   gtk_toolbar_append_widget
     (GTK_TOOLBAR (new_bbar), viewer_data->ut_buttons[LEFT90],
-     _("Rotate 90" DEGREES " counter-clockwise"), NULL);
+     _("Rotate 90 degrees counter-clockwise"), NULL);
 
   viewer_data->ut_buttons[REVERSE] =
     toolbar_button_new (viewer_data->viewer_window, PIXMAP ("reverse.xpm"),
@@ -225,7 +225,7 @@ toolbar_new (ViewerData *viewer_data)
 			right90_cb, viewer_data);
   gtk_toolbar_append_widget
     (GTK_TOOLBAR (new_bbar), viewer_data->ut_buttons[RIGHT90],
-     _("Rotate 90" DEGREES " clockwise"), NULL);
+     _("Rotate 90 degrees clockwise"), NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (new_bbar));
 

@@ -22,6 +22,6 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
-void file_open_error (gchar *file_name);
+void file_open_error (GtkWidget *window, gchar *file_name);
 
 #endif

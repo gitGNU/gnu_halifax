@@ -25,12 +25,7 @@
 #ifndef GTKUTILS_H
 #define GTKUTILS_H
 
-typedef struct _DialogWindow DialogWindow;
-
-struct _DialogWindow
-{
-  gpointer private;
-};
+typedef gpointer DialogWindow;                         /* private */
 
 GtkWidget* menu_separator_new (GtkWidget *menu);
 void menu_item_new (GtkWidget *menu, gchar *label,
@@ -38,8 +33,10 @@ void menu_item_new (GtkWidget *menu, gchar *label,
 
 DialogWindow *dialog_window_new (gchar *title);
 void dialog_window_set_content (DialogWindow *window, GtkWidget *content);
-void dialog_window_set_button_box (DialogWindow *window, GtkHButtonBox
-				   *button_box);
+void dialog_window_set_button_box (DialogWindow *window,
+				   GtkHButtonBox *button_box);
+void dialog_window_set_button (DialogWindow *window,
+			       GtkWidget *button);
 void dialog_window_show (DialogWindow *dialog, GtkWindow *parent);
 void dialog_window_destroy (DialogWindow *dialog);
 void dialog_window_destroy_from_signal (GtkWidget *widget, gpointer dialog);

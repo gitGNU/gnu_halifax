@@ -49,7 +49,7 @@
 static gint windows_count;
 
 #ifdef NEED_GNOMESUPPORT_H
-#define CONFIG_KEY "/apps/ghfaxviewer/viewer"
+#define CONFIG_KEY "/apps/ghfaxviewer/viewer/"
 GConfClient *gc_client;
 #else
 #ifdef __WIN32__
@@ -222,10 +222,14 @@ stock_init (void)
   entries[3].data.height = 16;
   entries[3].data.xpm_data = stock_zoom_out_menu_xpm;
 
-  gnome_stock_pixmap_register (STOCK_ZOOM_IN, GNOME_STOCK_PIXMAP_REGULAR, &entries[0]);
-  gnome_stock_pixmap_register (STOCK_ZOOM_OUT, GNOME_STOCK_PIXMAP_REGULAR, &entries[1]);
-  gnome_stock_pixmap_register (STOCK_ZOOM_IN_MENU, GNOME_STOCK_PIXMAP_REGULAR, &entries[2]);
-  gnome_stock_pixmap_register (STOCK_ZOOM_OUT_MENU, GNOME_STOCK_PIXMAP_REGULAR, &entries[3]);
+  gnome_stock_pixmap_register (STOCK_ZOOM_IN, GNOME_STOCK_PIXMAP_REGULAR,
+			       &entries[0]);
+  gnome_stock_pixmap_register (STOCK_ZOOM_OUT, GNOME_STOCK_PIXMAP_REGULAR,
+			       &entries[1]);
+  gnome_stock_pixmap_register (STOCK_ZOOM_IN_MENU, GNOME_STOCK_PIXMAP_REGULAR,
+			       &entries[2]);
+  gnome_stock_pixmap_register (STOCK_ZOOM_OUT_MENU, GNOME_STOCK_PIXMAP_REGULAR,
+			       &entries[3]);
 }
 
 static void

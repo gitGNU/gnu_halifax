@@ -19,25 +19,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* Functions to create progress and manage dialogs easily */
+
 #ifndef PROGRESS_H
 #define PROGRESS_H
 
-typedef struct _GfvProgressData GfvProgressData;
+typedef gpointer GfvProgressData;                      /* private */
 
 typedef enum
 {
   ABORT_BTN = 1,
   DISPLAY_WHEN_NEEDED = 2,
 } GfvProgressTag;
-
-struct _GfvProgressData
-{
-  gboolean aborted, done;
-  gchar *action_string;
-  GfvProgressTag tag;
-  GtkWidget *label, *progress_bar, *abort_btn, *progress_win;
-  GtkWindow *parent_window;
-};
 
 GfvProgressData *gfv_progress_new (GtkWindow *parent_window,
 				   gchar *title,

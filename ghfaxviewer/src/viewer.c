@@ -276,7 +276,8 @@ fax_viewer_open_file (ViewerData *viewer_data, gchar *file_name)
 	  else
 	    set_ut_button_sensitive = FALSE;
 
-	  file_open_error (g_basename (file_name));
+	  file_open_error (viewer_data->viewer_window,
+			   g_basename (file_name));
 	}
       else
 	{

@@ -35,31 +35,44 @@
 #include "gtkutils.h"
 #include "i18n.h"
 
-const gchar *copyright =
-"Copyright (C) 2000,2001 Wolfgang Sourdeau";
-const gchar *description =
-"This program displays image files received on a HylaFAX system.";
-const gchar *licensing =
-"This program is free software, you"
-" are welcome to use it, modify it"
-" and redistribute it under certain"
-" conditions. See the file COPYING"
-" for further informations. There is"
-" NO warranty; not even for"
-" MERCHANTABILITY or FITNESS FOR A"
-" PARTICULAR PURPOSE.";
+static gchar *copyright, *description, *licensing;
+static gboolean i18n_initted = FALSE;
+
+static
+void about_i18n_init ()
+{
+  if (!i18n_initted)
+    {
+      copyright =
+	_("Copyright (C) 2000,2001 Wolfgang Sourdeau");
+      description =
+	_("This program displays image files received on a HylaFAX system.");
+      licensing =
+	_("This program is free software, you"
+	  " are welcome to use it, modify it"
+	  " and redistribute it under certain"
+	  " conditions. See the file COPYING"
+	  " for further informations. There is"
+	  " NO warranty; not even for"
+	  " MERCHANTABILITY or FITNESS FOR A"
+	  " PARTICULAR PURPOSE.");
+      i18n_initted = TRUE;
+    }
+}
 
 #ifdef NEED_GNOMESUPPORT_H
 void
 about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 {
   gchar *message;
-  const gchar *authors[] = {"Wolfgang Sourdeau <wolfgang@contre.com>",
+  const gchar *authors[] = {"Wolfgang Sourdeau <wolfgang@gnu.org>",
 			    "George Farris", "Tilman Bubeck",
 			    "Thomas Bartschies", "Kevin Chen",
 			    "Zbigniew Baniewski",
 			    NULL};
   GtkWidget *about_dialog;
+
+  about_i18n_init ();
 
   message = g_strdup_printf ("%s %s",
 			     _(description),
@@ -165,23 +178,20 @@ void
 about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 {
   DialogWindow *about_dialog;
-  GtkWidget *content, *button_box, *ok_button;
+  GtkWidget *content, *ok_button;
+
+  about_i18n_init ();
 
   about_dialog = dialog_window_new (_("About..."));
   content = about_content (viewer_window);
   dialog_window_set_content (about_dialog, content);
 
-  button_box = gtk_hbutton_box_new ();
-
   ok_button = gtk_button_new_with_label (_("Close"));
   gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
 		      dialog_window_destroy_from_signal,
 		      about_dialog);
-  gtk_box_pack_start (GTK_BOX (button_box), ok_button,
-		      TRUE, FALSE, 5);
 
-  dialog_window_set_button_box (about_dialog,
-				GTK_HBUTTON_BOX (button_box));
+  dialog_window_set_button (about_dialog, ok_button);
 
   dialog_window_show (about_dialog, GTK_WINDOW (viewer_window));
 }

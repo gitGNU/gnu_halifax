@@ -26,11 +26,32 @@
 #include <config.h>
 #endif
 
+#ifdef NEED_GNOMESUPPORT_H
+#include <gnome.h>
+#else
 #include <gtk/gtk.h>
+#endif
 
 #include "i18n.h"
-#include "progress.h"
 #include "gtkutils.h"
+
+typedef struct _GfvProgressData GfvProgressData;
+
+typedef enum
+{
+  ABORT_BTN = 1,
+  DISPLAY_WHEN_NEEDED = 2,
+} GfvProgressTag;
+
+struct _GfvProgressData
+{
+  gboolean aborted, done, is_visible;
+  gchar *action_string;
+  GfvProgressTag tag;
+  GtkWidget *label, *progress_bar, *abort_btn;
+  DialogWindow *progress_win;
+  GtkWindow *parent_window;
+};
 
 static void
 progress_abort (GtkWidget *widget, GfvProgressData *progress_data)
@@ -43,26 +64,20 @@ gfv_progress_new (GtkWindow *parent_window,
 		  gchar *title, gchar *action_string,
 		  GfvProgressTag tag)
 {
-  GtkWidget *window, *frame, *vbox, *progress, *abort_btn, *label;
+  DialogWindow *dlg_window;
+  GtkWidget *vbox, *progress, *abort_btn, *label;
   GtkObject *adjustment;
   GfvProgressData *prog_data;
 
   prog_data = g_malloc (sizeof (GfvProgressData));
 
-  adjustment = gtk_adjustment_new(0.0, 0.0, 1.0, 0.1, 0.1, 1.0);
+  adjustment = gtk_adjustment_new (0.0, 0.0, 1.0, 0.1, 0.1, 1.0);
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (window), title);
-  gtk_window_set_modal (GTK_WINDOW (window), TRUE);
-  gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
-
-  frame = gtk_frame_new (_("Processing"));
-  gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
-  gtk_container_add (GTK_CONTAINER (window), frame);
+  dlg_window = dialog_window_new (title);
 
   vbox = gtk_vbox_new (FALSE, 3);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
+  dialog_window_set_content (dlg_window, vbox);
 	
   label = gtk_label_new (action_string);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, FALSE, 3);
@@ -73,18 +88,25 @@ gfv_progress_new (GtkWindow *parent_window,
 
   if (tag & ABORT_BTN)
     {
+#ifdef NEED_GNOMESUPPORT_H
+      abort_btn = gnome_stock_button (GNOME_STOCK_BUTTON_CANCEL);
+#else
       abort_btn = gtk_button_new_with_label (_("Cancel"));
+#endif
       gtk_signal_connect (GTK_OBJECT (abort_btn), "clicked",
 			  (GtkSignalFunc) progress_abort, prog_data);
-      gtk_box_pack_start (GTK_BOX (vbox), abort_btn, FALSE,
-			  FALSE, 3);
+      dialog_window_set_button (dlg_window, abort_btn);
 	    
       prog_data->abort_btn = abort_btn;
     }
 
   if (!(tag & DISPLAY_WHEN_NEEDED))
-    transient_window_show (GTK_WINDOW (window),
-			   parent_window);
+    {
+      dialog_window_show (dlg_window, parent_window);
+      prog_data->is_visible = TRUE;
+    }
+  else
+    prog_data->is_visible = FALSE;
 
   prog_data->aborted = FALSE;
   prog_data->done = FALSE;
@@ -95,7 +117,7 @@ gfv_progress_new (GtkWindow *parent_window,
   prog_data->label = label;
   prog_data->tag = tag;
   prog_data->progress_bar = progress;
-  prog_data->progress_win = window;
+  prog_data->progress_win = dlg_window;
   prog_data->parent_window = parent_window;
 
   return prog_data;
@@ -130,9 +152,12 @@ gfv_progress_update_with_percentage (guint value, guint total,
   prog_data = data;
 
   if ((prog_data->tag & DISPLAY_WHEN_NEEDED)
-      && !GTK_WIDGET_VISIBLE (prog_data->progress_win))
-    transient_window_show (GTK_WINDOW (prog_data->progress_win),
-			   prog_data->parent_window);
+      && !(prog_data->is_visible))
+    {
+      dialog_window_show (prog_data->progress_win,
+			  prog_data->parent_window);
+      prog_data->is_visible = TRUE;
+    }
 
   if (!prog_data->done)
     {
@@ -176,7 +201,7 @@ gfv_progress_update_with_value (guint value, guint total,
 void
 gfv_progress_destroy (GfvProgressData *prog_data)
 {
-  gtk_widget_destroy (prog_data->progress_win);
+  dialog_window_destroy (prog_data->progress_win);
   if (prog_data->action_string)
     g_free (prog_data->action_string);
   g_free (prog_data);
