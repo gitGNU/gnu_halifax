@@ -281,15 +281,17 @@ print_dlg_clicked_cb (GtkWidget *print_dlg, gint button,
 void
 print_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
+  GtkWidget *print_dialog;
+
   if (viewer_data->fax_file)
     {
-      viewer_data->print_dialog =
+      print_dialog =
 	gnome_print_dialog_new (_("Print..."),
 				GNOME_PRINT_DIALOG_RANGE
 				| GNOME_PRINT_DIALOG_COPIES);
 
       gnome_print_dialog_construct_range_page 
-	(GPD (viewer_data->print_dialog),
+	(GPD (print_dialog),
 	 GNOME_PRINT_RANGE_CURRENT
 	 | GNOME_PRINT_RANGE_ALL
 	 | GNOME_PRINT_RANGE_RANGE,
@@ -298,11 +300,11 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
 	 _("Current page only"),
 	 _("Range"));
 					   
-      gtk_signal_connect (GTK_OBJECT (viewer_data->print_dialog),
+      gtk_signal_connect (GTK_OBJECT (print_dialog),
 			  "clicked", print_dlg_clicked_cb,
 			  viewer_data);
 
-      transient_window_show (GTK_WINDOW (viewer_data->print_dialog),
+      transient_window_show (GTK_WINDOW (print_dialog),
 			     GTK_WINDOW (viewer_data->viewer_window));
     }
 }
