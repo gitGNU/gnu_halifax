@@ -1,5 +1,8 @@
-Maintainer:
+Maintainer and main author of ghfaxviewer :
 Wolfgang Sourdeau <wolfgang@ultim.net>
+
+src/cursors.c and src/cursors.h were originally written by Federico
+Mena Quintero and are copyrighted by the Free Software Foundation
 
 The GNU HaliFAX team:
 Wolfgang Sourdeau <wolfgang@ultim.net>
@@ -7,6 +10,7 @@ George Farris <george@gmsys.com>
 Tilman Bubeck <bubeck@think-at-work.de>
 
 Translations:
-Thomas Bartschies, Tilman Bubeck: German translation
-Kevin Chen: Traditional Chinese
-Zbigniew Baniewski: Polish translation
+Thomas Bartschies, Tilman Bubeck: German translation (de.po)
+Kevin Chen: Traditional Chinese (zh_TW.Big5.po)
+Zbigniew Baniewski: Polish translation (pl.po)
+

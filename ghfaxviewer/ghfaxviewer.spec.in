@@ -21,12 +21,12 @@ Requires: gnome-libs >= 1.2.3
 Requires: libtiff >= 3.4
 
 %description
+ This is the GNU HaliFAX Viewer, a component of GNU HaliFAX which will
+ help you look at the TIFF g3/g4 fax files produced by HylaFAX
+ .
  The GNU HaliFAX will be a complete free client package for HylaFAX
  and maybe for other fax systems in the future.
  It is intended to run on both the Win32 platform and the GNU system.
-
- This is the viewer. Recommended to use with GFax.
-
 
 %prep
 %setup
@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 
-%doc AUTHORS COPYING ChangeLog NEWS README docs/README.cvs TODO
+%doc AUTHORS COPYING ChangeLog NEWS TODO docs/README docs/README.cvs
 %{prefix}/bin/*
 %{prefix}/share/locale/*/LC_MESSAGES/%{name}.mo
 %{prefix}/share/pixmaps/ghfaxviewer/*

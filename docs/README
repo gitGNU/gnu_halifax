@@ -5,18 +5,11 @@ GNU HaliFAX (03/20/2001)
 
 Why
 ---
-
 This software package will be a complete free client package for HylaFAX.
 It is written because the free software world currently lacks a nice graphical
 client package. And as more and more people are going to use the GNU system 
 (of which GNU/Linux is the most common version, based on the Linux kernel) due
 to the current success of GNOME, it seemed to me that such software was needed.
-
-Also, it is a good exercice for me to learn since it is the first complete
-software entirely written by me and released to the public. I also was
-beginning to feel that I had something to give back to the free software
-community, even if some of them don't care about the freedom provided by
-free software.
 
 GNU HaliFAX is part of the GNU project. This means that we are engaged
 in integrating it with the rest of the GNU system the best we can,
@@ -27,10 +20,8 @@ Currently two components are being actively written: the Sender
 written eventually such as an administrative frontend, as well as a
 gnome applet to watch for incoming faxes and other facilities.
 
-
 Help needed
 -----------
-
 If you have any idea please send them to us so that we can improve GNU
 HaliFAX the best we can.
 If you speak a language for which there is no translation, please send
@@ -45,19 +36,15 @@ Even if we have long hair, don't sleep and are philosophically
 engaged, we are humans who need food and drink to keep our body alive
 while our souls are flying across the lines of code.
 
-
 Requisites
 ----------
-
 - GTK+ 1.2.x
 - libtiff 3.4 (minimum version)
 - mingw32, Mumit's Khan GCC port to win32 (if you use such a system) although
   Cygnus Solution Cygwin compiler suite *may* work.
 
-
-Notes
------
-
+Notes (Win32 only)
+------------------
 - i18n for GTK+/Win32 USED TO require manual creation of a $lang.utf8
   with iconv after which you HAD to execute msgfmt on it. This problem
   has been solved by creating a special makefile (Makefile.win32)
@@ -65,16 +52,37 @@ Notes
   .tgz format). Texts are "translated" from LF unix line-ending to
   MS-DOgS, CR-LF line-ending, po files are translated to UTF-8.
 
+Bug reports and discussions
+---------------------------
+Whenever you find a bug in GNU HaliFAX, please write the most detailed
+description you can have to bug-halifax@gnu.org. Just include pure
+text in those messages, no .gz and no core file for example. Text
+diffs are ok though.
+
+For general discussion about GNU HaliFAX, you can subscribe by using
+your favourite free web browser pointing to
+http://mail.gnu.org/mailman/listinfo/discuss-halifax
+otherwise, you can send send a message to
+discuss-halifax-request@gnu.org with "subscribe" in the body of the
+message. The subject line doesn't have to be modified.
+
+If you wish to unsuscribe, do the same with the word "unsubscribe" in
+the body of the message. DO NOT send it to discuss-halifax@gnu.org or
+otherwise you will be flamed like you never were before.
+
+CVS
+---
+Instructions regarding the HaliFAX cvs repository is available in the
+file README.cvs in the same directory as this one.
+
 links
 -----
-
-GNU HaliFAX	       (http://www.gnu.org/software/halifax/halifax.html)
+GNU HaliFAX	       (http://www.gnu.org/software/halifax/)
 HylaFAX                (http://www.hylafax.org)
-GTK+                   (http://www.gtk.org)
-GTK+ for Win32         (http://www.gimp.org/~tml/gimp/win32)
-libtiff                (http://www.libtiff.org)
-mingw32                (http://www.mingw.org)
-cygwin                 (http://sources.redhat.com/cygwin)
 GNOME                  (http://www.gnome.org)
 GNU                    (http://www.gnu.org)
-Richard Stallman       (http://www.stallman.org)
+GTK+                   (http://www.gtk.org)
+GTK+ for Win32         (http://www.gimp.org/~tml/gimp/win32/)
+libtiff                (http://www.libtiff.org)
+mingw32                (http://www.mingw.org)
+cygwin                 (http://sources.redhat.com/cygwin/)
