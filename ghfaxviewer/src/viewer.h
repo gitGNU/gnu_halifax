@@ -24,6 +24,11 @@
 
 #include "i18n.h"
 
+/* these are barely the measures for my own screen a 17" in 1024x768,
+   but is likely to not be correct for other people. */
+#define X_DPI 84.7
+#define Y_DPI 84.7
+
 #define MAX_ZOOM_INDEX 8
 
 typedef struct _ViewerData ViewerData;

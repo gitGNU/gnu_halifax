@@ -109,58 +109,58 @@ refresh_widgets (ViewerData *viewer_data)
 
   if (viewer_data->current_page->next == NULL)
     {
-      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_NEXT_PAGE],
-			       FALSE);
-      gtk_widget_set_sensitive(viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
-			       FALSE);
+      gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_NEXT_PAGE],
+				FALSE);
+      gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
+				FALSE);
     }
   else
     {
-      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_NEXT_PAGE],
-			       TRUE);
-      gtk_widget_set_sensitive(viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
-			       TRUE);
+      gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_NEXT_PAGE],
+				TRUE);
+      gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
+				TRUE);
     }
 	
   if (viewer_data->current_page->prev == NULL)
     {
-      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_PREV_PAGE],
-			       FALSE);
-      gtk_widget_set_sensitive(viewer_data->cmd_buttons[VIEW_PREV_PAGE],
-			       FALSE);
+      gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_PREV_PAGE],
+				FALSE);
+      gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_PREV_PAGE],
+				FALSE);
     }
   else
     {
-      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_PREV_PAGE],
-			       TRUE);
-      gtk_widget_set_sensitive(viewer_data->cmd_buttons[VIEW_PREV_PAGE],
-			       TRUE);
+      gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_PREV_PAGE],
+				TRUE);
+      gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_PREV_PAGE],
+				TRUE);
     }
   
   if (viewer_data->zoom_index == 0)
     {
-      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_ZOOM_OUT],
-			       FALSE);     
+      gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_ZOOM_OUT],
+				FALSE);     
       gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_OUT],
 				FALSE);
     }
   else
     {
-      gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_ZOOM_OUT],
-			       TRUE);     
+      gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_ZOOM_OUT],
+				TRUE);     
       gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_OUT],
 				TRUE);
       if (viewer_data->zoom_index == MAX_ZOOM_INDEX)
 	{
-	  gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_ZOOM_IN],
-				   FALSE);
+	  gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_ZOOM_IN],
+				    FALSE);
 	  gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_IN],
 				    FALSE);
 	}
       else
 	{
-	  gtk_widget_set_sensitive(viewer_data->cmd_menus[VIEW_ZOOM_IN],
-				   TRUE);     
+	  gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_ZOOM_IN],
+				    TRUE);     
 	  gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_IN],
 				    TRUE);
 	}
@@ -261,10 +261,10 @@ draw_page (ViewerData *viewer_data)
 
   area_width = (gint) ((gfloat) viewer_data->current_page->width
 		       / (gfloat) viewer_data->fax_file->x_res
-		       * 84.7 * zoom_factor[viewer_data->zoom_index]);
+		       * X_DPI * zoom_factor[viewer_data->zoom_index]);
   area_height = (gint) ((gfloat) viewer_data->current_page->height
-		      / (gfloat) viewer_data->fax_file->y_res
-		      * 84.7 * zoom_factor[viewer_data->zoom_index]);
+			/ (gfloat) viewer_data->fax_file->y_res
+			* Y_DPI * zoom_factor[viewer_data->zoom_index]);
 
   if (viewer_data->rotation == ROT_NONE
       || viewer_data->rotation == ROT_180)

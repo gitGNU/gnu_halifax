@@ -384,6 +384,7 @@ check_button_pos (GtkWidget *button, LayoutData *layout_data)
   return FALSE;
 }
 
+/*
 static
 void usr_btn_state_changed_cb (GtkWidget *widget,
 			       GtkStateType state,
@@ -394,6 +395,11 @@ void usr_btn_state_changed_cb (GtkWidget *widget,
   if (state == GTK_STATE_INSENSITIVE)
     {
       child = ((GtkBin*) widget)->child;
+      gdk_window_set_events (widget->window,
+			     gdk_window_get_events (widget->window)
+			     | GDK_BUTTON_PRESS_MASK
+			     | GDK_ENTER_NOTIFY_MASK
+			     | GDK_LEAVE_NOTIFY_MASK);
       gdk_window_set_events (child->window,
 			     gdk_window_get_events (widget->window)
 			     | GDK_BUTTON_PRESS_MASK
@@ -401,6 +407,7 @@ void usr_btn_state_changed_cb (GtkWidget *widget,
 			     | GDK_LEAVE_NOTIFY_MASK);
     }
 }
+*/
 
 static void
 usr_btn_realized_real_cb (GtkWidget *button, LayoutData *layout_data)
@@ -409,10 +416,12 @@ usr_btn_realized_real_cb (GtkWidget *button, LayoutData *layout_data)
 		      "released",
 		      GTK_SIGNAL_FUNC (check_button_pos),
 		      layout_data);
+/*
   gtk_signal_connect (GTK_OBJECT (button),
 		      "state-changed",
 		      (GtkSignalFunc) usr_btn_state_changed_cb,
 		      layout_data);
+*/
 
   widget_mouse_press_realize_cb (button, layout_data);
 }
