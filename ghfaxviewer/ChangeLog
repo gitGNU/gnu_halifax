@@ -1,3 +1,10 @@
+2001-04-28  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/viewer.c (viewer_window_cfg_event_cb): this function serves
+	as a callback to the "configure-event" signal rather than to
+	"show". This permit us to get rid of the random mis-resizing of
+	the window. Thanks to Havoc Pennington for his help on this.
+
 2001-04-27  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* configure.in: reversed dependency from gnome-print 0.28 to 0.25.

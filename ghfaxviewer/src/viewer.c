@@ -431,10 +431,18 @@ viewer_window_realize_cb (GtkWidget *viewer_window, ViewerData *viewer_data)
 		      viewer_data);
 }
 
-static void
-viewer_window_show_cb (GtkWidget *viewer_window, gpointer nothing)
+static gboolean
+viewer_window_cfg_event_cb (GtkWidget *viewer_window,
+			    GdkEventConfigure *event, gpointer nothing)
 {
-  vwindow_set_def_coords (viewer_window->window);  
+  vwindow_set_def_coords (viewer_window->window);
+
+  /* the signal has to be caught only once */
+  gtk_signal_disconnect_by_func (GTK_OBJECT (viewer_window),
+				 GTK_SIGNAL_FUNC (viewer_window_cfg_event_cb),
+				 nothing);
+
+  return FALSE;
 }
 
 static void
@@ -452,7 +460,7 @@ viewer_window_new (ViewerData *viewer_data)
 
 #ifdef CAN_SAVE_CONFIG
   gtk_signal_connect (GTK_OBJECT (viewer_data->viewer_window),
-		      "delete_event",
+		      "delete-event",
 		      GTK_SIGNAL_FUNC (precloseviewer_cb),
 		      NULL);
 #endif
@@ -467,9 +475,11 @@ viewer_window_new (ViewerData *viewer_data)
 		      GTK_SIGNAL_FUNC (viewer_window_realize_cb),
 		      viewer_data);
 
+  /* This signal is handled only once, to resize and reposition the
+     window according to our settings. */
   gtk_signal_connect (GTK_OBJECT (viewer_data->viewer_window),
-		      "show",
-		      GTK_SIGNAL_FUNC (viewer_window_show_cb),
+ 		      "configure-event",
+		      GTK_SIGNAL_FUNC (viewer_window_cfg_event_cb),
 		      NULL);
 
   viewer_data->page_area = gtk_drawing_area_new ();

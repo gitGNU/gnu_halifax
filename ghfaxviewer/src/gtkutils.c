@@ -27,6 +27,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "setup.h"
 
@@ -148,6 +149,23 @@ transient_window_show (GtkWindow *transient, GtkWindow *parent)
 
 /* dialog windows */
 
+static gboolean
+key_press_event_cb (GtkWidget *window, GdkEventKey *event,
+		    gpointer user_data)
+{
+  gboolean ret_code;
+
+  if (event->keyval == GDK_Escape)
+    {
+      gtk_widget_destroy (window);
+      ret_code = TRUE;
+    }
+  else
+    ret_code = FALSE;
+
+  return ret_code;
+}
+
 DialogWindow *
 dialog_window_new (gchar *title)
 {
@@ -157,6 +175,8 @@ dialog_window_new (gchar *title)
   dialog_win->window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_window_set_title (GTK_WINDOW (dialog_win->window), title);
   gtk_window_set_position (GTK_WINDOW (dialog_win->window), GTK_WIN_POS_CENTER);
+  gtk_signal_connect (GTK_OBJECT (dialog_win->window), "key-press-event",
+		      key_press_event_cb, NULL);		      
 
   dialog_win->vbox = gtk_vbox_new (FALSE, 5);
   gtk_container_add (GTK_CONTAINER (dialog_win->window),
@@ -164,7 +184,7 @@ dialog_window_new (gchar *title)
 
   dialog_win->frame = gtk_frame_new (NULL);
   gtk_box_pack_start (GTK_BOX (dialog_win->vbox), dialog_win->frame,
-		      TRUE, FALSE, 5);
+		      TRUE, FALSE, 2);
   gtk_container_set_border_width (GTK_CONTAINER (dialog_win->frame), 10);
 
   dialog_win->content = NULL;
