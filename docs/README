@@ -55,19 +55,19 @@ Notes (Win32 only)
 Bug reports and discussions
 ---------------------------
 Whenever you find a bug in GNU HaliFAX, please write the most detailed
-description you can have to bug-halifax@gnu.org. Just include pure
+description you can have to halifax-bugs@gnu.org. Just include pure
 text in those messages, no .gz and no core file for example. Text
 diffs are ok though.
 
 For general discussion about GNU HaliFAX, you can subscribe by using
 your favourite free web browser pointing to
-http://mail.gnu.org/mailman/listinfo/discuss-halifax
+http://mail.gnu.org/mailman/listinfo/halifax-discuss
 otherwise, you can send send a message to
-discuss-halifax-request@gnu.org with "subscribe" in the body of the
+halifax-discuss-request@gnu.org with "subscribe" in the body of the
 message. The subject line doesn't have to be modified.
 
 If you wish to unsuscribe, do the same with the word "unsubscribe" in
-the body of the message. DO NOT send it to discuss-halifax@gnu.org or
+the body of the message. DO NOT send it to halifax-discuss@gnu.org or
 otherwise you will be flamed like you never were before.
 
 CVS
