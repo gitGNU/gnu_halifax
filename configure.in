@@ -1,0 +1,21 @@
+AC_INIT(docs/gfax.1)
+parameters="$@"
+AM_INIT_AUTOMAKE(halifax, 0.0)
+
+AM_MAINTAINER_MODE
+
+AC_PROG_INSTALL
+
+MODULES="ghfaxviewer"
+MANPAGES="gfax.1 ghfaxviewer.1"
+AC_SUBST(MANPAGES)
+
+AC_OUTPUT([
+Makefile
+docs/Makefile
+])
+
+for module in ${MODULES}; do
+  ( cd $module; \
+    ./configure --cache-file=../config.cache $parameters ) 
+done
