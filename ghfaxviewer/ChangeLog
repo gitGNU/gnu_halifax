@@ -1,3 +1,11 @@
+2001-11-09  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/prefs.c (create_pref_notebook): new notebook to display the
+	program's parameters.
+	(tab_switch_cb): what happens whenever a preference button is clicked.
+	(create_pref_content): set layout background to a light gray for
+	aesthetical pleasure.
+
 2001-11-08  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/prefs.c: New file to manage user's preferences.

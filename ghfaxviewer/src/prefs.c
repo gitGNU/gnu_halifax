@@ -33,14 +33,62 @@
 #include <ghfaxwidgets/ghfaxwidgets.h>
 #include "setup.h"
 
+typedef struct _PrefBtnData PrefBtnData;
+
+struct _PrefBtnData {
+  GtkWidget *notebook;
+  guint page_nbr;
+};
+
+static void
+tab_switch_cb (GtkWidget *button, gpointer data)
+{
+  PrefBtnData *pref_btn_data;
+  GtkWidget *cur_selected_btn;
+
+  pref_btn_data = data;
+  gtk_notebook_set_page (GTK_NOTEBOOK (pref_btn_data->notebook),
+			 pref_btn_data->page_nbr);
+
+
+  cur_selected_btn = gtk_object_get_data (GTK_OBJECT (pref_btn_data->notebook),
+					  "cur_selected_btn");	  
+  gtk_widget_set_sensitive (cur_selected_btn, TRUE);
+  gtk_widget_set_sensitive (button, FALSE);
+  gtk_object_set_data (GTK_OBJECT (pref_btn_data->notebook),
+		       "cur_selected_btn", button);
+}
+
+static GtkWidget *
+create_pref_notebook ()
+{
+  GtkWidget *notebook, *label;
+
+  notebook = gtk_notebook_new ();
+  gtk_widget_set_usize (notebook, 300, 200);
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
+  gtk_notebook_set_show_border (GTK_NOTEBOOK (notebook), FALSE);
+
+  label = gtk_label_new ("Test 1");
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), label, NULL);
+
+  label = gtk_label_new ("Test 2");
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), label, NULL);
+
+  return notebook;
+}
+
 static GtkWidget *
 create_mixed_btn (GtkWidget *ref_widget,
 		  const gchar *pixmap_path,
-		  const gchar *text)
+		  const gchar *text,
+		  GtkWidget *notebook,
+		  guint page_nbr)
 {
   GtkWidget *button, *vbox;
   GtkWidget *pixmap, *label;
   GtkRcStyle *bg_style;
+  PrefBtnData *pref_btn_data;
 
   button = gtk_button_new ();
   vbox = gtk_vbox_new (FALSE, 3);
@@ -50,15 +98,29 @@ create_mixed_btn (GtkWidget *ref_widget,
   gtk_box_pack_start (GTK_BOX (vbox), pixmap, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
 
+  pref_btn_data = g_new (PrefBtnData, 1);
+  pref_btn_data->notebook = notebook;
+  pref_btn_data->page_nbr = page_nbr;
+
   gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
   gtk_widget_set_usize (button, 76, 70);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		      tab_switch_cb, pref_btn_data);
+  gtk_signal_connect (GTK_OBJECT (button), "destroy",
+		      free_data_on_destroy_cb, pref_btn_data);
+
   gtk_container_add (GTK_CONTAINER (button), vbox);
 
-/*   bg_style = gtk_rc_style_new (); */
-/*   back_gtkstyle (bg_style, GTK_STATE_ACTIVE, 56320, 56320, 65535); */
-/*   back_gtkstyle (bg_style, GTK_STATE_PRELIGHT, 56320, 56320, 65535); */
-/*   gtk_widget_modify_style (button, bg_style); */
-/*   gtk_rc_style_unref (bg_style); */
+  bg_style = gtk_rc_style_new ();
+  back_gtkstyle (bg_style, GTK_STATE_NORMAL, 20000, 20000, 20000);
+  gtk_widget_modify_style (pixmap, bg_style);
+  gtk_rc_style_unref (bg_style);
+
+  bg_style = gtk_rc_style_new ();
+  back_gtkstyle (bg_style, GTK_STATE_ACTIVE, 45000, 45000, 45000);
+  back_gtkstyle (bg_style, GTK_STATE_PRELIGHT, 45000, 45000, 45000);
+  gtk_widget_modify_style (button, bg_style);
+  gtk_rc_style_unref (bg_style);
 
   return button;
 }
@@ -66,27 +128,31 @@ create_mixed_btn (GtkWidget *ref_widget,
 static GtkWidget *
 create_pref_content (GtkWidget *ref_widget)
 {
-  GtkWidget *content_hbox, *viewport, *icon_box, *button, *fixed;
+  GtkWidget *content_hbox, *viewport, *notebook, *icon_box, *button;
 
   content_hbox = gtk_hbox_new (FALSE, 5);
 
   viewport = gtk_viewport_new (NULL, NULL);
   icon_box = layout_new (ref_widget, GTK_ORIENTATION_VERTICAL, 0, 76);
+  layout_set_bg_color (icon_box, 45000, 45000, 45000);
+
   gtk_widget_show (icon_box);
-/*   layout_set_bg_color (icon_box, 56320, 56320, 65535); */
 
   gtk_container_add (GTK_CONTAINER (viewport), icon_box);
   gtk_box_pack_start (GTK_BOX (content_hbox), viewport, FALSE, FALSE, 0);
 
-  button = create_mixed_btn (ref_widget, PIXMAP ("viewer_prefs.xpm"), _("Viewer"));
-  layout_add_widget (icon_box, button);
+  notebook = create_pref_notebook ();
+  gtk_box_pack_start (GTK_BOX (content_hbox), notebook, TRUE, FALSE, 0);
 
-  button = create_mixed_btn (ref_widget, PIXMAP ("printer_prefs.xpm"), _("Printer"));
+  button = create_mixed_btn (ref_widget, PIXMAP ("viewer_prefs.xpm"), _("Viewer"),
+			     notebook, 0);
   layout_add_widget (icon_box, button);
+  gtk_widget_set_sensitive (button, FALSE);
+  gtk_object_set_data (GTK_OBJECT (notebook), "cur_selected_btn", button);
 
-  fixed = gtk_fixed_new ();
-  gtk_widget_set_usize (fixed, 300, 400);
-  gtk_box_pack_start (GTK_BOX (content_hbox), fixed, FALSE, FALSE, 0);
+  button = create_mixed_btn (ref_widget, PIXMAP ("printer_prefs.xpm"), _("Printer"),
+			     notebook, 1);
+  layout_add_widget (icon_box, button);
 
   return content_hbox;
 }
@@ -103,7 +169,7 @@ prefs_cb (GtkWidget *widget, GtkWidget *viewer_window)
   close_btn = gtk_button_new_with_label ("Close");
 
   pref_content = create_pref_content (pref_win);
-  ghfw_dlg_window_set_content (GHFW_DLG_WINDOW (pref_win), pref_content);
+  ghfw_dlg_window_set_content_with_frame (GHFW_DLG_WINDOW (pref_win), pref_content);
   ghfw_dlg_window_set_button (GHFW_DLG_WINDOW (pref_win), close_btn);
 
   gtk_signal_connect_object (GTK_OBJECT (close_btn), "clicked",
