@@ -21,6 +21,18 @@ CFLAGS=""
 
 MANPAGES=ghfaxviewer.1
 
+# are we configured from halifax parent dir or from independent ghfaxviewer
+# subdir ?
+if test "x$cache_file" == "x../config.cache"; then
+  SUPPSUBDIRS= 
+  docsubdir=no
+else
+  SUPPSUBDIRS=docs
+  docsubdir=yes
+fi
+
+AC_SUBST(SUPPSUBDIRS)
+
 AC_PATH_PROG(LIBTOOL, "libtool")
 
 # FreeBSD hacks
@@ -254,13 +266,16 @@ ghfaxviewer.spec
 debian/Makefile
 macros/Makefile
 intl/Makefile
-docs/Makefile
 src/Makefile
 src/ghfaxviewer-res.rc
 src/pixmaps/Makefile
 po/Makefile.in
 po/Makefile
 ])
+
+if test x"$docsubdir" == x"yes"; then
+  AC_OUTPUT(docs/Makefile)
+fi
 
 if test x"$XPM2WICO" = x && test $OS = WIN32; then
   AC_MSG_WARN([The xpm2wico utility was not found. As a result,
