@@ -32,6 +32,7 @@
 
 #include <ghfaxwidgets/ghfaxwidgets.h>
 #include "setup.h"
+#include "i18n.h"
 
 typedef struct _PrefBtnData PrefBtnData;
 typedef struct _IconBoxData IconBoxData;

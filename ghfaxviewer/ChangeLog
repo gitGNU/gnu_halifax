@@ -1,3 +1,8 @@
+2001-11-20  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/prefs.c: Needs to include "i18n.h" to avoid non-resolution
+	of the '_' symbol...
+
 2001-11-09  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/prefs.c (create_pref_notebook): new notebook to display the
