@@ -75,6 +75,7 @@ text_box_destroy (TextBox *text_box)
 gboolean
 text_box_attach_to_drawable (TextBox *text_box, GdkDrawable *drawable)
 {
+  return FALSE;
 }
 
 /* Cursors */

@@ -24,6 +24,41 @@
 #ifndef GHFW_THUMBBOX_H
 #define GHFW_THUMBBOX_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+#define GHFW_TYPE_THUMBBOX            (ghfw_thumbbox_get_type ())
+#define GHFW_THUMBBOX(obj)		(GTK_CHECK_CAST (obj, GHFW_TYPE_THUMBBOX, GhfwThumbBox))
+#define GHFW_THUMBBOX_CLASS(obj)	(GTK_CHECK_CAST (obj, GHFW_TYPE_THUMBBOX, GhfwThumbBoxClass))
+#define GHFW_IS_THUMBBOX(obj)         (GTK_CHECK_TYPE (obj, GHFW_TYPE_THUMBBOX))
+#define GHFW_IS_THUMBBOX_CLASS(klass) (GTK_CHECK_CLASS_TYPE (klass, GHFW_TYPE_THUMBBOX))
+
+
+typedef struct _GhfwThumbBox GhfwThumbBox;
+typedef struct _GhfwThumbBoxClass GhfwThumbBoxClass;
+
+struct _GhfwThumbBox
+{
+  GtkWindow window;
+
+  GtkWidget *vbox, *content, *button_box;
+
+  guint escapable:1;
+};
+
+struct _GhfwThumbBoxClass
+{
+  GtkWindowClass parent_class;
+
+  void (* escaped) (GhfwThumbBox *thumbbox);
+};
+
+GtkType        ghfw_thumbbox_get_type       (void);
+
+
+GtkWidget *ghfw_thumbbox_new (gchar *title);
+
 GtkWidget *layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
 		       gint spacing, gint width);
 void layout_reset (GtkWidget *layout);
@@ -31,5 +66,9 @@ void layout_reset (GtkWidget *layout);
 void layout_add_widget (GtkWidget *layout, GtkWidget *widget);
 void layout_set_bg_color (GtkWidget *layout,
 			  gushort red, gushort green, gushort blue);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* GHFW_THUMBBOX_H */

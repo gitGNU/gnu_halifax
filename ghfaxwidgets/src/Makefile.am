@@ -16,7 +16,7 @@ CPPFLAGS = -DGHFW_MAJOR_VERSION=$(GHFW_MAJOR_VERSION) \
 	-DGHFW_INTERFACE_AGE=$(GHFW_INTERFACE_AGE) \
 	-DGHFW_BINARY_AGE=$(GHFW_BINARY_AGE)
 
-CFLAGS = @CFLAGS@ @DEBUG_CFLAGS@ @WIN32_CFLAGS@ @GNOMEUI_CFLAGS@ @GTK_CFLAGS@ @WIN32_CFLAGS@
+CFLAGS = @CFLAGS@ @DEBUG_CFLAGS@ @GNOME_CFLAGS@
 
 # libghfax_widgets.la
 
@@ -32,9 +32,7 @@ libghfax_widgets_la_LDFLAGS = -release $(LT_RELEASE) \
 		-export-dynamic \
 		-no-undefined \
 		@DEBUG_LIBS@ \
-		@GNOMEUI_LIBS@ \
-		@GTK_LIBS@ \
-		@WIN32_LIBS@
+		@GNOMEUI_LIBS@
 
 libghfax_widgetsinclude_HEADERS = ghfwdlgwindow.h ghfwprogress.h \
 				ghfwurlzone.h ghfwthumbbox.h \

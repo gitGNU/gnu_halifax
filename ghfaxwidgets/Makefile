@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -20,16 +20,16 @@ prefix = /usr
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
-sbindir = /usr/sbin
-libexecdir = /usr/lib
-datadir = /usr/share
-sysconfdir = /etc
+sbindir = ${exec_prefix}/sbin
+libexecdir = ${exec_prefix}/libexec
+datadir = ${prefix}/share
+sysconfdir = ${prefix}/etc
 sharedstatedir = ${prefix}/com
-localstatedir = /var
-libdir = /usr/lib
-infodir = /usr/share/info
-mandir = /usr/share/man
-includedir = /usr/include
+localstatedir = ${prefix}/var
+libdir = ${exec_prefix}/lib
+infodir = ${prefix}/info
+mandir = ${prefix}/man
+includedir = ${prefix}/include
 oldincludedir = /usr/include
 
 DESTDIR =
@@ -40,9 +40,9 @@ pkgincludedir = $(includedir)/ghfaxwidgets
 
 top_builddir = .
 
-ACLOCAL = aclocal
+ACLOCAL = aclocal-1.4
 AUTOCONF = autoconf
-AUTOMAKE = automake
+AUTOMAKE = automake-1.4
 AUTOHEADER = autoheader
 
 INSTALL = /usr/bin/install -c
@@ -59,65 +59,49 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_alias = 
 host_triplet = i686-pc-linux-gnu
-AS = as
+AS = @AS@
 BUILD_INCLUDED_LIBINTL = no
-CATALOGS =  de.gmo fr.gmo pl.gmo zh_TW.Big5.gmo
 CATOBJEXT = .gmo
 CC = gcc
-CFLAGS = -g -O2 -Wall -Wunused 
-CXX = g++
-CXXCPP = g++ -E
+CFLAGS = -g -O2
 DATADIRNAME = share
 DEBUG_CFLAGS = 
 DEBUG_LIBS = 
-DLLTOOL = dlltool
+DLLTOOL = @DLLTOOL@
 ECHO = echo
 EXEEXT = 
 GCC_CFLAGS = 
-GCJ = @GCJ@
-GCJFLAGS = @GCJFLAGS@
 GENCAT = gencat
-GETTEXT = 
 GHFW_BINARY_AGE = 0
-GHFW_CFLAGS = -I/usr/include -DNEED_GNOMESUPPORT_H -I/usr/lib/gnome-libs/include -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include 
-GHFW_INCLUDEDIR = -I/usr/include
+GHFW_CFLAGS =   
+GHFW_INCLUDEDIR = -I${prefix}/include
 GHFW_INTERFACE_AGE = 0
-GHFW_LIBDIR = -L/usr/lib
-GHFW_LIBS = -lghfax_widgets -lSM -lICE -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm -rdynamic -L/usr/lib -L/usr/X11R6/lib -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib -ldl 
+GHFW_LIBDIR = -L${exec_prefix}/lib
+GHFW_LIBS = -lghfax_widgets   
 GHFW_MAJOR_VERSION = 0
 GHFW_MICRO_VERSION = 0
 GHFW_MINOR_VERSION = 0
 GHFW_VERSION = 0.0.0
 GLIBC21 = yes
-GLIB_CFLAGS = 
-GLIB_CONFIG = 
-GLIB_LIBS = 
-GMOFILES =  de.gmo fr.gmo pl.gmo zh_TW.Big5.gmo
 GMSGFMT = /usr/bin/msgfmt
-GNOMEGNORBA_LIBS = -rdynamic -lgnorba -lORBitCosNaming -lORBit -lIIOP -lORBitutil -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib -ldl
-GNOMEUI_CFLAGS = -I/usr/include -DNEED_GNOMESUPPORT_H -I/usr/lib/gnome-libs/include -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include
-GNOMEUI_LIBS = -rdynamic -L/usr/lib -L/usr/X11R6/lib -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib -ldl
-GNOME_APPLETS_LIBS = 
-GNOME_CAPPLET_LIBS = 
-GNOME_CONFIG = /usr/bin/gnome-config
-GNOME_DOCKLETS_LIBS = 
-GNOME_INCLUDEDIR = -I/usr/include -DNEED_GNOMESUPPORT_H -I/usr/lib/gnome-libs/include -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/gtk-1.2
-GNOME_LIBDIR = -rdynamic -L/usr/lib -L/usr/X11R6/lib
-GNOME_LIBS = -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib -ldl
-GNORBA_CFLAGS = -I/usr/include -DNEED_GNOMESUPPORT_H -I/usr/lib/gnome-libs/include -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/gtk-1.2
-GNORBA_LIBS = -rdynamic -L/usr/lib -L/usr/X11R6/lib -lgnorba -lORBitCosNaming -lORBit -lIIOP -lORBitutil -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib -ldl
-GTKXMHTML_LIBS = -rdynamic -lgtkxmhtml -lXpm -ljpeg -lpng -lz -lSM -lICE -lgtk -lgdk -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
-GTK_CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include
-GTK_CONFIG = /usr/bin/gtk-config
-GTK_LIBS = -lSM -lICE -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
+GNOME_CFLAGS = -DORBIT2=1 -pthread -I/usr/include/libgnomeui-2.0 -I/usr/include/libgnome-2.0 -I/usr/include/libgnomecanvas-2.0 -I/usr/include/gtk-2.0 -I/usr/include/libart-2.0 -I/usr/include/gconf/2 -I/usr/include/libbonoboui-2.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/orbit-2.0 -I/usr/include/libbonobo-2.0 -I/usr/include/gnome-vfs-2.0 -I/usr/lib/gnome-vfs-2.0/include -I/usr/include/linc-1.0 -I/usr/include/bonobo-activation-2.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/libxml2 -I/usr/include/libxml2/libxml  
+GNOME_LIBS = -pthread -Wl,--export-dynamic -L/usr/X11R6/lib -lgnomeui-2 -lSM -lICE -lbonoboui-2 -lxml2 -lz -lgnomecanvas-2 -lgnome-2 -lart_lgpl_2 -lpangoft2-1.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lbonobo-2 -lgconf-2 -lgnomevfs-2 -lbonobo-activation -lORBit-2 -lm -llinc -lgmodule-2.0 -ldl -lgobject-2.0 -lgthread-2.0 -lglib-2.0  
+GTK_CFLAGS = 
+GTK_LIBS = 
+HAVE_LIB = @HAVE_LIB@
 INSTOBJEXT = .mo
 INTLBISON = bison
 INTLLIBS = 
 INTLOBJS = 
 INTL_LIBTOOL_SUFFIX_PREFIX = 
+LIB = @LIB@
 LIBICONV = 
+LIBINTL = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LN_S = ln -s
+LTLIB = @LTLIB@
+LTLIBICONV = 
+LTLIBINTL = 
 LT_AGE = 0
 LT_CURRENT = 0
 LT_RELEASE = 0.0
@@ -126,53 +110,38 @@ MAINT = #
 MAKEINFO = makeinfo
 MANPAGES = 
 MKINSTALLDIRS = ./mkinstalldirs
-MSGFMT = /usr/bin/msgfmt
-MSGMERGE = 
-OBJDUMP = objdump
+OBJDUMP = @OBJDUMP@
 OBJEXT = o
-ORBIT_CFLAGS = -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include
-ORBIT_CONFIG = /usr/bin/orbit-config
-ORBIT_IDL = /usr/bin/orbit-idl
-ORBIT_LIBS = -L/usr/lib -lORBitCosNaming -lORBit -lIIOP -lORBitutil -lglib -lm
-PIXMAPS_DIR = /usr/share/pixmaps/ghfaxwidgets
-POFILES =  de.po fr.po pl.po zh_TW.Big5.po
+PIXMAPS_DIR = 
+PKG_CONFIG = /usr/bin/pkg-config
 POSUB = po
-PTHREAD_LIB = -lpthread
 RANLIB = ranlib
-RC_ICON_DIRECTIVE = 
 STRIP = strip
 SUPPSUBDIRS = docs macros
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-WIN32_CFLAGS = 
-WIN32_LIBS = 
-WINDRES = 
-WINDRES_INCLUDE_DIR = 
-XGETTEXT = /usr/bin/xgettext
-XPM_LIBS = -lXpm
-ZVT_LIBS = -rdynamic -lzvt -lutil -lSM -lICE -lgdk_imlib -lgtk -lgdk -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
-cflags_set = yes
-cxxflags_set = @cxxflags_set@
 
 PACKAGE = ghfaxwidgets
 VERSION = 0.0.0
-SUBDIRS = docs macros intl po src tests debian
+SUBDIRS = docs macros intl po src tests
 
-bin_SCRIPTS = ghfw-config
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = ghfaxwidgets.pc
 
-EXTRA_DIST = README ghfw-config.in
+EXTRA_DIST = README ghfaxwidgets.pc.in ghfaxwidgets-uninstalled.pc.in
 
 LIBTOOL_DEPS = ./ltmain.sh
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES =  ghfw-config
-SCRIPTS =  $(bin_SCRIPTS)
+CONFIG_CLEAN_FILES =  ghfaxwidgets.pc ghfaxwidgets-uninstalled.pc
+DATA =  $(pkgconfig_DATA)
 
 DIST_COMMON =  README ./stamp-h.in ABOUT-NLS AUTHORS COPYING ChangeLog \
-INSTALL Makefile.am Makefile.in NEWS acconfig.h aclocal.m4 config.guess \
-config.h.in config.sub configure configure.in ghfw-config.in install-sh \
-ltmain.sh missing mkinstalldirs
+INSTALL Makefile.am Makefile.in NEWS aclocal.m4 config.guess \
+config.h.in config.sub configure configure.in \
+ghfaxwidgets-uninstalled.pc.in ghfaxwidgets.pc.in install-sh ltmain.sh \
+missing mkinstalldirs
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -191,7 +160,7 @@ Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 $(ACLOCAL_M4): # configure.in 
 	cd $(srcdir) && $(ACLOCAL)
 
-config.status: $(srcdir)/configure.in $(CONFIG_STATUS_DEPENDENCIES)
+config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
 $(srcdir)/configure: #$(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
 	cd $(srcdir) && $(AUTOCONF)
@@ -211,7 +180,7 @@ $(srcdir)/config.h.in: #$(srcdir)/stamp-h.in
 		rm -f $(srcdir)/stamp-h.in; \
 		$(MAKE) $(srcdir)/stamp-h.in; \
 	else :; fi
-$(srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) acconfig.h
+$(srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOHEADER)
 	@echo timestamp > $(srcdir)/stamp-h.in 2> /dev/null
 
@@ -223,26 +192,28 @@ distclean-hdr:
 	-rm -f config.h
 
 maintainer-clean-hdr:
-ghfw-config: $(top_builddir)/config.status ghfw-config.in
+ghfaxwidgets.pc: $(top_builddir)/config.status ghfaxwidgets.pc.in
+	cd $(top_builddir) && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
+ghfaxwidgets-uninstalled.pc: $(top_builddir)/config.status ghfaxwidgets-uninstalled.pc.in
 	cd $(top_builddir) && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
-install-binSCRIPTS: $(bin_SCRIPTS)
+install-pkgconfigDATA: $(pkgconfig_DATA)
 	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	@list='$(bin_SCRIPTS)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    echo " $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`"; \
-	    $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`; \
-	  else if test -f $(srcdir)/$$p; then \
-	    echo " $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`"; \
-	    $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`; \
-	  else :; fi; fi; \
+	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir)
+	@list='$(pkgconfig_DATA)'; for p in $$list; do \
+	  if test -f $(srcdir)/$$p; then \
+	    echo " $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkgconfigdir)/$$p"; \
+	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkgconfigdir)/$$p; \
+	  else if test -f $$p; then \
+	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(pkgconfigdir)/$$p"; \
+	    $(INSTALL_DATA) $$p $(DESTDIR)$(pkgconfigdir)/$$p; \
+	  fi; fi; \
 	done
 
-uninstall-binSCRIPTS:
+uninstall-pkgconfigDATA:
 	@$(NORMAL_UNINSTALL)
-	list='$(bin_SCRIPTS)'; for p in $$list; do \
-	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`; \
+	list='$(pkgconfig_DATA)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(pkgconfigdir)/$$p; \
 	done
 
 # This directory's subdirectories are mostly independent; you can cd
@@ -281,7 +252,7 @@ maintainer-clean-recursive:
 	dot_seen=no; \
 	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
 	  rev="$$subdir $$rev"; \
-	  test "$$subdir" = "." && dot_seen=yes; \
+	  test "$$subdir" != "." || dot_seen=yes; \
 	done; \
 	test "$$dot_seen" = "no" && rev=". $$rev"; \
 	target=`echo $@ | sed s/-recursive//`; \
@@ -323,7 +294,7 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) $(LI
 	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)config.h.in$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags config.h.in $$unique $(LISP) -o $$here/TAGS)
+	  || (cd $(srcdir) && etags -o $$here/TAGS $(ETAGS_ARGS) $$tags config.h.in $$unique $(LISP))
 
 mostlyclean-tags:
 
@@ -408,24 +379,24 @@ installcheck: installcheck-recursive
 all-recursive-am: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
-install-exec-am: install-binSCRIPTS
+install-exec-am:
 install-exec: install-exec-recursive
 
-install-data-am:
+install-data-am: install-pkgconfigDATA
 install-data: install-data-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-recursive
-uninstall-am: uninstall-binSCRIPTS
+uninstall-am: uninstall-pkgconfigDATA
 uninstall: uninstall-recursive
-all-am: Makefile $(SCRIPTS) config.h
+all-am: Makefile $(DATA) config.h
 all-redirect: all-recursive-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs: installdirs-recursive
 installdirs-am:
-	$(mkinstalldirs)  $(DESTDIR)$(bindir)
+	$(mkinstalldirs)  $(DESTDIR)$(pkgconfigdir)
 
 
 mostlyclean-generic:
@@ -460,7 +431,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f config.status
 
 .PHONY: mostlyclean-hdr distclean-hdr clean-hdr maintainer-clean-hdr \
-uninstall-binSCRIPTS install-binSCRIPTS install-data-recursive \
+uninstall-pkgconfigDATA install-pkgconfigDATA install-data-recursive \
 uninstall-data-recursive install-exec-recursive \
 uninstall-exec-recursive installdirs-recursive uninstalldirs-recursive \
 all-recursive check-recursive installcheck-recursive info-recursive \
@@ -473,6 +444,8 @@ install uninstall-am uninstall all-redirect all-am all installdirs-am \
 installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
+
+$(pkgconfig_DATA): config.status
 
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck

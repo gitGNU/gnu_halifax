@@ -2,12 +2,14 @@ PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 SUBDIRS = @SUPPSUBDIRS@ intl po src tests
 
-bin_SCRIPTS = ghfw-config
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = ghfaxwidgets.pc
 
-EXTRA_DIST = README ghfw-config.in
+$(pkgconfig_DATA): config.status
+
+EXTRA_DIST = README ghfaxwidgets.pc.in ghfaxwidgets-uninstalled.pc.in
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
-

@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+                                                                                
+Name: GHFaxWidgets
+Description: GNU HaliFAX Widgets Library
+Version: @VERSION@
+Libs: -L${libdir} -lglib-2.0
+Cflags: -I${includedir}/ghfaxwidgets

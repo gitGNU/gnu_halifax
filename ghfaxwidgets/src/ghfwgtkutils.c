@@ -77,7 +77,7 @@ menu_item_new (GtkWidget *menu, gchar *label,
   gtk_container_add (GTK_CONTAINER (menu), new_menu_item);
 
   if (callback)
-    gtk_signal_connect (GTK_OBJECT (new_menu_item), "activate",
+    g_signal_connect (G_OBJECT (new_menu_item), "activate",
 			callback, data);
 
   return new_menu_item;
@@ -85,22 +85,22 @@ menu_item_new (GtkWidget *menu, gchar *label,
 
 /* Pixmaps and icons */
 
-GtkWidget *
-pixmap_from_xpm (GtkWidget *ref_widget, gchar *file_name)
-{
-  GtkWidget *gtk_pixmap;
-  GdkPixmap *pixmap;
-  GdkBitmap *mask;
+/* GtkWidget * */
+/* pixmap_from_xpm (GtkWidget *ref_widget, gchar *file_name) */
+/* { */
+/*   GtkWidget *gtk_pixmap; */
+/*   GdkPixmap *pixmap; */
+/*   GdkBitmap *mask; */
 
-  pixmap = gdk_pixmap_create_from_xpm
-    (ref_widget->window, &mask,
-     &(ref_widget->style->bg[GTK_STATE_NORMAL]),
-     file_name);
+/*   pixmap = gdk_pixmap_create_from_xpm */
+/*     (ref_widget->window, &mask, */
+/*      &(ref_widget->style->bg[GTK_STATE_NORMAL]), */
+/*      file_name); */
 
-  gtk_pixmap = gtk_pixmap_new (pixmap, mask);
+/*   gtk_pixmap = gtk_pixmap_new (pixmap, mask); */
 
-  return gtk_pixmap;
-}
+/*   return gtk_pixmap; */
+/* } */
 
 GtkWidget *
 pixmap_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data)
@@ -143,7 +143,7 @@ transient_destroy_cb (GtkWidget *window, gpointer data)
 {
   GtkWindow *parent;
 
-  parent = gtk_object_get_data (GTK_OBJECT (window), "parent_was_modal");
+  parent = g_object_get_data (G_OBJECT (window), "parent_was_modal");
   if (parent)
     gtk_window_set_modal (parent, TRUE);
     
@@ -181,7 +181,7 @@ transient_window_show (GtkWidget *transient, GtkWidget *parent)
 
   if (((GtkWindow *) parent)->modal)
     {
-      gtk_object_set_data (GTK_OBJECT (transient), "parent_was_modal",
+      gtk_object_set_data (G_OBJECT (transient), "parent_was_modal",
 			   parent);
       gtk_window_set_modal ((GtkWindow *) parent, FALSE);
     }
@@ -189,8 +189,8 @@ transient_window_show (GtkWidget *transient, GtkWidget *parent)
   gtk_window_set_modal ((GtkWindow *) transient, TRUE);
   gtk_window_set_policy ((GtkWindow *) transient, FALSE, FALSE, TRUE);
 
-  gtk_signal_connect (GTK_OBJECT (transient), "destroy",
-		      transient_destroy_cb, NULL);
+  g_signal_connect (G_OBJECT (transient), "destroy",
+		    G_CALLBACK (transient_destroy_cb), NULL);
 
   gtk_widget_show_all (transient);
 
@@ -226,8 +226,8 @@ key_press_event_cb (GtkWidget *window, GdkEventKey *event,
 void
 gtk_window_set_escapable (GtkWindow *window)
 {
-  gtk_signal_connect (GTK_OBJECT (window), "key-press-event",
-		      GTK_SIGNAL_FUNC (key_press_event_cb), NULL);
+  g_signal_connect (G_OBJECT (window), "key-press-event",
+		    G_CALLBACK (key_press_event_cb), NULL);
 }
 
 /* very simple GtkRcStyle stuff */
@@ -251,15 +251,15 @@ void
 handle_box_transient_cb (GtkHandleBox *handle_box, GtkWidget *hb_child,
 			 GdkWindow *parent)
 {
-  gtk_signal_disconnect_by_func (GTK_OBJECT (handle_box),
-				 GTK_SIGNAL_FUNC (handle_box_transient_cb),
-				 parent);
+  g_signal_handlers_disconnect_by_func (G_OBJECT (handle_box),
+					G_CALLBACK (handle_box_transient_cb),
+					parent);
 #ifndef __WIN32__
   gdk_window_set_transient_for (handle_box->float_window,
 				parent);
 #else
   win32gdk_window_set_transient_for (handle_box->float_window,
-				parent);
+				     parent);
 #endif
 }
 

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/* A pseudo-widget to create the thumbnail area */
+/* A widget to create the thumbnail area */
 
 #include <gtk/gtk.h>
 
@@ -507,6 +507,41 @@ setup_usr_btn (GtkWidget *button, LayoutData *layout_data)
     gtk_signal_connect ((GtkObject*) button, "realize",
 			setup_usr_btn, layout_data);
 }
+
+/* GTK widget stuff */
+
+static void
+ghfw_dlg_window_class_init (GhfwDlgWindowClass *klass)
+{
+  GtkObjectClass *object_class;
+  GtkWidgetClass *widget_class;
+
+  object_class = (GtkObjectClass *) klass;
+  widget_class = (GtkWidgetClass *) klass;
+
+  parent_class = gtk_type_class (GTK_TYPE_WINDOW);
+
+  gtk_object_add_arg_type ("GhfwDlgWindow::escapable",
+			   GTK_TYPE_BOOL, GTK_ARG_READWRITE,
+			   ARG_ESCAPABLE);
+  gtk_object_add_arg_type ("GhfwDlgWindow::content",
+			   GTK_TYPE_POINTER, GTK_ARG_READWRITE,
+			   ARG_CONTENT);
+  gtk_object_add_arg_type ("GhfwDlgWindow::button_box",
+			   GTK_TYPE_POINTER, GTK_ARG_READWRITE,
+			   ARG_BUTTON_BOX);
+  gtk_object_add_arg_type ("GhfwDlgWindow::vbox",
+			   GTK_TYPE_POINTER, GTK_ARG_READABLE,
+			   ARG_VBOX);
+
+  object_class->set_arg = ghfw_dlg_window_set_arg;
+  object_class->get_arg = ghfw_dlg_window_get_arg;
+
+}
+
+static void
+ghfw_thumbbox_init (GhfwProgressWindow *progress_window)
+
 
 GtkWidget *
 layout_new (GtkWidget *ref_widget, GtkOrientation orientation,

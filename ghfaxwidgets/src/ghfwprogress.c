@@ -48,12 +48,14 @@ static GhfwDlgWindowClass *parent_class;
 static guint progress_window_aborted_signal;
 
 /* Callbacks */
-static void ghfw_progress_window_real_aborted (GhfwProgressWindow *progress_window)
+static void
+ghfw_progress_window_real_aborted (GhfwProgressWindow *progress_window)
 {
   progress_window->aborted = TRUE;  
 }
 
-static void ghfw_progress_window_destroy (GtkObject *object)
+static void
+ghfw_progress_window_destroy (GtkObject *object)
 {
   GhfwProgressWindow *progress_window;
 
@@ -66,7 +68,8 @@ static void ghfw_progress_window_destroy (GtkObject *object)
     (* GTK_OBJECT_CLASS (parent_class)->destroy) (object);
 }
 
-static void ghfw_progress_window_show (GtkWidget *widget)
+static void
+ghfw_progress_window_show (GtkWidget *widget)
 {
   GhfwProgressWindow *progress_window;
   GhfwDlgWindow *dlg_window;
@@ -81,7 +84,8 @@ static void ghfw_progress_window_show (GtkWidget *widget)
     gtk_widget_hide (dlg_window->button_box);
 }
 
-static void ghfw_progress_window_show_all (GtkWidget *widget)
+static void
+ghfw_progress_window_show_all (GtkWidget *widget)
 {
   GhfwProgressWindow *progress_window;
   GhfwDlgWindow *dlg_window;
@@ -96,9 +100,10 @@ static void ghfw_progress_window_show_all (GtkWidget *widget)
     gtk_widget_hide (dlg_window->button_box);
 }
 
-static void progress_abort_cb (GhfwProgressWindow *progress_window, gpointer null)
+static void
+progress_abort_cb (GhfwProgressWindow *progress_window, gpointer null)
 {
-  gtk_signal_emit (GTK_OBJECT (progress_window),
+  gtk_signal_emit (G_OBJECT (progress_window),
 		   progress_window_aborted_signal);
 }
 
@@ -123,7 +128,7 @@ ghfw_progress_window_set_arg (GtkObject *object,
       ghfw_progress_window_set_abortable (progress_window, GTK_VALUE_BOOL (*arg));
       break;
     case ARG_ABORTED:
-      gtk_signal_emit (GTK_OBJECT (progress_window),
+      gtk_signal_emit (G_OBJECT (progress_window),
 		       progress_window_aborted_signal);
       break;
     default:
@@ -214,20 +219,15 @@ ghfw_progress_window_init (GhfwProgressWindow *progress_window)
   progress_window->label = gtk_label_new ("");
   gtk_box_pack_start (GTK_BOX (vbox), progress_window->label, TRUE, FALSE, 3);
 
-  progress_window->progress_bar = gtk_progress_bar_new_with_adjustment
-    (GTK_ADJUSTMENT(adjustment));
+  progress_window->progress_bar = gtk_progress_bar_new ();
   gtk_box_pack_start (GTK_BOX (vbox), progress_window->progress_bar, FALSE, FALSE, 3);
 
-#ifdef NEED_GNOMESUPPORT_H
-  progress_window->abort_btn = gnome_stock_button (GNOME_STOCK_BUTTON_CANCEL);
-#else
-  progress_window->abort_btn = gtk_button_new_with_label (_("Cancel"));
-#endif
-  gtk_signal_connect (GTK_OBJECT (progress_window->abort_btn), "clicked",
-		      (GtkSignalFunc) progress_abort_cb, progress_window); 
+  progress_window->abort_btn = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+  g_signal_connect (G_OBJECT (progress_window->abort_btn), "clicked",
+		    G_CALLBACK (progress_abort_cb), progress_window); 
   ghfw_dlg_window_set_button (GHFW_DLG_WINDOW (progress_window), progress_window->abort_btn);
-  gtk_signal_connect_object (GTK_OBJECT (progress_window), "escaped",
-			     (GtkSignalFunc) progress_abort_cb, NULL);
+  g_signal_connect_object (G_OBJECT (progress_window), "escaped",
+			   G_CALLBACK (progress_abort_cb), NULL);
 
   progress_window->aborted = FALSE;
   progress_window->abortable = FALSE;
@@ -273,9 +273,11 @@ ghfw_progress_window_new (gchar *title, gchar *action)
 {
   GtkWidget *progress_window;
   
-  progress_window = GTK_WIDGET (gtk_type_new (ghfw_progress_window_get_type ()));
+  progress_window = GTK_WIDGET
+    (gtk_type_new (ghfw_progress_window_get_type ()));
   gtk_window_set_title (GTK_WINDOW (progress_window), title);
-  ghfw_progress_window_set_action ((GhfwProgressWindow *) progress_window, action);
+  ghfw_progress_window_set_action ((GhfwProgressWindow *) progress_window,
+				   action);
 
   return progress_window;
 }
@@ -321,8 +323,9 @@ ghfw_progress_window_update_with_value (GhfwProgressWindow *progress_window,
   return aborted;
 }
 
-void ghfw_progress_window_increment (GhfwProgressWindow *progress_window,
-				     guint increment)
+void
+ghfw_progress_window_increment (GhfwProgressWindow *progress_window,
+				guint increment)
 {
   ghfw_progress_window_update_with_value (progress_window,
 					  progress_window->value + increment,
