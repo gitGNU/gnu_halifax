@@ -131,7 +131,7 @@ msgstr "O programie"
 
 #: src/about.c:47
 msgid "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
-msgstr "Copyright © 2000, 2001 Wolfgang Sourdeau"
+msgstr "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
 
 #: src/about.c:49
 msgid "This program displays image files received on a HylaFAX system."
@@ -413,7 +413,7 @@ msgstr "Drukujê..."
 
 #: src/ps_print.c:1096
 msgid "This is weird..."
-msgstr ""
+msgstr "Dziwna sprawa..."
 
 #: src/ps_print.c:1097
 msgid ""
@@ -431,10 +431,23 @@ msgid ""
 "accordingly and send it to\n"
 "halifax-bugs@gnu.org."
 msgstr ""
+"Nie uda³o siê ustaliæ, jak w³a¶ciwie powinna\n"
+"przebiegaæ wspó³praca z Twoim systemem druku.\n"
+"\n"
+"Z tego wzglêdu masz jedynie mo¿liwo¶æ eksportu\n"
+"danych do pliku PostScript.\n"
+"\n"
+"Niech administrator Twojego systemu sprawdzi,\n"
+"czy jest zainstalowany nowszy system druku.\n"
+"\n"
+"Je¶li tak, zapewne trafi³e¶ na 'pluskwê'\n"
+"w programie. Zg³o¶ j±, odpowiednio wype³niaj±c\n"
+"'bug report' i prze¶lij go na adres\n"
+"halifax-bugs@gnu.org"
 
 #: src/ps_print.c:1107
 msgid "I promise!"
-msgstr ""
+msgstr "S³owo!"
 
 #: src/gn_print.c:246
 msgid "Print preview..."
@@ -443,6 +456,3 @@ msgstr "Podgl±d wydruku"
 #: src/gn_print.c:297
 msgid "Range"
 msgstr "Zakres"
-
-#~ msgid "Processing"
-#~ msgstr "Przetwarzanie..."

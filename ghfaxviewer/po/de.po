@@ -412,7 +412,7 @@ msgstr "Drucke..."
 
 #: src/ps_print.c:1096
 msgid "This is weird..."
-msgstr ""
+msgstr "Dies ist seltsam..."
 
 #: src/ps_print.c:1097
 msgid ""
@@ -430,10 +430,22 @@ msgid ""
 "accordingly and send it to\n"
 "halifax-bugs@gnu.org."
 msgstr ""
+"Es war nicht möglich, die Arbeitsweise\n"
+"des Druckersystems herauszufinden.\n"
+"\n"
+"Sie können Ihre Daten deshalb nur als\n"
+"Postscript-Datei exportieren.\n"
+"\n"
+"Bitte lassen Sie Ihren Administrator überprüfen,\n"
+"ob ein funktionsfähiges Drucksystem installiert ist.\n"
+"\n"
+"Wenn das der Fall ist, dann muss ein Fehler\n"
+"in ghfaxviewer vorliegen. Bitte senden Sie\n"
+"einen Fehlerreport an halifax-bugs@gnu.org."
 
 #: src/ps_print.c:1107
 msgid "I promise!"
-msgstr ""
+msgstr "Ich verspreche es!"
 
 #: src/gn_print.c:246
 msgid "Print preview..."
