@@ -174,9 +174,9 @@ msgid ""
 "Kevin Chen, Traditional Chinese translation\n"
 "Zbigniew Baniewski, Polish translation"
 msgstr ""
-"Thomas Bartschies, Deutsch übersetzung\n"
-"Kevin Chen, Traditonnelle Chinesen übersetzung\n"
-"Zbigniew Baniewski, Polnische übersetzung"
+"Thomas Bartschies, Deutsche Übersetzung\n"
+"Kevin Chen, Traditonnell-Chinesische Übersetzung\n"
+"Zbigniew Baniewski, Polnische Übersetzung"
 
 #: src/info.c:47
 msgid "this fax is clean"
