@@ -38,7 +38,8 @@ WINDOWS_DETECTED=no
 
 ALL_LINGUAS="de fr pl zh_TW.Big5"
 
-MANPAGES=ghfaxviewer.1
+dnl MANPAGES=ghfaxviewer.1
+MANPAGES=
 
 # are we configured from halifax parent dir or from independent ghfaxviewer
 # subdir ?
@@ -54,7 +55,7 @@ if test "x$cache_file" == "x.././config.cache"; then
     echo "install clean distclean dist:" > docs/Makefile.in
   fi
 else
-  SUPPSUBDIRS=docs macros
+  SUPPSUBDIRS="docs macros"
   docsubdir=yes
 fi
 
@@ -194,7 +195,7 @@ dnl Checks for libraries.
 	   ])
    fi
 else
-   PIXMAPS_DIR="$datadir/pixmaps/ghfaxviewer"
+   PIXMAPS_DIR="$datadir/pixmaps/ghfaxwidgets"
 
    AC_MSG_WARN([GNOME support disabled, falling back on GTK+])
    AM_PATH_GLIB([1.2.0],[],[
