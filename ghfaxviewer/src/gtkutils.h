@@ -26,6 +26,8 @@
 
 typedef gpointer DialogWindow;                         /* private */
 
+void free_data_on_destroy_cb (GtkWidget *widget, gpointer data);
+
 GtkWidget* menu_separator_new (GtkWidget *menu);
 void menu_item_new (GtkWidget *menu, gchar *label,
 		    GtkSignalFunc callback, gpointer data);

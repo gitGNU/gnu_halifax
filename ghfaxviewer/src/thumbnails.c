@@ -73,15 +73,6 @@ draw_req_page_cb (GtkWidget *widget, DrawReqData *request)
   return FALSE;
 }
 
-static gint
-destroy_thumb_button_cb (GtkWidget *widget, DrawReqData *draw_req_data)
-{
-  gtk_pixmap_set (draw_req_data->pixmap, NULL, NULL);
-  g_free (draw_req_data);
-
-  return FALSE;
-}
-
 static void
 thumbs_fixed_update_size (ViewerData *viewer_data)
 {
@@ -118,16 +109,6 @@ thumbs_fixed_new ()
   return thumbs_fixed;
 }
 
-GdkPixmap *
-thumb_pixmap ()
-{
-  GdkPixmap *pixmap;
-
-
-
-  return pixmap;
-}
-
 GtkWidget *
 thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
 	      gint th_height, gint th_width)
@@ -140,7 +121,6 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
   DrawReqData *draw_request;
   DrawData *draw_data;
   gchar *tttext;
-
 
   gdk_pixmap = pixmap_for_page (viewer_data->viewer_window,
 				th_width, th_height,
@@ -181,7 +161,7 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
   draw_request->pixmap = GTK_PIXMAP (gtk_pixmap);
 
   gtk_signal_connect (GTK_OBJECT(button), "destroy",
-		      GTK_SIGNAL_FUNC (destroy_thumb_button_cb),
+		      GTK_SIGNAL_FUNC (free_data_on_destroy_cb),
 		      draw_request);
   gtk_signal_connect (GTK_OBJECT(button), "clicked",
 		      GTK_SIGNAL_FUNC (draw_req_page_cb),

@@ -181,7 +181,6 @@ gfv_progress_update_with_percentage (guint value, guint total,
 	gtk_main_iteration ();
     }
 
-
   return (prog_data->aborted);
 }
 

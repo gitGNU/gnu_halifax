@@ -48,6 +48,14 @@ struct _EscCallbackData
   gpointer user_data;
 };
 
+/* This function happens to be present in more than one place. Let's
+   clean up some... */
+void
+free_data_on_destroy_cb (GtkWidget *widget, gpointer data)
+{
+  g_free (data);
+}
+
 /* Menu creation */
 
 GtkWidget*
@@ -185,12 +193,6 @@ gtk_window_set_escapable (GtkWindow *window)
 {
   gtk_signal_connect (GTK_OBJECT (window), "key-press-event",
 		      GTK_SIGNAL_FUNC (key_press_event_cb), NULL);
-}
-
-void
-free_data_on_destroy_cb (GtkWidget *widget, gpointer data)
-{
-  g_free (data);
 }
 
 /* dialog windows */

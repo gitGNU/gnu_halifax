@@ -922,12 +922,6 @@ print_dialog_bbox (PrintData *print_data)
   gtk_widget_show (button_box);
 }
 
-static void
-print_dialog_destroy_cb (GtkWidget *widget, PrintData *print_data)
-{
-  g_free (print_data);
-}
-
 static DialogWindow *
 print_dialog (ViewerData *viewer_data)
 {
@@ -958,7 +952,7 @@ print_dialog (ViewerData *viewer_data)
 
   dialog_window_set_content (print_dialog, table);
   dialog_window_add_destroy_callback (print_dialog,
-				      GTK_SIGNAL_FUNC (print_dialog_destroy_cb),
+				      GTK_SIGNAL_FUNC (free_data_on_destroy_cb),
 				      print_data);
 
   return print_dialog;
