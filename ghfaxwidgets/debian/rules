@@ -52,9 +52,9 @@ install-stamp: build-stamp
 		usr/lib/libghfax_widgets.a \
 		usr/lib/libghfax_widgets.la \
 		usr/lib/libghfax_widgets.so
-	install -d debian/libghfaxwidgets-dev/usr/share/aclocal
+	install -d debian/libghfaxwidgets-dev/usr/share/aclocal/ghfaxwidgets
 	cp macros/ghfaxwidgets*.m4 \
-		debian/libghfaxwidgets-dev/usr/share/aclocal/
+		debian/libghfaxwidgets-dev/usr/share/aclocal/ghfaxwidgets/
 	rm -rf debian/$(package)/usr/include \
 		debian/$(package)/usr/bin \
 		debian/$(package)/usr/share/man/man1

@@ -1,4 +1,4 @@
-/* ghfaxwidgets.h - this file is part of the GNU HaliFAX Widgets library
+/* ghfwversion.h - this file is part of the GNU HaliFAX Widgets library
  *
  * Copyright (C) 2001 Wolfgang Sourdeau
  *
@@ -20,15 +20,18 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef GHFAXWIDGETS_H
-#define GHFAXWIDGETS_H
+#ifndef GHFWVERSION_H
+#define GHFWVERSION_H
 
-#include <ghfaxwidgets/ghfwversion.h>
-#include <ghfaxwidgets/ghfwgdkutils.h>
-#include <ghfaxwidgets/ghfwgtkutils.h>
-#include <ghfaxwidgets/ghfwdlgwindow.h>
-#include <ghfaxwidgets/ghfwprogress.h>
-#include <ghfaxwidgets/ghfwthumbbox.h>
-#include <ghfaxwidgets/ghfwurlzone.h>
+/* Gtk version.
+ */
+extern const guint ghfw_major_version;
+extern const guint ghfw_minor_version;
+extern const guint ghfw_micro_version;
+extern const guint ghfw_binary_age;
+extern const guint ghfw_interface_age;
+gchar* ghfw_check_version (guint required_major,
+                           guint required_minor,
+                           guint required_micro);
 
-#endif /* GHFAXWIDGETS_H */
+#endif /* GHFWVERSION_H */

@@ -26,4 +26,4 @@ libghfax_widgets_la_LDFLAGS = -release $(LT_RELEASE) \
 libghfax_widgetsinclude_HEADERS = ghfwdlgwindow.h ghfwprogress.h \
 				ghfwurlzone.h ghfwthumbbox.h \
 				ghfwgtkutils.h ghfwgdkutils.h \
-				ghfaxwidgets.h
+				ghfaxwidgets.h ghfwversion.h

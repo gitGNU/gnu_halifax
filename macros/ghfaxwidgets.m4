@@ -10,6 +10,9 @@
 # This file is part of the GNU HaliFAX Widgets library.
 # Please send any bugs to <halifax-bugs@gnu.org>
 
+dnl So that ghfaxwidgets.m4 can stands both in $(topdir)/macros and in
+dnl /usr/share/aclocal...
+
 dnl Test for GHfaxWidgets, and define GHFW_CFLAGS and GHFW_LIBS
 dnl
 AC_DEFUN(AM_PATH_GHFW,
@@ -62,7 +65,8 @@ dnl checks the results of ghfw-config to some extent
 dnl
       rm -f conf.ghfwtest
       AC_TRY_RUN([
-#include <ghfaxwidgets/ghfaxwidgets.h>
+#include <glib.h>
+#include <ghfaxwidgets/ghfwversion.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -158,7 +162,8 @@ main ()
           CFLAGS="$CFLAGS $GHFW_CFLAGS"
           LIBS="$LIBS $GHFW_LIBS"
           AC_TRY_LINK([
-#include <ghfaxwidgets/ghfaxwidgets.h>
+#include <glib.h>
+#include <ghfaxwidgets/ghfwversion.h>
 #include <stdio.h>
 ],      [ return ((ghfw_major_version) || (ghfw_minor_version) || (ghfw_micro_version)); ],
         [ echo "*** The test program compiled, but did not run. This usually means"
