@@ -36,7 +36,7 @@ libghfaxwidgets_la_LDFLAGS = -release $(LT_RELEASE) \
 		-export-dynamic \
 		-no-undefined \
 		@DEBUG_LIBS@ \
-		@GNOMEUI_LIBS@
+		@GNOME_LIBS@
 
 libghfaxwidgetsinclude_HEADERS = ghfwdlgwindow.h ghfwprogress.h \
 				ghfwurlzone.h ghfwthumbbox.h \
