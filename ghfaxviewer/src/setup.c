@@ -46,15 +46,6 @@
 #include "i18n.h"
 #include "setup.h"
 
-#ifdef CAN_SAVE_CONFIG
-#define KEY_DEF_DIR "default_dir"
-
-#define KEY_DEF_X "viewer_def_x"
-#define KEY_DEF_Y "viewer_def_y"
-#define KEY_DEF_WIDTH "viewer_def_width"
-#define KEY_DEF_HEIGHT "viewer_def_height"
-#endif
-
 static gint windows_count;
 
 #ifdef NEED_GNOMESUPPORT_H
@@ -67,8 +58,15 @@ GConfClient *gc_client;
 #endif /* NEED_GNOMESUPPORT_H */
 
 #ifdef CAN_SAVE_CONFIG
+#define KEY_DEF_DIR "default_dir"
+
+#define KEY_DEF_X "viewer_def_x"
+#define KEY_DEF_Y "viewer_def_y"
+#define KEY_DEF_WIDTH "viewer_def_width"
+#define KEY_DEF_HEIGHT "viewer_def_height"
+
 static gint viewer_def_x, viewer_def_y;
-#endif
+#endif /* CAN_SAVE_CONFIG */
 
 static gint viewer_def_width, viewer_def_height;
 
