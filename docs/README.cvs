@@ -5,7 +5,6 @@ GNU HaliFAX and CVS
 
 Downloading GNU HaliFAX
 -----------------------
-
 As from April 13, 2001 it is possible to download the GNU HaliFAX project
 from the GNU cvs repository. If you don't have an account on
 subversions.gnu.org, you can download the package as user "anoncvs". Here is
@@ -37,7 +36,6 @@ whole archive each time.
 
 Building the configure tree
 ---------------------------
-
 This process is very simple. Actually it only has generally to be done
 once per new release. Small changes will only require the one or two
 last steps.
@@ -67,13 +65,12 @@ autoconf
 
 Making patches
 --------------
-
 Whenever you have an interesting change to send us. Please issue the following
 command from the top directory of the active module:
 
 cvs -z3 diff u > [module]-[description].diff
 
-Please note that any changes is not guaranteed to be accepted. We are going
+Please note that any change is not guaranteed to be accepted. We are going
 to discuss this patch within the development team and with you to evaluate
 how much this patch will be needed, useful, appropriate and bugfree.
 
