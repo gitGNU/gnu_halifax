@@ -1,5 +1,7 @@
 tmp
 stamp-h
+build-stamp
+install-stamp
 config.status
 config.cache
 config.h
