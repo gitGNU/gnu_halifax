@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+                                                                                
+Name: GHFaxWidgets Uninstalled
+Description: GNU HaliFAX Widgets Library, Not Installed
+Version: @VERSION@
+Libs: ${pc_top_builddir}/${pcfiledir}/ghfaxwidgets/libghfaxwidgets.la
+Cflags: -I${pc_top_builddir}/${pcfiledir} -I${pc_top_builddir}/${pcfiledir}/@srcdir@ -I${pc_top_builddir}/${pcfiledir}/@srcdir@/ghfaxwidgets
