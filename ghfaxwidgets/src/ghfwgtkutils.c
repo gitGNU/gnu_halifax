@@ -1,7 +1,7 @@
 /* gtkutils.c - this file is part of the GNU HaliFAX Viewer
  *
  * Copyright (C) 2000 The Free Software Foundation, inc.
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *

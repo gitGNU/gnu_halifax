@@ -1,6 +1,6 @@
 /* ghfwthumbbox.c - this file is part of the GNU HaliFAX Widgets library
  *
- * Copyright (C) 2001 Wolfgang Sourdeau
+ * Copyright (C) 2001, 2002, 2003 Wolfgang Sourdeau
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -117,6 +117,7 @@ refresh_buttons (LayoutData *layout_data)
     {
       if (condition) 
 	{
+	  g_print ("condition (%d, %d) 1\n", up_height, down_height);
 	  gtk_button_released ((GtkButton*) layout_data->up);
 	  gtk_widget_hide (layout_data->up);
 	  reset_timeout (layout_data);
@@ -127,6 +128,7 @@ refresh_buttons (LayoutData *layout_data)
   else
     if (!condition)
       {
+	g_print ("condition (%d, %d) 2\n", up_height, down_height);
         gtk_widget_show (layout_data->up);
         up_height = widget_height (layout_data->up, 
 				   layout_data->orientation);
@@ -140,6 +142,7 @@ refresh_buttons (LayoutData *layout_data)
     {
       if (condition)
         {
+	  g_print ("condition (%d, %d) 3\n", up_height, down_height);
 	  gtk_button_released ((GtkButton*) layout_data->down);
 	  gtk_widget_hide (layout_data->down);
 	  reset_timeout (layout_data);
@@ -148,6 +151,7 @@ refresh_buttons (LayoutData *layout_data)
   else
     if (!condition)
       {
+	g_print ("condition (%d, %d) 4\n", up_height, down_height);
         gtk_widget_show (layout_data->down);
         down_height = widget_height (layout_data->down,
 				     layout_data->orientation);
@@ -219,6 +223,8 @@ layout_resize_cb (GtkWidget *layout,
 
   adjustment = layout_data->adjustment;
 
+  g_print ("layout_resize_cb\n");
+
   delta = (layout_data->height - (gint) adjustment->page_size);
 
   if ((adjustment->value > delta)
@@ -238,7 +244,7 @@ layout_resize_cb (GtkWidget *layout,
   refresh_buttons (layout_data);
 }
 
-#ifdef __WIN32__
+/* #ifdef __WIN32__ */
 /* This is a dirty hack waiting for GTK+ for Windows to be fixed... */
 void win32_layout_changed_cb (GtkWidget *widget, LayoutData *layout_data)
 {
@@ -246,6 +252,7 @@ void win32_layout_changed_cb (GtkWidget *widget, LayoutData *layout_data)
 			    &(layout_data->gtk_layout->allocation));
 }
 
+#ifdef __WIN32__
 static gint
 mouse_scroll_event_cb (GtkWidget *ref_widget,
 			GdkEventScroll *event,
@@ -428,21 +435,13 @@ layout_set_width (LayoutData *layout_data, gint width)
       gtk_widget_set_size_request (layout_data->down, -1, width);
       gtk_widget_set_size_request (layout_data->gtk_layout,
 				   -1, width);
-/*       gtk_widget_set_usize (layout_data->up, -1, width); */
-/*       gtk_widget_set_usize (layout_data->down, -1, width); */
-/*       gtk_widget_set_usize (layout_data->gtk_layout, */
-/* 			    -1, width); */
     }
   else
     {
       gtk_widget_set_size_request (layout_data->up, width, -1);
       gtk_widget_set_size_request (layout_data->down, width, -1);
       gtk_widget_set_size_request (layout_data->gtk_layout,
-			    width, -1);
-/*       gtk_widget_set_usize (layout_data->up, width, -1); */
-/*       gtk_widget_set_usize (layout_data->down, width, -1); */
-/*       gtk_widget_set_usize (layout_data->gtk_layout, */
-/* 			    width, -1); */
+				   width, -1);
     }
 
   layout_data->width = width;
@@ -606,14 +605,14 @@ layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
   else
     g_signal_connect (G_OBJECT (ref_widget), "realize",
 		      G_CALLBACK (put_icons_on_buttons), layout_data);
-#ifdef __WIN32__
+/* #ifdef __WIN32__ */
   g_signal_connect (adjustment, "value_changed",
 		    G_CALLBACK (win32_layout_changed_cb), layout_data);
-#endif
+/* #endif */
 
   g_object_set_data_full (G_OBJECT (box),
-			    "_layout_data", layout_data,
-			    g_free);
+			  "_layout_data", layout_data,
+			  g_free);
 
   gtk_widget_show (gtk_layout);
 

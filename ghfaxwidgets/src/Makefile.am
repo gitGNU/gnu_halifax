@@ -6,7 +6,7 @@ GHFW_MICRO_VERSION=@GHFW_MICRO_VERSION@
 GHFW_BINARY_AGE=@GHFW_BINARY_AGE@
 GHFW_INTERFACE_AGE=@GHFW_INTERFACE_AGE@
 
-lib_LTLIBRARIES = libghfax_widgets.la
+lib_LTLIBRARIES = libghfaxwidgets.la
 
 noinst_HEADERS = i18n.h
 
@@ -22,23 +22,23 @@ CPPFLAGS = -DGHFW_MAJOR_VERSION=$(GHFW_MAJOR_VERSION) \
 
 CFLAGS = @CFLAGS@ @DEBUG_CFLAGS@ @GNOME_CFLAGS@
 
-# libghfax_widgets.la
+# libghfaxwidgets.la
 
-libghfax_widgetsincludedir = $(includedir)/ghfaxwidgets
+libghfaxwidgetsincludedir = $(includedir)/ghfaxwidgets
 
-libghfax_widgets_la_SOURCES = ghfwdlgwindow.c ghfwprogress.c \
+libghfaxwidgets_la_SOURCES = ghfwdlgwindow.c ghfwprogress.c \
 				ghfwgtkutils.c ghfwgdkutils.c \
 				ghfwurlzone.c ghfwthumbbox.c \
 				ghfaxwidgets.c
 
-libghfax_widgets_la_LDFLAGS = -release $(LT_RELEASE) \
+libghfaxwidgets_la_LDFLAGS = -release $(LT_RELEASE) \
 		-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 		-export-dynamic \
 		-no-undefined \
 		@DEBUG_LIBS@ \
 		@GNOMEUI_LIBS@
 
-libghfax_widgetsinclude_HEADERS = ghfwdlgwindow.h ghfwprogress.h \
+libghfaxwidgetsinclude_HEADERS = ghfwdlgwindow.h ghfwprogress.h \
 				ghfwurlzone.h ghfwthumbbox.h \
 				ghfwgtkutils.h ghfwgdkutils.h \
 				ghfaxwidgets.h ghfwversion.h
