@@ -26,6 +26,11 @@
 #endif
 
 #define HALIFAX_URL "http://www.gnu.org/software/halifax/"
+#ifdef __WIN32__
+#define TEXT_FONT "-*-MS Sans Serif-medium-r-normal-*-*-100-*-*-p-*-*-*"
+#else
+#define TEXT_FONT "-adobe-helvetica-medium-r-normal-*-*-180-*-*-p-*-*-*"
+#endif
 
 #ifdef NEED_GNOMESUPPORT_H
 #include <gnome.h>
@@ -42,9 +47,26 @@ static
 void about_pixmap_realize_cb (GtkWidget *ref_window, GtkWidget *pixmap)
 {
   UrlZone *url_zone;
+  GdkFont *gdk_font;
+  gchar *text;
+  gint text_len;
 
   url_zone = url_zone_new (HALIFAX_URL, 150, 280, 195, 17);
   url_zone_attach (url_zone, pixmap);
+
+  gdk_font = gdk_font_load (TEXT_FONT);
+
+  if (gdk_font)
+    {
+      text = _("The GNU HaliFAX Viewer");
+      text_len = strlen (text);
+      gdk_draw_text (GTK_PIXMAP (pixmap)->pixmap, gdk_font,
+		     pixmap->style->black_gc,
+		     128, 58,
+		     text, text_len);
+    }
+  else
+    g_print ("error loading font\n");
 }
 
 static GtkWidget*

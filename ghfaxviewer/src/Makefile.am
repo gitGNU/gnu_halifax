@@ -38,14 +38,14 @@ SUFFIXES = .rc .o
 
 noinst_HEADERS = setup.h tiffimages.h tiffinfo.h viewer.h cursors.h print.h \
 		 menu.h toolbar.h errors.h progress.h i18n.h gtkutils.h \
-		 urlzone.h \
+		 urlzone.h dialog_window.h \
 		 thumblayout.h callbcks.h draw_page.h zoom.h $(NOPRINTSRC)
 
 ghfaxviewer_SOURCES = setup.c fileopen.c cursors.c draw_page.c \
 		 thumbnails.c thumblayout.c \
 		 tiffimages.c tiffinfo.c zoom.c viewer.c callbcks.c toolbar.c \
 		 menu.c about.c errors.c progress.c gtkutils.c info.c \
-		 urlzone.c \
+		 urlzone.c dialog_window.c \
 		 $(PRINTSRC) $(RCSRC)
 
 EXTRA_DIST = ghfaxviewer.desktop ghfaxviewer-res.rc

@@ -1,3 +1,13 @@
+2001-07-26  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/dialog_window.c: new file containing all the dialog_window_*
+	functions from gtkutils.c (for further move in the libghfaxwidgets
+	library)
+
+2001-07-25  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/urlzone.c: new utility, add URL links to pixmap widgets.
+
 2001-05-28  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/thumblayout.c (usr_btn_state_changed_cb): insensitive

@@ -24,8 +24,6 @@
 #ifndef GTKUTILS_H
 #define GTKUTILS_H
 
-typedef void DialogWindow;                         /* private */
-
 void free_data_on_destroy_cb (GtkWidget *widget, gpointer data);
 
 GtkWidget *menu_separator_new (GtkWidget *menu);
@@ -33,30 +31,6 @@ GtkWidget *menu_item_new (GtkWidget *menu, gchar *label,
 			  GtkSignalFunc callback, gpointer data);
 
 void gtk_window_set_escapable (GtkWidget *window);
-void dialog_window_set_escapable_with_callback (DialogWindow *window,
-						GtkSignalFunc callback,
-						gpointer user_data);
-
-void dialog_window_set_escapable (DialogWindow *window);
-GtkWidget *dialog_window_bbox ();
-
-DialogWindow *dialog_window_new (gchar *title);
-void dialog_window_set_content (DialogWindow *window, GtkWidget *content);
-void dialog_window_set_content_with_frame (DialogWindow *window,
-					   GtkWidget *content);
-void dialog_window_set_button_box (DialogWindow *window,
-				   GtkWidget *button_box);
-void dialog_window_set_button (DialogWindow *window,
-			       GtkWidget *button);
-GtkWidget *dialog_window_get_gtkwin (DialogWindow *window);
-void dialog_window_show (DialogWindow *dialog, GtkWidget *parent);
-void dialog_window_destroy (DialogWindow *dialog);
-void dialog_window_destroy_from_signal (GtkWidget *widget,
-					DialogWindow *dialog);
-void dialog_window_add_destroy_callback (DialogWindow *window,
-					 GtkSignalFunc callback,
-					 gpointer data);
-
 void transient_window_show (GtkWidget *transient, GtkWidget *parent);
 
 GtkWidget *pixmap_from_xpm (GtkWidget *ref_widget, gchar *file_name);
