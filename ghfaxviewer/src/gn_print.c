@@ -222,14 +222,16 @@ prepare_print_master (GtkWidget *print_dlg,
   return print_master;
 }
 
-static void
+static gint
 print_or_preview (GtkWidget *print_dlg,
 		  ViewerData *viewer_data,
 		  gint button)
 {
   GnomePrintMaster *print_master;
   GtkWidget *preview;
+  gint result;
 
+  result = FALSE;
   print_master = prepare_print_master (print_dlg,
 				       viewer_data->fax_file,
 				       viewer_data->current_page);
@@ -237,7 +239,7 @@ print_or_preview (GtkWidget *print_dlg,
   if (print_master)
     {
       if (button == GNOME_PRINT_PRINT)
-	gnome_print_master_print (print_master);
+	result = gnome_print_master_print (print_master);
       else
 	{
 	  preview =
@@ -248,10 +250,13 @@ print_or_preview (GtkWidget *print_dlg,
 	  transient_window_show (preview, print_dlg);
 	  
 	  gtk_widget_show (preview);
+	  result = TRUE;
 	}
 
       gnome_print_master_close (print_master);
     }
+
+  return (!result);
 }
 
 static void
@@ -262,15 +267,10 @@ print_dlg_clicked_cb (GtkWidget *print_dlg, gint button,
 
   destroy_dlg = TRUE;
 
-  switch (button)
-    {
-    case GNOME_PRINT_PREVIEW:
-      destroy_dlg = FALSE;
-    case GNOME_PRINT_PRINT:
-      print_or_preview (print_dlg, viewer_data, button);
-      break;
-    case GNOME_PRINT_CANCEL:
-    }
+  if (button != GNOME_PRINT_CANCEL)
+    destroy_dlg = print_or_preview (print_dlg, viewer_data, button);
+  else
+    destroy_dlg = TRUE;
 
   if (destroy_dlg)
     gtk_widget_destroy (print_dlg);

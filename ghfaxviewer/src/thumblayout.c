@@ -67,9 +67,12 @@ reset_timeout (LayoutData *layout_data)
       grab_widget = gtk_grab_get_current ();
       if (grab_widget)
 	{
-	  gtk_grab_remove (grab_widget);
 	  gtk_button_released ((GtkButton*) grab_widget);
+	  gtk_grab_remove (grab_widget);
 	}
+
+      if (gdk_pointer_is_grabbed ())
+	gdk_pointer_ungrab (GDK_CURRENT_TIME);
     }
 }
 
@@ -78,17 +81,17 @@ refresh_buttons (LayoutData *layout_data)
 {
   GtkAdjustment *adjustment;
   gint up_height, down_height;
-  gboolean up_condition, down_condition;
+  gboolean condition;
 
   adjustment = layout_data->adjustment;
   down_height = widget_height (layout_data->down);
   up_height = widget_height (layout_data->up);
 
-  up_condition = (adjustment->value <= up_height);
+  condition = (adjustment->value - up_height <= 0);
 
   if (GTK_WIDGET_VISIBLE (layout_data->up))
     {
-      if (up_condition) 
+      if (condition) 
 	{
 	  reset_timeout (layout_data);
 	  gtk_widget_hide (layout_data->up);
@@ -97,27 +100,26 @@ refresh_buttons (LayoutData *layout_data)
 	}
     }
   else
-    if (!up_condition)
+    if (!condition)
       {
         gtk_widget_show (layout_data->up);
         up_height = widget_height (layout_data->up);
         gtk_adjustment_set_value (adjustment, adjustment->value + up_height);
       }
 
-  down_condition = (adjustment->page_size + adjustment->value
-		    + up_height /*  + down_height */
-		    >= layout_data->height);
+  condition = (adjustment->page_size + adjustment->value
+	       + down_height - layout_data->height >= 0);
 
   if (GTK_WIDGET_VISIBLE (layout_data->down))
     {
-      if (down_condition)
+      if (condition)
         {
 	  reset_timeout (layout_data);
           gtk_widget_hide (layout_data->down);
         }
     }
   else
-    if (!down_condition)
+    if (!condition)
       {
         gtk_widget_show (layout_data->down);
         down_height = widget_height (layout_data->down);
@@ -356,21 +358,21 @@ check_button_pos (GtkWidget *button, LayoutData *layout_data)
   allocation = button->allocation;
   adjustment = layout_data->adjustment;
 
-  delta = allocation.y + allocation.height - adjustment->page_size;
   button_delta = allocation.height + layout_data->spacing;
 
+  /* If a button was hidden at the top of the scrolling layout... */
+  delta = allocation.y + allocation.height - adjustment->page_size;
   if (delta > 0)
     gtk_adjustment_set_value (adjustment, (adjustment->value
 					   + delta
 					   + button_delta));
 
+  /* If a button was hidden at the bottom of the scrolling layout... */
   delta = allocation.y;
   if (delta < 0)
     gtk_adjustment_set_value (adjustment, (adjustment->value
 					   + delta
 					   - button_delta));
-
-  refresh_buttons (layout_data);
 
   return FALSE;
 }
@@ -393,23 +395,12 @@ void usr_btn_state_changed_cb (GtkWidget *widget,
     }
 }
 
-static gint
-usr_btn_mouse_press_event_cb (GtkWidget *button,
-			      GdkEventButton *event,
-			      LayoutData *layout_data)
-{
-  if (event->button == 1)
-    check_button_pos (button, layout_data);
-
-  return FALSE;
-}
-
 static void
 usr_btn_realized_real_cb (GtkWidget *button, LayoutData *layout_data)
 {
   gtk_signal_connect (GTK_OBJECT (button),
-		      "button-press-event",
-		      GTK_SIGNAL_FUNC (usr_btn_mouse_press_event_cb),
+		      "released",
+		      GTK_SIGNAL_FUNC (check_button_pos),
 		      layout_data);
   gtk_signal_connect (GTK_OBJECT (button),
 		      "state-changed",
