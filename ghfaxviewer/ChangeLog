@@ -1,3 +1,11 @@
+2001-05-28  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/thumblayout.c (usr_btn_state_changed_cb): insensitive
+	buttons don't prevent the layout to be scrolled with the mouse
+	wheel anymore. The trick is to deactivate the button_press event
+	catching when the widget is insensitive and do the reverse when it
+	is sensitive.
+
 2001-05-21  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/thumblayout.c (mouse_scroll_event_cb): added support for

@@ -52,6 +52,15 @@ if test "`uname`" = "FreeBSD"; then
   fi 
 fi
 
+case $ac_cv_build in
+  *cygwin | *cygwin32)
+    CYGWIN=yes
+    ;;
+  *mingw | *mingw32)
+    MINGW32=yes
+    ;;
+esac
+
 if test "$CYGWIN" = yes || test "$MINGW32" = yes; then
 # under Windows
 OS=WIN32
@@ -76,7 +85,7 @@ fi
 AC_MSG_CHECKING([which version of the GCC port you are using])
 if test "$CYGWIN" = yes; then
 	AC_MSG_RESULT([using cygwin, CFLAGS+=-mno-cygwin])
-	CFLAGS="$CFLAGS -mno-cygwin -I$includedir/w32api"
+	CFLAGS="$CFLAGS -mno-cygwin -I$includedir/w32api -I$includedir/mingw"
 	WINDRES_INCLUDE_DIR="$includedir/w32api"
 else
 	AC_MSG_RESULT([using mingw])
@@ -238,10 +247,8 @@ deps="$TIFF_LIBS"
 AC_MSG_CHECKING(whether debugging is requested)
 if test "$debug" = "yes"; then
     AC_MSG_RESULT(yes)
-    CFLAGS="-Wall -ggdb3 -O0"
-    if test "$OS" = "GNU"; then
-        CFLAGS="-ggdb3 $CFLAGS"
-    else
+    CFLAGS="$CFLAGS -Wall -O0 -ggdb3"
+    if test "$OS" = "WIN32"; then
     	WIN32_LIBS="-lgdi32 $WIN32_LIBS"
     fi
 else

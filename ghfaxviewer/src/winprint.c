@@ -104,7 +104,7 @@ size_of_output (ViewerData *viewer_data,
 		guint min_page_nbr, guint max_page_nbr)
 {
   FaxPage *page, *max_page;
-  guint result, c_page_nbr;
+  guint result;
   
   result = 0;
   page = ti_seek_fax_page (viewer_data->fax_file, min_page_nbr - 1);

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gfaxviewer 0.9.9\n"
-"POT-Creation-Date: 2001-05-10 03:10-0400\n"
+"POT-Creation-Date: 2001-05-29 00:23-0400\n"
 "PO-Revision-Date: 2001-02-08 18:21-05:00\n"
 "Last-Translator: Kevin Chen <kevin@vega.idv.tw>\n"
 "Language-Team: none\n"
@@ -13,17 +13,17 @@ msgstr ""
 "Content-Type: text/plain; charset=big5-0\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: src/thumbnails.c:171
+#: src/thumbnails.c:133
 #, c-format
 msgid "Page %d"
 msgstr "第 %d 頁"
 
-#: src/gn_print.c:189 src/ps_print.c:768 src/thumbnails.c:195
-#: src/winprint.c:167
+#: src/gn_print.c:187 src/ps_print.c:768 src/thumbnails.c:159
+#: src/winprint.c:166
 msgid "Please wait..."
 msgstr "請稍後..."
 
-#: src/thumbnails.c:209
+#: src/thumbnails.c:173
 #, c-format
 msgid "Computing index for page %d of %d..."
 msgstr "計算第 %d 之 %d 頁..."
@@ -53,43 +53,43 @@ msgstr "無法找到 %s"
 msgid "permission to read %s is missing"
 msgstr "沒有讀取 %s 的權限"
 
-#: src/about.c:82 src/viewer.c:277 src/viewer.c:455 src/viewer.c:460
+#: src/about.c:80 src/viewer.c:272 src/viewer.c:445 src/viewer.c:450
 msgid "GNU HaliFAX - Viewer"
 msgstr "GNU HaliFAX - 傳真查閱\工具"
 
-#: src/menu.c:70 src/menu.c:191 src/toolbar.c:70 src/toolbar.c:187
+#: src/menu.c:70 src/menu.c:191 src/toolbar.c:71 src/toolbar.c:188
 msgid "Go to previous page"
 msgstr "回上頁"
 
-#: src/menu.c:64 src/menu.c:188 src/toolbar.c:76 src/toolbar.c:194
+#: src/menu.c:64 src/menu.c:188 src/toolbar.c:77 src/toolbar.c:195
 msgid "Go to next page"
 msgstr "到下頁"
 
-#: src/menu.c:77 src/menu.c:197 src/toolbar.c:83 src/toolbar.c:203
+#: src/menu.c:77 src/menu.c:197 src/toolbar.c:84 src/toolbar.c:204
 msgid "Zoom in"
 msgstr "放大"
 
-#: src/menu.c:83 src/menu.c:200 src/toolbar.c:89 src/toolbar.c:210
+#: src/menu.c:83 src/menu.c:200 src/toolbar.c:90 src/toolbar.c:211
 msgid "Zoom out"
 msgstr "縮小"
 
-#: src/menu.c:96 src/menu.c:209 src/toolbar.c:96 src/toolbar.c:219
+#: src/menu.c:96 src/menu.c:209 src/toolbar.c:97 src/toolbar.c:220
 msgid "Rotate 90 degrees counter-clockwise"
 msgstr "逆時鐘旋轉 90 度"
 
-#: src/menu.c:102 src/menu.c:212 src/toolbar.c:102 src/toolbar.c:226
+#: src/menu.c:102 src/menu.c:212 src/toolbar.c:103 src/toolbar.c:227
 msgid "Reverse image"
 msgstr "上下顛到"
 
-#: src/menu.c:90 src/menu.c:206 src/toolbar.c:108 src/toolbar.c:233
+#: src/menu.c:90 src/menu.c:206 src/toolbar.c:109 src/toolbar.c:234
 msgid "Rotate 90 degrees clockwise"
 msgstr "順時鐘旋轉 90 度"
 
-#: src/menu.c:164 src/toolbar.c:115 src/toolbar.c:242
+#: src/menu.c:164 src/toolbar.c:116 src/toolbar.c:243
 msgid "Print fax"
 msgstr "列印傳真"
 
-#: src/menu.c:169 src/toolbar.c:122 src/toolbar.c:252
+#: src/menu.c:169 src/toolbar.c:123 src/toolbar.c:253
 msgid "Properties..."
 msgstr "特性..."
 
@@ -101,7 +101,7 @@ msgstr "檔案"
 msgid "Open..."
 msgstr "開啟..."
 
-#: src/about.c:189 src/info.c:327 src/menu.c:159
+#: src/about.c:188 src/info.c:327 src/menu.c:159
 msgid "Close"
 msgstr "關閉"
 
@@ -125,19 +125,19 @@ msgstr "個人喜好..."
 msgid "Help"
 msgstr "求助"
 
-#: src/about.c:185 src/menu.c:241
+#: src/about.c:184 src/menu.c:241
 msgid "About..."
 msgstr "關於..."
 
-#: src/about.c:47
+#: src/about.c:45
 msgid "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
 msgstr "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
 
-#: src/about.c:49
+#: src/about.c:47
 msgid "This program displays image files received on a HylaFAX system."
 msgstr "這個程式是用來顯示經由 HylaFAX 系統所接收到的傳真影像檔."
 
-#: src/about.c:51
+#: src/about.c:49
 msgid ""
 "This program is free software, you are welcome to use it, modify it and "
 "redistribute it under certain conditions. See the file COPYING for further "
@@ -145,37 +145,37 @@ msgid ""
 "FOR A PARTICULAR PURPOSE."
 msgstr "這是一個免費的軟體, 歡迎使用, 修改, 有條件的散佈此軟體. 請看 COPYING 這個檔案以獲得更多資訊. 並不附帶保證, 更不是可銷售或是特別目的的適用性."
 
-#: src/about.c:110
+#: src/about.c:108
 msgid "About the GNU HaliFAX - Viewer..."
 msgstr "關於 GNU HaliFAX 傳真查閱\工具..."
 
-#: src/about.c:118
+#: src/about.c:116
 msgid "Version :"
 msgstr "版本 :"
 
-#: src/about.c:121
+#: src/about.c:119
 msgid "The GNU HaliFAX team :"
 msgstr "GNU HaliFAX 團隊:"
 
-#: src/about.c:124
+#: src/about.c:122
 msgid ""
 "The GNU HaliFAX - Viewer was enhanced in various ways thanks to those "
 "people :"
 msgstr "GNU HaliFAX 傳真查閱\工具因下列人員的努力而增色不少, 感謝 參與人士 :"
 
-#: src/about.c:130
+#: src/about.c:128
 msgid "What is the GNU HaliFAX - Viewer ?"
 msgstr "GNU HaliFAX 傳真查閱\工具是什麼 ?"
 
-#: src/about.c:133
+#: src/about.c:131
 msgid "Copyright :"
 msgstr "版權 :"
 
-#: src/about.c:136
+#: src/about.c:134
 msgid "Licensing :"
 msgstr "許\可 : "
 
-#: src/about.c:152
+#: src/about.c:150
 msgid ""
 "Thomas Bartschies, German translation\n"
 "Kevin Chen, Traditional Chinese translation\n"
@@ -288,7 +288,7 @@ msgstr "接收電腦主機名稱"
 msgid "Fax properties"
 msgstr "傳真性質"
 
-#: src/fileopen.c:69
+#: src/fileopen.c:67
 msgid "Please choose a FAX G3 file to open..."
 msgstr "請選擇一個 G3 的傳真檔案..."
 
@@ -369,7 +369,7 @@ msgstr "從"
 msgid "to"
 msgstr "到"
 
-#: src/gn_print.c:296 src/ps_print.c:605
+#: src/gn_print.c:294 src/ps_print.c:605
 msgid "Current page only"
 msgstr "僅目前頁面"
 
@@ -398,7 +398,7 @@ msgstr "謝謝, 不用了"
 msgid "Print"
 msgstr "列印"
 
-#: src/gn_print.c:287 src/ps_print.c:1053
+#: src/gn_print.c:285 src/ps_print.c:1053
 msgid "Print..."
 msgstr "列印..."
 
@@ -427,11 +427,11 @@ msgstr ""
 msgid "I promise!"
 msgstr ""
 
-#: src/gn_print.c:246
+#: src/gn_print.c:247
 msgid "Print preview..."
 msgstr "預覽列印..."
 
-#: src/gn_print.c:297
+#: src/gn_print.c:295
 msgid "Range"
 msgstr "範圍"
 
