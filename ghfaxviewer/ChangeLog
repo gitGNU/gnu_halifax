@@ -1,3 +1,8 @@
+2001-04-14  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/ps_print.c: added definition of __compar_fn_t for non-glibc
+	systems (patch from Dominik Brettnacher)
+
 2001-04-13  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* docs/README.cvs: README.cvs is now in docs/
