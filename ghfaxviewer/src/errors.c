@@ -1,8 +1,8 @@
 /* errors.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 02:04:55 wolfgang>
+ * Time-stamp: <2003-03-07 10:20:56 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -99,9 +99,9 @@ display_failure (GtkWidget *window,
 			    G_CALLBACK (gtk_widget_destroy),
 			    G_OBJECT (fail_dialog));
 
-  ghfw_dlg_window_set_content_with_frame ((GhfwDlgWindow *) fail_dialog, vbox);
-  ghfw_dlg_window_set_button ((GhfwDlgWindow *) fail_dialog, ok_but);
-  ghfw_dlg_window_set_escapable ((GhfwDlgWindow *) fail_dialog);
+  ghfw_dlg_window_set_content_with_frame (fail_dialog, vbox);
+  ghfw_dlg_window_set_button (fail_dialog, ok_but);
+  ghfw_dlg_window_set_escapable (fail_dialog);
 
   transient_window_show (GTK_WIDGET (fail_dialog), window);
 }

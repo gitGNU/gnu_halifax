@@ -1,8 +1,8 @@
 /* about.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 02:01:08 wolfgang>
+ * Time-stamp: <2003-03-07 10:18:47 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -99,16 +99,15 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
   about_dialog = ghfw_dlg_window_new (_("About..."));
   content = about_content (viewer_window);
 
-  ghfw_dlg_window_set_content_with_frame ((GhfwDlgWindow*) about_dialog,
-					  content);
+  ghfw_dlg_window_set_content_with_frame (about_dialog, content);
 
   ok_button = gtk_button_new_with_label (_("Close"));
   g_signal_connect_swapped (G_OBJECT (ok_button), "clicked",
 			    G_CALLBACK (gtk_widget_destroy),
 			    G_OBJECT (about_dialog));
 
-  ghfw_dlg_window_set_button ((GhfwDlgWindow*) about_dialog, ok_button);
-  ghfw_dlg_window_set_escapable ((GhfwDlgWindow*) about_dialog);
+  ghfw_dlg_window_set_button (about_dialog, ok_button);
+  ghfw_dlg_window_set_escapable (about_dialog);
 
   transient_window_show (GTK_WIDGET (about_dialog), viewer_window);
 }

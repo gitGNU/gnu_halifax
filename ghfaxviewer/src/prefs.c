@@ -1,8 +1,8 @@
 /* prefs.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2001 Wolfgang Sourdeau
+ * Copyright (C) 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 02:03:49 wolfgang>
+ * Time-stamp: <2003-03-07 10:26:50 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -207,13 +207,13 @@ prefs_cb (GtkWidget *widget, GtkWidget *viewer_window)
   close_btn = gtk_button_new_with_label ("Close");
 
   pref_content = create_pref_content (GTK_WIDGET (pref_win));
-  ghfw_dlg_window_set_content_with_frame (GHFW_DLG_WINDOW (pref_win), pref_content);
-  ghfw_dlg_window_set_button (GHFW_DLG_WINDOW (pref_win), close_btn);
+  ghfw_dlg_window_set_content_with_frame (pref_win, pref_content);
+  ghfw_dlg_window_set_button (pref_win, close_btn);
 
   g_signal_connect_swapped (G_OBJECT (close_btn), "clicked",
-			   G_CALLBACK (gtk_widget_destroy),
-			   G_OBJECT (pref_win));
-  ghfw_dlg_window_set_escapable (GHFW_DLG_WINDOW (pref_win));
+			    G_CALLBACK (gtk_widget_destroy),
+			    G_OBJECT (pref_win));
+  ghfw_dlg_window_set_escapable (pref_win);
 
   transient_window_show (GTK_WIDGET (pref_win), viewer_window);
 }

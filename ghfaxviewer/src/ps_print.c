@@ -1,8 +1,8 @@
 /* ps_print.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:07:15 wolfgang>
+ * Time-stamp: <2003-03-07 10:26:54 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *

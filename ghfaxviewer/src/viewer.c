@@ -1,8 +1,8 @@
 /* viewer.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 01:40:07 wolfgang>
+ * Time-stamp: <2003-03-07 10:27:20 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *

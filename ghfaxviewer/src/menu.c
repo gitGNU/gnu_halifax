@@ -1,8 +1,8 @@
 /* menu.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:08:01 wolfgang>
+ * Time-stamp: <2003-03-07 10:24:58 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -228,7 +228,8 @@ param_menu_new (ViewerData *viewer_data)
   param_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (param_menu_item), param_menu);
 
-  menu_item_new (param_menu, _("Preferences..."), prefs_cb, viewer_data->viewer_window);
+  menu_item_new (param_menu, _("Preferences..."), prefs_cb,
+		 viewer_data->viewer_window);
  
   return param_menu_item;
 }
@@ -255,8 +256,6 @@ menu_bar_new (ViewerData *viewer_data)
   GtkWidget *file_menu_item, *view_menu_item;
   GtkWidget *param_menu_item, *help_menu_item;
 
-  /* To give a GNOMEish look to those poor users with only GTK+
-     available */
   menu_handle_box = gtk_handle_box_new ();
   g_signal_connect (G_OBJECT (menu_handle_box), "child-detached",
 		      G_CALLBACK (handle_box_transient_cb),

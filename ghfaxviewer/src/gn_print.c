@@ -1,8 +1,8 @@
 /* gn_print.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 01:46:28 wolfgang>
+ * Time-stamp: <2003-03-07 10:22:43 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -299,9 +299,9 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
      _("Current page only"),
      _("Range"));
 					   
-  g_signal_connect (G_OBJECT (print_dialog),
-		      "clicked", G_CALLBACK (print_dlg_clicked_cb),
-		      viewer_data);
+  g_signal_connect (G_OBJECT (print_dialog), "clicked",
+		    G_CALLBACK (print_dlg_clicked_cb),
+		    viewer_data);
   
   transient_window_show (print_dialog, viewer_data->viewer_window);
   window_set_icon (print_dialog, PIXMAP ("ghfaxviewer-icon.xpm"));

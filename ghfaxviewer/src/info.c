@@ -1,8 +1,8 @@
 /* info.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 02:05:04 wolfgang>
+ * Time-stamp: <2003-03-07 10:18:12 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -322,17 +322,15 @@ create_info_dialog (GtkWidget *viewer_window, TiffInfo *file_info)
 
   info_dialog = ghfw_dlg_window_new (_("Fax properties"));
   table = create_info_table (viewer_window, file_info);
-  ghfw_dlg_window_set_content_with_frame ((GhfwDlgWindow *) info_dialog,
-					  table);
+  ghfw_dlg_window_set_content_with_frame (info_dialog, table);
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
   g_signal_connect_swapped (G_OBJECT (ok_button), "clicked",
 			    G_CALLBACK (gtk_widget_destroy),
 			    G_OBJECT (info_dialog));
 
-  ghfw_dlg_window_set_button ((GhfwDlgWindow *) info_dialog,
-			      ok_button);
-  ghfw_dlg_window_set_escapable ((GhfwDlgWindow *) info_dialog);
+  ghfw_dlg_window_set_button (info_dialog, ok_button);
+  ghfw_dlg_window_set_escapable (info_dialog);
 
   return info_dialog;
 }
