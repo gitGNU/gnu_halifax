@@ -35,6 +35,36 @@ cvs -z3 update
 whole archive each time.
 
 
+Building the configure tree
+---------------------------
+
+This process is very simple. Actually it only has generally to be done
+once per new release. Small changes will only require the one or two
+last steps.
+
+With a fresh cvs copy, issue this sequence of commands:
+
+gettextize -c -f
+aclocal -I macros
+autoheader
+automake -a -c --gnu
+autoconf
+
+- for small changes made to configure.in, like a reorganisation in the
+  sequence of macros and commands, modifying a macro parameter or
+  adding a new instance of a macro that was already called from
+  configure.in, autoconf will need to be issued again;
+- for any changes made to any Makefile.am files, automake -a -c
+  gnu will need to be issued again;
+- for more important changes like adding a new library dependency,
+  aclocal, autoheader, automake -a -c --gnu and autoconf will have to
+  be issued again;
+- when adding a new translation, add it to the ALL_LINGUAS variable in
+  configure.in, reissue gettextize -a -c and autoconf.
+- when modifying a source file or documentation, nothing is needed
+  except if it involved another modification mentionned above.
+
+
 Making patches
 --------------
 
