@@ -1,4 +1,4 @@
-Before version 1.0 (03/29/2001):
+Before version 1.0 (2001/05/02):
 
 - add support for plain G3 format and Winfax format; (->independent image library)
 - add better handling of paper size in both Win32 and UNIX versions;
