@@ -19,6 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* sigchld_handler and launch_program taken and modified from the GTK+
+   FAQ at http://www.gtk.org/faq/. This code is copyright (C) 1999 by
+   Erik Mouw <J.A.K.Mouw at its.tudelft.nl>. */
+
 /* This file implements some useful GTK+-related functions used all
    around the program */
 
@@ -30,6 +34,12 @@
 #include <gdk/gdkkeysyms.h>
 #ifdef __WIN32__
 #include <gdk/win32/gdkwin32.h>
+#else
+#include <unistd.h>
+#include <signal.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #endif
 
 #include "setup.h"
@@ -425,3 +435,71 @@ handle_box_transient_cb (GtkHandleBox *handle_box, GtkWidget *hb_child,
 				parent);
 #endif
 }
+
+#ifndef __WIN32__
+/* Launching programs from GTK+ applications */
+static
+void sigchld_handler (int num)
+{
+  sigset_t set, oldset;
+  pid_t pid;
+  gint status, exitstatus;
+
+  /* block other incoming SIGCHLD signals */
+  sigemptyset(&set);
+  sigaddset(&set, SIGCHLD);
+  sigprocmask(SIG_BLOCK, &set, &oldset);
+
+  /* wait for child */
+  while ((pid = waitpid ((pid_t)-1, &status, WNOHANG)) > 0)
+    {
+      if(WIFEXITED (status))
+	{
+	  exitstatus = WEXITSTATUS (status);
+	}
+      else if (WIFSIGNALED (status))
+	{
+	  exitstatus = WTERMSIG (status);
+	}
+      else if (WIFSTOPPED (status))
+	{
+	  exitstatus = WSTOPSIG (status);
+	}
+    }
+
+  /* re-install the signal handler (some systems need this) */
+  signal(SIGCHLD, sigchld_handler);
+  
+  /* and unblock it */
+  sigemptyset (&set);
+  sigaddset (&set, SIGCHLD);
+  sigprocmask (SIG_UNBLOCK, &set, &oldset);
+}
+
+void
+launch_program (const gchar *program, gchar *argv[])
+{
+  pid_t pid;
+
+  pid = fork();
+
+  signal(SIGCHLD, sigchld_handler);
+
+  if (pid == -1)
+    {
+      /* ouch, fork() failed */
+      perror("fork");
+      exit(-1);
+    }
+  else if (pid == 0)
+    {
+      execvp(program, argv);
+      
+      /* if exec() returns, there is something wrong */
+      perror("execvp");
+
+      /* exit child. note the use of _exit() instead of exit() */
+      _exit(-1);
+    }
+}
+#endif

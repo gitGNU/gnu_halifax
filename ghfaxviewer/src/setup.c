@@ -33,6 +33,7 @@
 #include "pixmaps/stock-zoom-out-menu.xpm"
 #else
 #include <gtk/gtk.h>
+#include <unistd.h>
 #endif
 
 #ifdef __WIN32__
@@ -504,4 +505,30 @@ app_setup (gint *argc, gchar **argv[])
   gtk_screen_setup ();
 #endif /* __WIN32__ */
 #endif /* NEED_GNOMESUPPORT_H */
+}
+
+/* Various non-GUI utility-functions */
+gchar *
+where_is (gchar *test_dirs[], gchar *command)
+{
+  gchar **cur_dir, *path, *test_cmd, *result;
+
+  result = NULL;
+  cur_dir = test_dirs;
+
+  while (!result && *cur_dir)
+    {
+      path = *cur_dir;
+      test_cmd = g_strdup_printf ("%s/%s", path, command);
+
+      if (access (test_cmd, X_OK))
+	{
+	  g_free (test_cmd);
+	  cur_dir++;
+	}
+      else
+	result = test_cmd;
+    }
+
+  return result;
 }

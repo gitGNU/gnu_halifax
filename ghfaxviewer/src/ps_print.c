@@ -41,6 +41,7 @@
 #include "i18n.h"
 #include "gtkutils.h"
 #include "errors.h"
+#include "setup.h"
 
 /* Shorthand for type of comparison functions.  */
 #ifndef __GLIBC__
@@ -102,39 +103,6 @@ static gboolean printer_enabled;
 
 /* Do various tests to determine how to get the list of printers.
    There are so many veriants of the lpr system... */
-static gchar *
-where_is (gchar *command)
-{
-  gchar **cur_dir, *path, *test_cmd, *result;
-  gchar *test_dirs[] =
-    {
-      "/usr/sbin",
-      "/usr/bin",
-      "/sbin",
-      "/bin",
-      NULL
-    };
-
-  result = NULL;
-  cur_dir = test_dirs;
-
-  while (!result && *cur_dir)
-    {
-      path = *cur_dir;
-      test_cmd = g_strdup_printf ("%s/%s", path, command);
-
-      if (access (test_cmd, X_OK))
-	{
-	  g_free (test_cmd);
-	  cur_dir++;
-	}
-      else
-	result = test_cmd;
-    }
-
-  return result;
-}
-
 static gchar *
 cmd_result (gchar *cmd)
 {
@@ -211,12 +179,20 @@ static void
 ensure_commands (GtkWidget *viewer_window)
 {
   gchar *lpc, *lpstat;
-  
+  gchar *test_dirs[] =
+    {
+      "/usr/sbin",
+      "/usr/bin",
+      "/sbin",
+      "/bin",
+      NULL
+    };
+
   if (!lpc_command && !lpstat_command)
     {
-      lpc = where_is ("lpc");
-      lpstat = where_is ("lpstat");
-         
+      lpc = where_is (test_dirs, "lpc");
+      lpstat = where_is (test_dirs, "lpstat");
+
       if (lpc)
 	printer_enabled = test_lpc (lpc);
       else if (lpstat)

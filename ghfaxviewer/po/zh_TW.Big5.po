@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gfaxviewer 0.9.9\n"
-"POT-Creation-Date: 2001-05-29 00:23-0400\n"
+"POT-Creation-Date: 2001-07-16 17:31-0400\n"
 "PO-Revision-Date: 2001-02-08 18:21-05:00\n"
 "Last-Translator: Kevin Chen <kevin@vega.idv.tw>\n"
 "Language-Team: none\n"
@@ -53,7 +53,7 @@ msgstr "無法找到 %s"
 msgid "permission to read %s is missing"
 msgstr "沒有讀取 %s 的權限"
 
-#: src/about.c:80 src/viewer.c:272 src/viewer.c:445 src/viewer.c:450
+#: src/viewer.c:272 src/viewer.c:445 src/viewer.c:450
 msgid "GNU HaliFAX - Viewer"
 msgstr "GNU HaliFAX - 傳真查閱\工具"
 
@@ -101,7 +101,7 @@ msgstr "檔案"
 msgid "Open..."
 msgstr "開啟..."
 
-#: src/about.c:188 src/info.c:327 src/menu.c:159
+#: src/about.c:107 src/info.c:327 src/menu.c:159
 msgid "Close"
 msgstr "關閉"
 
@@ -125,65 +125,9 @@ msgstr "個人喜好..."
 msgid "Help"
 msgstr "求助"
 
-#: src/about.c:184 src/menu.c:241
+#: src/about.c:102 src/menu.c:241
 msgid "About..."
 msgstr "關於..."
-
-#: src/about.c:45
-msgid "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
-msgstr "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
-
-#: src/about.c:47
-msgid "This program displays image files received on a HylaFAX system."
-msgstr "這個程式是用來顯示經由 HylaFAX 系統所接收到的傳真影像檔."
-
-#: src/about.c:49
-msgid ""
-"This program is free software, you are welcome to use it, modify it and "
-"redistribute it under certain conditions. See the file COPYING for further "
-"informations. There is NO warranty; not even for MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE."
-msgstr "這是一個免費的軟體, 歡迎使用, 修改, 有條件的散佈此軟體. 請看 COPYING 這個檔案以獲得更多資訊. 並不附帶保證, 更不是可銷售或是特別目的的適用性."
-
-#: src/about.c:108
-msgid "About the GNU HaliFAX - Viewer..."
-msgstr "關於 GNU HaliFAX 傳真查閱\工具..."
-
-#: src/about.c:116
-msgid "Version :"
-msgstr "版本 :"
-
-#: src/about.c:119
-msgid "The GNU HaliFAX team :"
-msgstr "GNU HaliFAX 團隊:"
-
-#: src/about.c:122
-msgid ""
-"The GNU HaliFAX - Viewer was enhanced in various ways thanks to those "
-"people :"
-msgstr "GNU HaliFAX 傳真查閱\工具因下列人員的努力而增色不少, 感謝 參與人士 :"
-
-#: src/about.c:128
-msgid "What is the GNU HaliFAX - Viewer ?"
-msgstr "GNU HaliFAX 傳真查閱\工具是什麼 ?"
-
-#: src/about.c:131
-msgid "Copyright :"
-msgstr "版權 :"
-
-#: src/about.c:134
-msgid "Licensing :"
-msgstr "許\可 : "
-
-#: src/about.c:150
-msgid ""
-"Thomas Bartschies, German translation\n"
-"Kevin Chen, Traditional Chinese translation\n"
-"Zbigniew Baniewski, Polish translation"
-msgstr ""
-"Thomas Bartschies, 德文翻譯\n"
-"陳旭之, 繁體中文翻譯\n"
-"Zbigniew Baniewski, 波蘭文翻譯"
 
 #: src/info.c:49
 msgid "this fax is clean"
@@ -434,6 +378,51 @@ msgstr "預覽列印..."
 #: src/gn_print.c:295
 msgid "Range"
 msgstr "範圍"
+
+#~ msgid "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
+#~ msgstr "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
+
+#~ msgid "This program displays image files received on a HylaFAX system."
+#~ msgstr "這個程式是用來顯示經由 HylaFAX 系統所接收到的傳真影像檔."
+
+#~ msgid ""
+#~ "This program is free software, you are welcome to use it, modify it and "
+#~ "redistribute it under certain conditions. See the file COPYING for "
+#~ "further informations. There is NO warranty; not even for MERCHANTABILITY "
+#~ "or FITNESS FOR A PARTICULAR PURPOSE."
+#~ msgstr "這是一個免費的軟體, 歡迎使用, 修改, 有條件的散佈此軟體. 請看 COPYING 這個檔案以獲得更多資訊. 並不附帶保證, 更不是可銷售或是特別目的的適用性."
+
+#~ msgid "About the GNU HaliFAX - Viewer..."
+#~ msgstr "關於 GNU HaliFAX 傳真查閱\工具..."
+
+#~ msgid "Version :"
+#~ msgstr "版本 :"
+
+#~ msgid "The GNU HaliFAX team :"
+#~ msgstr "GNU HaliFAX 團隊:"
+
+#~ msgid ""
+#~ "The GNU HaliFAX - Viewer was enhanced in various ways thanks to those "
+#~ "people :"
+#~ msgstr "GNU HaliFAX 傳真查閱\工具因下列人員的努力而增色不少, 感謝 參與人士 :"
+
+#~ msgid "What is the GNU HaliFAX - Viewer ?"
+#~ msgstr "GNU HaliFAX 傳真查閱\工具是什麼 ?"
+
+#~ msgid "Copyright :"
+#~ msgstr "版權 :"
+
+#~ msgid "Licensing :"
+#~ msgstr "許\可 : "
+
+#~ msgid ""
+#~ "Thomas Bartschies, German translation\n"
+#~ "Kevin Chen, Traditional Chinese translation\n"
+#~ "Zbigniew Baniewski, Polish translation"
+#~ msgstr ""
+#~ "Thomas Bartschies, 德文翻譯\n"
+#~ "陳旭之, 繁體中文翻譯\n"
+#~ "Zbigniew Baniewski, 波蘭文翻譯"
 
 #~ msgid "Processing"
 #~ msgstr "處理中"

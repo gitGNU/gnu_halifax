@@ -25,151 +25,91 @@
 #include <config.h>
 #endif
 
+#define HALIFAX_URL "http://www.gnu.org/software/halifax/"
+
 #ifdef NEED_GNOMESUPPORT_H
 #include <gnome.h>
 #else /* NEED_GNOMESUPPORT_H */
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
+#ifdef __WIN32__
+#include <windows.h>
+#endif
+
 #include "setup.h"
 #include "gtkutils.h"
 #include "i18n.h"
 
-static gchar *copyright, *description, *licensing;
-static gboolean i18n_initted = FALSE;
-
-static
-void about_i18n_init ()
+static void
+url_btn_clicked_cb (GtkObject *widget, gpointer user_data)
 {
-  copyright =
-    _("Copyright (C) 2000, 2001 Wolfgang Sourdeau");
-  description =
-    _("This program displays image files received on a HylaFAX system.");
-  licensing =
-    _("This program is free software, you"
-      " are welcome to use it, modify it"
-      " and redistribute it under certain"
-      " conditions. See the file COPYING"
-      " for further informations. There is"
-      " NO warranty; not even for"
-	  " MERCHANTABILITY or FITNESS FOR A"
-      " PARTICULAR PURPOSE.");
-      i18n_initted = TRUE;
-}
-
+#ifdef __WIN32__
+  ShellExecute (NULL, "open", HALIFAX_URL,
+	        NULL, NULL, SW_SHOWNORMAL);
+#else
 #ifdef NEED_GNOMESUPPORT_H
-void
-about_cb (GtkWidget *irrelevant, gpointer viewer_window)
-{
-  gchar *message;
-  const gchar *authors[] = {"Wolfgang Sourdeau <wolfgang@gnu.org>",
-			    "George Farris", "Tilman Bubeck",
-			    "Thomas Bartschies", "Kevin Chen",
-			    "Zbigniew Baniewski",
-			    NULL};
-  GtkWidget *about_dialog;
+  gnome_url_show (HALIFAX_URL);
+#else
+  gchar *browser, *params[3];
+  gchar *test_dirs[] =
+    {
+      "/usr/bin",
+      "/opt/bin",
+      "/usr/local/bin",
+      "/usr/local/netscape",
+      "/opt/netscape",
+      NULL
+    };
 
-  if (!i18n_initted)
-    about_i18n_init ();
+  params[1] = HALIFAX_URL;
+  params[2] = NULL;
 
-  message = g_strdup_printf ("%s %s",
-			     _(description),
-			     _(licensing));
- 
-  about_dialog =
-    gnome_about_new (_("GNU HaliFAX - Viewer"),
-		     VERSION,
-		     copyright,
-		     authors,
-		     message,
-		     PIXMAP ("ghfaxviewer-logo.xpm"));
-		       
-  transient_window_show (about_dialog,
-			 viewer_window);
+  browser = where_is (test_dirs, "galeon");
+  if (browser)
+    params[0] = "-w";
+  else
+    {
+      browser = where_is (test_dirs, "mozilla");
+      params[0] = "--remote";
 
-  g_free (message);
+      if (!browser)
+	browser = where_is (test_dirs, "netscape");
+    }
+
+  if (browser)
+    {
+      launch_program (browser, params);
+      g_free (browser);
+    }
+
+#endif
+#endif
 }
-#else /* NEED_GNOMESUPPORT_H */
 
-static GtkWidget *
-about_content (GtkWidget *window)
+static GtkWidget*
+about_content (GtkWidget *ref_window)
 {
-  GtkWidget *logo, *table, *label, *separator;
+  GtkWidget *layout, *pixmap, *link_btn;
 
-  table = gtk_table_new (8, 2, FALSE);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 5);
-  gtk_table_set_col_spacings (GTK_TABLE (table), 20);
-  gtk_container_set_border_width (GTK_CONTAINER (table), 5);
+  layout = gtk_layout_new (NULL, NULL);
+  gtk_widget_set_usize (layout, 467, 393);
 
-  logo = pixmap_from_xpm (window, PIXMAP ("ghfaxviewer-logo.xpm"));
-  gtk_misc_set_alignment (GTK_MISC (logo), 0.5, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), logo, 0, 1, 0, 1);
+  link_btn = gtk_button_new_with_label (HALIFAX_URL);
+  gtk_button_set_relief (GTK_BUTTON (link_btn), GTK_RELIEF_NONE);
 
-  label = gtk_label_new (_("About the GNU HaliFAX - Viewer..."));
-  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.7);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 0, 1);
-  
-  separator = gtk_hseparator_new ();
-  gtk_table_attach_defaults (GTK_TABLE (table), separator, 0, 2, 1, 2);
+  gtk_widget_set_usize (link_btn, -1, 20);
+  gtk_layout_put (GTK_LAYOUT (layout), link_btn, 10, 363);
+  gtk_signal_connect (GTK_OBJECT (link_btn),
+		      "clicked",
+		      url_btn_clicked_cb,
+		      NULL);
 
-  label = gtk_label_new (_("Version :"));
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 2, 3);
-  label = gtk_label_new (_("The GNU HaliFAX team :"));
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 3, 4);
-  label = gtk_label_new (_("The GNU HaliFAX - Viewer was enhanced"
-			   " in various ways thanks to those"
-			   " people :"));
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 4, 5);
-  label = gtk_label_new (_("What is the GNU HaliFAX - Viewer ?"));
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 5, 6);
-  label = gtk_label_new (_("Copyright :"));
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 6, 7);
-  label = gtk_label_new (_("Licensing :"));
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 7, 8);
-  
-  label = gtk_label_new (VERSION);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 2, 3);
+  pixmap = pixmap_from_xpm (ref_window,
+			    PIXMAP ("ghfaxviewer-logo.xpm"));
+  gtk_layout_put (GTK_LAYOUT (layout), pixmap, 0, 0);
 
-  label = gtk_label_new ("Wolfgang Sourdeau <Wolfgang@contre.com>\n"
-			 "George Farris\n"
-			 "Tilman Bubeck");
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
-  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 3, 4);
-
-  label =
-    gtk_label_new (_("Thomas Bartschies, German translation\n"
-		     "Kevin Chen, Traditional Chinese translation\n"
-		     "Zbigniew Baniewski, Polish translation"));
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
-  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 4, 5);
-
-  label = gtk_label_new (_(description));
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 5, 6);
-
-  label = gtk_label_new (copyright);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 6, 7);
-
-  label = gtk_label_new (_(licensing));
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
-  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 7, 8);
-
-  return table;
+  return layout;
 }
 
 void
@@ -178,11 +118,9 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
   DialogWindow *about_dialog;
   GtkWidget *content, *ok_button;
 
-  if (!i18n_initted)
-    about_i18n_init ();
-
   about_dialog = dialog_window_new (_("About..."));
   content = about_content (viewer_window);
+
   dialog_window_set_content_with_frame (about_dialog, content);
 
   ok_button = gtk_button_new_with_label (_("Close"));
@@ -195,4 +133,3 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 
   dialog_window_show (about_dialog, viewer_window);
 }
-#endif /* NEED_GNOMESUPPORT_H */

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gfaxviewer 0.9.9\n"
-"POT-Creation-Date: 2001-05-29 00:23-0400\n"
+"POT-Creation-Date: 2001-07-16 17:31-0400\n"
 "PO-Revision-Date: 2001-02-08 18:21-05:00\n"
 "Last-Translator: Wolfgang Sourdeau <wolfgang@contre.com>\n"
 "Language-Team: none\n"
@@ -53,7 +53,7 @@ msgstr "%s n'a pu être trouvé"
 msgid "permission to read %s is missing"
 msgstr "la lecture du fichier %s n'est pas permise"
 
-#: src/about.c:80 src/viewer.c:272 src/viewer.c:445 src/viewer.c:450
+#: src/viewer.c:272 src/viewer.c:445 src/viewer.c:450
 msgid "GNU HaliFAX - Viewer"
 msgstr "GNU HaliFAX - Visionneuse"
 
@@ -101,7 +101,7 @@ msgstr "Fichier"
 msgid "Open..."
 msgstr "Ouvrir..."
 
-#: src/about.c:188 src/info.c:327 src/menu.c:159
+#: src/about.c:107 src/info.c:327 src/menu.c:159
 msgid "Close"
 msgstr "Fermer"
 
@@ -125,74 +125,9 @@ msgstr "Préférences..."
 msgid "Help"
 msgstr "Aide"
 
-#: src/about.c:184 src/menu.c:241
+#: src/about.c:102 src/menu.c:241
 msgid "About..."
 msgstr "À propos..."
-
-#: src/about.c:45
-msgid "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
-msgstr "Copyright © 2000, 2001 Wolfgang Sourdeau"
-
-#: src/about.c:47
-msgid "This program displays image files received on a HylaFAX system."
-msgstr ""
-"Ce programme sert à afficher des fichiers d'image reçus par un système de "
-"télécopie HylaFAX."
-
-#: src/about.c:49
-msgid ""
-"This program is free software, you are welcome to use it, modify it and "
-"redistribute it under certain conditions. See the file COPYING for further "
-"informations. There is NO warranty; not even for MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE."
-msgstr ""
-"Ceci est un logiciel libre, vous êtes invités à l'utiliser, le modifier et "
-"le redistribuer sous certaines conditions. Veuillez consulter le fichier "
-"COPYING (NdT: en anglais) pour de plus amples informations. AUCUNE garantie "
-"n'est donnée; tant pour des raisons COMMERÇIALES que pour RÉPONDRE À UN "
-"BESOIN PARTICULIER."
-
-#: src/about.c:108
-msgid "About the GNU HaliFAX - Viewer..."
-msgstr "À propos de la Visionneuse de GNU HaliFAX..."
-
-#: src/about.c:116
-msgid "Version :"
-msgstr "Version :"
-
-#: src/about.c:119
-msgid "The GNU HaliFAX team :"
-msgstr "L'équipe de GNU HaliFAX :"
-
-#: src/about.c:122
-msgid ""
-"The GNU HaliFAX - Viewer was enhanced in various ways thanks to those "
-"people :"
-msgstr ""
-"La Visionneuse de GNU HaliFAX s'est vue améliorée de diverses manières grâce "
-"à ces gens :"
-
-#: src/about.c:128
-msgid "What is the GNU HaliFAX - Viewer ?"
-msgstr "Qu'est-ce que la Visionneuse de GNU HaliFAX ?"
-
-#: src/about.c:131
-msgid "Copyright :"
-msgstr ""
-
-#: src/about.c:134
-msgid "Licensing :"
-msgstr "Politique de licence: "
-
-#: src/about.c:150
-msgid ""
-"Thomas Bartschies, German translation\n"
-"Kevin Chen, Traditional Chinese translation\n"
-"Zbigniew Baniewski, Polish translation"
-msgstr ""
-"Thomas Bartschies, traduction allemande\n"
-"Kevin Chen, traduction en chinois traditionnel\n"
-"Zbigniew Baniewski, traduction polonaise"
 
 #: src/info.c:49
 msgid "this fax is clean"
@@ -458,3 +393,54 @@ msgstr "Prévisualisation de l'impression..."
 #: src/gn_print.c:295
 msgid "Range"
 msgstr "Sélection"
+
+#~ msgid "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
+#~ msgstr "Copyright © 2000, 2001 Wolfgang Sourdeau"
+
+#~ msgid "This program displays image files received on a HylaFAX system."
+#~ msgstr ""
+#~ "Ce programme sert à afficher des fichiers d'image reçus par un système de "
+#~ "télécopie HylaFAX."
+
+#~ msgid ""
+#~ "This program is free software, you are welcome to use it, modify it and "
+#~ "redistribute it under certain conditions. See the file COPYING for "
+#~ "further informations. There is NO warranty; not even for MERCHANTABILITY "
+#~ "or FITNESS FOR A PARTICULAR PURPOSE."
+#~ msgstr ""
+#~ "Ceci est un logiciel libre, vous êtes invités à l'utiliser, le modifier "
+#~ "et le redistribuer sous certaines conditions. Veuillez consulter le "
+#~ "fichier COPYING (NdT: en anglais) pour de plus amples informations. "
+#~ "AUCUNE garantie n'est donnée; tant pour des raisons COMMERÇIALES que pour "
+#~ "RÉPONDRE À UN BESOIN PARTICULIER."
+
+#~ msgid "About the GNU HaliFAX - Viewer..."
+#~ msgstr "À propos de la Visionneuse de GNU HaliFAX..."
+
+#~ msgid "Version :"
+#~ msgstr "Version :"
+
+#~ msgid "The GNU HaliFAX team :"
+#~ msgstr "L'équipe de GNU HaliFAX :"
+
+#~ msgid ""
+#~ "The GNU HaliFAX - Viewer was enhanced in various ways thanks to those "
+#~ "people :"
+#~ msgstr ""
+#~ "La Visionneuse de GNU HaliFAX s'est vue améliorée de diverses manières "
+#~ "grâce à ces gens :"
+
+#~ msgid "What is the GNU HaliFAX - Viewer ?"
+#~ msgstr "Qu'est-ce que la Visionneuse de GNU HaliFAX ?"
+
+#~ msgid "Licensing :"
+#~ msgstr "Politique de licence: "
+
+#~ msgid ""
+#~ "Thomas Bartschies, German translation\n"
+#~ "Kevin Chen, Traditional Chinese translation\n"
+#~ "Zbigniew Baniewski, Polish translation"
+#~ msgstr ""
+#~ "Thomas Bartschies, traduction allemande\n"
+#~ "Kevin Chen, traduction en chinois traditionnel\n"
+#~ "Zbigniew Baniewski, traduction polonaise"

@@ -13,7 +13,11 @@ dnl AC_C_CONST
 dnl AC_C_INLINE
 
 AC_EXEEXT
+AC_CYGWIN
+AC_MINGW32
 AC_PROG_INSTALL
+
+WINDOWS_DETECTED=no
 
 ALL_LINGUAS="de fr pl zh_TW.Big5"
 
@@ -52,16 +56,23 @@ if test "`uname`" = "FreeBSD"; then
   fi 
 fi
 
+if test "$ac_cv_exeext" = ".exe"; then
+  WINDOWS_DETECTED=yes;
+fi
+
 case $ac_cv_build in
-  *cygwin | *cygwin32)
+  *cygwin*)
     CYGWIN=yes
+    WINDOWS_DETECTED=yes;
     ;;
-  *mingw | *mingw32)
+  *mingw*)
     MINGW32=yes
+    WINDOWS_DETECTED=yes;
     ;;
 esac
 
-if test "$CYGWIN" = yes || test "$MINGW32" = yes; then
+if test "$WINDOWS_DETECTED" = yes; then
+echo XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # under Windows
 OS=WIN32
 AC_MSG_WARN(It seems we are compiling for WIN32...)

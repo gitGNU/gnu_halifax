@@ -42,6 +42,8 @@ gchar *load_last_directory ();
 void save_last_directory (gchar *path);
 #endif
 
+gchar *where_is (gchar *test_dirs[], gchar *command);
+
 #define STOCK_ZOOM_IN       "GHFV_stock_zoom_in"
 #define STOCK_ZOOM_OUT	    "GHFV_stock_zoom_out"
 #define STOCK_ZOOM_IN_MENU  "GHFV_stock_zoom_in_menu"
