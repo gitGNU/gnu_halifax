@@ -74,23 +74,16 @@ msgstr "縮小"
 
 #: src/menu.c:89 src/menu.c:95 src/menu.c:172 src/menu.c:174 src/toolbar.c:79
 #: src/toolbar.c:91 src/toolbar.c:196 src/toolbar.c:210
-#, fuzzy
-msgid "Rotate 90"
+msgid "Rotate 90 degrees clockwise"
 msgstr "順時鐘旋轉 90 度"
 
 #: src/menu.c:95 src/menu.c:174 src/toolbar.c:79 src/toolbar.c:196
-#, fuzzy
-msgid " counter-clockwise"
+msgid "Rotate 90 degrees counter-clockwise"
 msgstr "逆時鐘旋轉 90 度"
 
 #: src/menu.c:101 src/menu.c:176 src/toolbar.c:85 src/toolbar.c:203
 msgid "Reverse image"
 msgstr "上下顛到"
-
-#: src/menu.c:89 src/menu.c:172 src/toolbar.c:91 src/toolbar.c:210
-#, fuzzy
-msgid " clockwise"
-msgstr "順時鐘旋轉 90 度"
 
 #: src/menu.c:148 src/toolbar.c:98 src/toolbar.c:219
 msgid "Print fax"
@@ -404,12 +397,6 @@ msgstr "預覽列印..."
 #: src/gn_print.c:237
 msgid "Range"
 msgstr "範圍"
-
-msgid "Rotate 90簞 clockwise"
-msgstr "順時鐘旋轉 90 度"
-
-msgid "Rotate 90簞 counter-clockwise"
-msgstr "逆時鐘旋轉 90 度"
 
 msgid "This program displays image files received on a HylaFAX system."
 msgstr "這個程式是用來顯示經由 HylaFAX 系統所接收到的傳真影像檔."

@@ -74,23 +74,16 @@ msgstr "Zmniejszenie"
 
 #: src/menu.c:89 src/menu.c:95 src/menu.c:172 src/menu.c:174 src/toolbar.c:79
 #: src/toolbar.c:91 src/toolbar.c:196 src/toolbar.c:210
-#, fuzzy
-msgid "Rotate 90"
+msgid "Rotate 90 degrees clockwise"
 msgstr "Obrót o 90° w prawo"
 
 #: src/menu.c:95 src/menu.c:174 src/toolbar.c:79 src/toolbar.c:196
-#, fuzzy
-msgid " counter-clockwise"
+msgid "Rotate 90 degrees counter-clockwise"
 msgstr "Obrót o 90° w lewo"
 
 #: src/menu.c:101 src/menu.c:176 src/toolbar.c:85 src/toolbar.c:203
 msgid "Reverse image"
 msgstr "Odwrócenie obrazu 'do góry nogami'"
-
-#: src/menu.c:89 src/menu.c:172 src/toolbar.c:91 src/toolbar.c:210
-#, fuzzy
-msgid " clockwise"
-msgstr "Obrót o 90° w prawo"
 
 #: src/menu.c:148 src/toolbar.c:98 src/toolbar.c:219
 msgid "Print fax"
@@ -406,12 +399,6 @@ msgstr "Podgl±d wydruku"
 #: src/gn_print.c:237
 msgid "Range"
 msgstr "Zakres"
-
-msgid "Rotate 90Â° clockwise"
-msgstr "Obrót o 90° w prawo"
-
-msgid "Rotate 90Â° counter-clockwise"
-msgstr "Obrót o 90° w lewo"
 
 msgid "This program displays image files received on a HylaFAX system."
 msgstr ""

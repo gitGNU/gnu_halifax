@@ -74,23 +74,16 @@ msgstr "Verkleinern"
 
 #: src/menu.c:89 src/menu.c:95 src/menu.c:172 src/menu.c:174 src/toolbar.c:79
 #: src/toolbar.c:91 src/toolbar.c:196 src/toolbar.c:210
-#, fuzzy
-msgid "Rotate 90"
+msgid "Rotate 90 degrees clockwise"
 msgstr "Um 90° im Uhrzeigersinn drehen"
 
 #: src/menu.c:95 src/menu.c:174 src/toolbar.c:79 src/toolbar.c:196
-#, fuzzy
-msgid " counter-clockwise"
+msgid "Rotate 90 degrees counter-clockwise"
 msgstr "Um 90° im Gegenuhrzeigersinn drehen"
 
 #: src/menu.c:101 src/menu.c:176 src/toolbar.c:85 src/toolbar.c:203
 msgid "Reverse image"
 msgstr "Seite invertieren"
-
-#: src/menu.c:89 src/menu.c:172 src/toolbar.c:91 src/toolbar.c:210
-#, fuzzy
-msgid " clockwise"
-msgstr "Um 90° im Uhrzeigersinn drehen"
 
 #: src/menu.c:148 src/toolbar.c:98 src/toolbar.c:219
 msgid "Print fax"
@@ -406,9 +399,6 @@ msgstr "Druckvorschau..."
 #: src/gn_print.c:237
 msgid "Range"
 msgstr "Bereich"
-
-msgid "Rotate 90Â° counter-clockwise"
-msgstr "Um 90° im Gegenuhrzeigersinn drehen"
 
 msgid "This program displays image files received on a HylaFAX system."
 msgstr ""
