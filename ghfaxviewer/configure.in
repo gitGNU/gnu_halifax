@@ -23,9 +23,13 @@ MANPAGES=ghfaxviewer.1
 
 # are we configured from halifax parent dir or from independent ghfaxviewer
 # subdir ?
-if test "x$cache_file" == "x../config.cache"; then
+if test "x$cache_file" == "x.././config.cache"; then
   SUPPSUBDIRS= 
   docsubdir=no
+  if test ! -f docs/Makefile.in; then
+    mkdir docs
+    echo "install clean distclean dist:" > docs/Makefile.in
+  fi
 else
   SUPPSUBDIRS=docs
   docsubdir=yes
@@ -259,25 +263,19 @@ AM_CONDITIONAL(HAVE_TIFF, test "x$TIFF_LIBS" != x)
 AM_CONDITIONAL(GNOME, test x"$USING_GNOME" = xyes)
 AM_CONDITIONAL(WITHOUT_GNOMEPRINT, test "x$no_gnome_print" = xyes)
 
-makefile_list="Makefile 			\
-		Makefile.win32 		\
-		ghfaxviewer.spec	\
-		debian/Makefile		\
-		macros/Makefile		\
-		intl/Makefile		\
-		src/Makefile		\
-		src/ghfaxviewer-res.rc	\
-		src/pixmaps/Makefile	\
-		po/Makefile.in		\
-		po/Makefile"
-
-if test x"$docsubdir" == x"yes"; then
-  makefile_list="$makefile_list \
-		docs/Makefile"
-fi
-
 AC_OUTPUT([
-$makefile_list
+Makefile
+Makefile.win32
+ghfaxviewer.spec
+debian/Makefile
+macros/Makefile
+intl/Makefile
+docs/Makefile
+src/Makefile
+src/ghfaxviewer-res.rc
+src/pixmaps/Makefile
+po/Makefile.in
+po/Makefile
 ])
 
 if test x"$XPM2WICO" = x && test $OS = WIN32; then
