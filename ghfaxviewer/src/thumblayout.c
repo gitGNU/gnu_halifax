@@ -31,6 +31,10 @@
 #define ADJUSTMENT_STEP 10
 #define ADJUSTMENT_DELAY 50
 
+#define MOUSE_WHEEL_UP 4
+#define MOUSE_WHEEL_DOWN 5
+#define MOUSE_WHEEL_ADJUSTMENT_STEP 50
+
 typedef struct _LayoutData LayoutData;
 
 struct _LayoutData
@@ -51,12 +55,21 @@ struct _LayoutData
 static void
 reset_timeout (LayoutData *layout_data)
 {
+  GtkWidget *grab_widget;
+
   if (layout_data->timeout_id)
     {
       layout_data->up_pressed = FALSE;
       layout_data->down_pressed = FALSE;
       gtk_timeout_remove (layout_data->timeout_id);
       layout_data->timeout_id = 0;
+
+      grab_widget = gtk_grab_get_current ();
+      if (grab_widget)
+	{
+	  gtk_grab_remove (grab_widget);
+	  gtk_button_released ((GtkButton*) grab_widget);
+	}
     }
 }
 
@@ -65,24 +78,17 @@ refresh_buttons (LayoutData *layout_data)
 {
   GtkAdjustment *adjustment;
   gint up_height, down_height;
-  gboolean down_condition;
+  gboolean up_condition, down_condition;
 
   adjustment = layout_data->adjustment;
   down_height = widget_height (layout_data->down);
   up_height = widget_height (layout_data->up);
 
-  if (!GTK_WIDGET_VISIBLE (layout_data->up)
-      && (adjustment->value > 0.0))
+  up_condition = (adjustment->value <= up_height);
+
+  if (GTK_WIDGET_VISIBLE (layout_data->up))
     {
-      gtk_widget_show (layout_data->up);
-      up_height = widget_height (layout_data->up);
-      gtk_adjustment_set_value (adjustment,
-				adjustment->value
-				+ up_height);
-    }
-  else if (GTK_WIDGET_VISIBLE (layout_data->up))
-    {
-      if (adjustment->value <= up_height)
+      if (up_condition) 
 	{
 	  reset_timeout (layout_data);
 	  gtk_widget_hide (layout_data->up);
@@ -90,25 +96,36 @@ refresh_buttons (LayoutData *layout_data)
 	  up_height = 0;
 	}
     }
+  else
+    if (!up_condition)
+      {
+        gtk_widget_show (layout_data->up);
+        up_height = widget_height (layout_data->up);
+        gtk_adjustment_set_value (adjustment, adjustment->value + up_height);
+      }
 
   down_condition = (adjustment->page_size + adjustment->value
-		    + up_height + down_height
+		    + up_height /*  + down_height */
 		    >= layout_data->height);
 
-  if (GTK_WIDGET_VISIBLE (layout_data->down) && down_condition)
+  if (GTK_WIDGET_VISIBLE (layout_data->down))
     {
-      reset_timeout (layout_data);
-      gtk_widget_hide (layout_data->down);
+      if (down_condition)
+        {
+	  reset_timeout (layout_data);
+          gtk_widget_hide (layout_data->down);
+        }
     }
-  else if (!GTK_WIDGET_VISIBLE (layout_data->down) && !down_condition)
-    {
-      gtk_widget_show (layout_data->down);
-      down_height = widget_height (layout_data->down);
-      gtk_adjustment_set_value (adjustment,
-				adjustment->value
-				- down_height
-				+ up_height);
-    }
+  else
+    if (!down_condition)
+      {
+        gtk_widget_show (layout_data->down);
+        down_height = widget_height (layout_data->down);
+        gtk_adjustment_set_value (adjustment,
+				  adjustment->value
+				  - down_height
+				  + up_height);
+      }
 }
 
 static gboolean
@@ -124,10 +141,12 @@ layout_timeout_cb (LayoutData *layout_data)
   else if (layout_data->down_pressed)
     new_value = adjustment->value + ADJUSTMENT_STEP;
   else
-    reset_timeout (layout_data);
+    {
+      reset_timeout (layout_data);
+      new_value = adjustment->value;
+    }
 
   gtk_adjustment_set_value (adjustment, new_value);
-  gtk_adjustment_value_changed (adjustment);
 
   refresh_buttons (layout_data);
 
@@ -168,8 +187,6 @@ layout_resize_cb (GtkWidget *layout,
   GtkAdjustment *adjustment;
   gint delta;
 
-  g_print ("caught\n");
-
   adjustment = layout_data->adjustment;
 
   delta = (layout_data->height - (gint) adjustment->page_size);
@@ -191,20 +208,69 @@ layout_resize_cb (GtkWidget *layout,
   refresh_buttons (layout_data);
 }
 
+static gint
+mouse_press_event_cb (GtkWidget *ref_widget,
+		      GdkEventButton *event,
+		      LayoutData *layout_data)
+{
+  gboolean modify_value;
+  gint new_value;
+  GtkAdjustment *adjustment;
+
+  adjustment = layout_data->adjustment;
+
+  if (event->button == MOUSE_WHEEL_UP)
+    {
+      new_value = adjustment->value - MOUSE_WHEEL_ADJUSTMENT_STEP;
+      modify_value = TRUE;
+    }
+  else if (event->button == MOUSE_WHEEL_DOWN)
+    {
+      new_value = adjustment->value + MOUSE_WHEEL_ADJUSTMENT_STEP;
+      modify_value = TRUE;
+    }
+  else
+    {
+      new_value = 0;
+      modify_value = FALSE;
+    }
+
+  if (modify_value)
+    {
+      gtk_adjustment_set_value (adjustment, new_value);
+      refresh_buttons (layout_data);
+    }
+
+  return FALSE;
+}
+
+static void
+widget_mouse_press_realize_cb (GtkWidget *widget, LayoutData *layout_data)
+{
+  gdk_window_set_events (widget->window,
+			 gdk_window_get_events (widget->window)
+			 | GDK_BUTTON_PRESS_MASK);
+  gtk_signal_connect (GTK_OBJECT (widget),
+		      "button-press-event",
+		      GTK_SIGNAL_FUNC (mouse_press_event_cb),
+		      layout_data);
+}
+
 static LayoutData *
-layout_data_create (GtkWidget *ref_widget, GtkObject *adjustment)
+layout_data_create (GtkWidget *ref_widget, GtkAdjustment *adjustment)
 {
   GtkWidget *pixmap;
   LayoutData *layout_data;
 
   layout_data = g_malloc (sizeof (LayoutData));
-  layout_data->adjustment = GTK_ADJUSTMENT (adjustment);
+  layout_data->adjustment = adjustment;
 
   layout_data->up = gtk_button_new ();
   pixmap = pixmap_from_xpm_data (ref_widget,
 				 up_arrow_xpm);
   gtk_container_add (GTK_CONTAINER (layout_data->up),
 		     pixmap);
+  gtk_button_set_relief (GTK_BUTTON (layout_data->up), GTK_RELIEF_HALF);
   gtk_signal_connect (GTK_OBJECT (layout_data->up), "pressed",
 		      up_pressed_cb, layout_data);
   gtk_signal_connect (GTK_OBJECT (layout_data->up), "released",
@@ -215,6 +281,7 @@ layout_data_create (GtkWidget *ref_widget, GtkObject *adjustment)
 				 down_arrow_xpm);
   gtk_container_add (GTK_CONTAINER (layout_data->down),
 		     pixmap);
+  gtk_button_set_relief (GTK_BUTTON (layout_data->down), GTK_RELIEF_HALF);
   gtk_signal_connect (GTK_OBJECT (layout_data->down), "pressed",
 		      down_pressed_cb, layout_data);
   gtk_signal_connect (GTK_OBJECT (layout_data->down), "released",
@@ -245,57 +312,123 @@ layout_new (GtkWidget *ref_widget, gint spacing, gint width)
 
   vbox = gtk_vbox_new (FALSE, 0);
 
-  layout_data = layout_data_create (ref_widget, adjustment);
+  layout_data = layout_data_create (ref_widget, (GtkAdjustment*) adjustment);
+  gtk_layout = gtk_layout_new (NULL, GTK_ADJUSTMENT (adjustment));
 
   gtk_box_pack_start (GTK_BOX (vbox), layout_data->up,
 		      FALSE, TRUE, 0);
-
-  gtk_layout = gtk_layout_new (NULL, GTK_ADJUSTMENT (adjustment));
   gtk_box_pack_start (GTK_BOX (vbox), gtk_layout,
 		      TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), layout_data->down,
 		      FALSE, TRUE, 0);
 
-  layout_data->gtk_layout = gtk_layout;
-  gtk_object_set_data_full (GTK_OBJECT (vbox),
-			    "_layout_data", layout_data,
-			    g_free);
   gtk_signal_connect (GTK_OBJECT (gtk_layout),
 		      "size-allocate",
 		      (GtkSignalFunc) layout_resize_cb,
 		      layout_data);
+  gtk_signal_connect (GTK_OBJECT (gtk_layout),
+		      "realize",
+		      (GtkSignalFunc) widget_mouse_press_realize_cb,
+		      layout_data);
 
+  layout_data->gtk_layout = gtk_layout;
   layout_data->spacing = spacing;
   layout_data->height = 0;
   layout_data->up_pressed = FALSE;
   layout_data->down_pressed = FALSE;
   layout_data->timeout_id = 0;
-
   layout_set_width (layout_data, width);
+
+  gtk_object_set_data_full (GTK_OBJECT (vbox),
+			    "_layout_data", layout_data,
+			    g_free);
 
   return vbox;
 }
 
-static void
+static gboolean
 check_button_pos (GtkWidget *button, LayoutData *layout_data)
 {
   GtkAllocation allocation;
   GtkAdjustment *adjustment;
-  gint delta;
+  gint delta, button_delta;
 
   allocation = button->allocation;
   adjustment = layout_data->adjustment;
 
   delta = allocation.y + allocation.height - adjustment->page_size;
+  button_delta = allocation.height + layout_data->spacing;
 
   if (delta > 0)
-    gtk_adjustment_set_value (adjustment, adjustment->value + delta);
+    gtk_adjustment_set_value (adjustment, (adjustment->value
+					   + delta
+					   + button_delta));
 
   delta = allocation.y;
   if (delta < 0)
-    gtk_adjustment_set_value (adjustment, adjustment->value + delta);
+    gtk_adjustment_set_value (adjustment, (adjustment->value
+					   + delta
+					   - button_delta));
 
   refresh_buttons (layout_data);
+
+  return FALSE;
+}
+
+static
+void usr_btn_state_changed_cb (GtkWidget *widget,
+			       GtkStateType state,
+			       LayoutData layout_data)
+{
+  GtkWidget *child;
+
+  if (state == GTK_STATE_INSENSITIVE)
+    {
+      child = ((GtkBin*) widget)->child;
+      gdk_window_set_events (child->window,
+			     gdk_window_get_events (widget->window)
+			     | GDK_BUTTON_PRESS_MASK
+			     | GDK_ENTER_NOTIFY_MASK
+			     | GDK_LEAVE_NOTIFY_MASK);
+    }
+}
+
+static gint
+usr_btn_mouse_press_event_cb (GtkWidget *button,
+			      GdkEventButton *event,
+			      LayoutData *layout_data)
+{
+  if (event->button == 1)
+    check_button_pos (button, layout_data);
+
+  return FALSE;
+}
+
+static void
+usr_btn_realized_real_cb (GtkWidget *button, LayoutData *layout_data)
+{
+  gtk_signal_connect (GTK_OBJECT (button),
+		      "button-press-event",
+		      GTK_SIGNAL_FUNC (usr_btn_mouse_press_event_cb),
+		      layout_data);
+  gtk_signal_connect (GTK_OBJECT (button),
+		      "state-changed",
+		      (GtkSignalFunc) usr_btn_state_changed_cb,
+		      layout_data);
+
+  widget_mouse_press_realize_cb (button, layout_data);
+}
+
+static void
+setup_usr_btn (GtkWidget *button, LayoutData *layout_data)
+{
+  if (GTK_WIDGET_REALIZED (button))
+    usr_btn_realized_real_cb (button, layout_data);
+  else
+    gtk_signal_connect (GTK_OBJECT (button),
+			"realize",
+			usr_btn_realized_real_cb,
+			layout_data);
 }
 
 void
@@ -308,22 +441,19 @@ layout_add_button (GtkWidget *layout, GtkWidget *button)
 
   layout_data = gtk_object_get_data (GTK_OBJECT (layout),
 				     "_layout_data");
+  gtk_layout = layout_data->gtk_layout;
 
   gtk_widget_get_child_requisition (button, &requisition);
-
-  gtk_layout = layout_data->gtk_layout;
 
   x = (gtk_layout->allocation.width - requisition.width) / 2;
   layout_data->height += layout_data->spacing / 2;
 
+  setup_usr_btn (button, layout_data);
+
   gtk_layout_put (GTK_LAYOUT (gtk_layout),
 		  button, x, layout_data->height);
 
-  gtk_signal_connect (GTK_OBJECT (button), "pressed",
-		      check_button_pos, layout_data);
-
   layout_data->height += requisition.height + layout_data->spacing / 2;
-
   gtk_layout_set_size (GTK_LAYOUT (gtk_layout),
 		       layout_data->height, layout_data->width);
 }
