@@ -6,6 +6,8 @@ programming-related informations, see the file 'ChangeLog'.
 - Dialog windows, progress windows, icon bar and a few GUI utility functions
   are separated in a new library (libghfaxwidgets);
 - The thumbnails are displayed in a new icon bar;
+- Security fix in the Postscript printing module. The temp file created
+  when printing is now created with umask 077 instead of the default one.
 
 
 05/08/2001:
@@ -34,8 +36,10 @@ programming-related informations, see the file 'ChangeLog'.
   position and size;
 - the GNOME and Win32 versions are able to remember the last directory
   from where a file was open;
-- the UNIX printing version is putting the default printer at the top of the list;
-- the UNIX printing version is supposed to work with the "standard" BSD LPR system;
+- the UNIX printing version is putting the default printer at the top of
+  the list;
+- the UNIX printing version is supposed to work with the "standard" BSD
+  LPR system;
 
 
 02/12/2001:
@@ -91,3 +95,10 @@ programming-related informations, see the file 'ChangeLog'.
 - some interface arrangements
 - fixed some memory leaks
 - released version 0.9.0
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: text
+mode: auto-fill
+End:
+-->

@@ -51,40 +51,28 @@ draw_page_func (FaxPage *ref_page, gint y, gint height,
 
   draw_data = references;
 
-  switch (draw_data->rotation)
+  if (draw_data->rotation == ROT_NONE
+      || draw_data->rotation == ROT_180)
     {
-    case ROT_NONE:
       pixm_x = 0;
-      pixm_y = y;
+      pixm_y = ((draw_data->rotation == ROT_NONE)
+		? y
+		: (ref_page->height - y - height));
       pixm_width = ref_page->width;
       pixm_height = height;
       rowstride = ref_page->width;
       coord = (ref_page->image + pixm_y * pixm_width);
-      break;
-    case ROT_RIGHT90:
-      pixm_x = ref_page->height - y - height;
+    }
+  else
+    {
+      pixm_x = ((draw_data->rotation == ROT_RIGHT90)
+		? (ref_page->height - y - height)
+		: y);
       pixm_y = 0;
       pixm_width = height;
       pixm_height = ref_page->width;
       rowstride = ref_page->height;
       coord = (ref_page->image + pixm_x);
-      break;
-    case ROT_180:
-      pixm_x = 0;
-      pixm_y = ref_page->height - height - y;
-      pixm_width = ref_page->width;
-      pixm_height = height;
-      rowstride = ref_page->width;
-      coord = (ref_page->image + pixm_y * pixm_width);
-      break;
-    case ROT_LEFT90:
-      pixm_x = y;
-      pixm_y = 0;
-      pixm_width = height;
-      pixm_height = ref_page->width;
-      rowstride = ref_page->height;
-      coord = (ref_page->image + pixm_x);
-      break;
     }
 
   gdk_draw_gray_image (draw_data->ref_pixmap,
@@ -108,49 +96,43 @@ refresh_widgets (ViewerData *viewer_data)
 {
   int bcounter;
 
-  if (viewer_data->current_page->next == NULL)
+  if (viewer_data->current_page->next)
     {
       gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_NEXT_PAGE],
-				FALSE);
+				TRUE);
       gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
-				FALSE);
+				TRUE);
     }
   else
     {
       gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_NEXT_PAGE],
-				TRUE);
+				FALSE);
       gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_NEXT_PAGE],
-				TRUE);
+				FALSE);
     }
 	
-  if (viewer_data->current_page->prev == NULL)
+  if (viewer_data->current_page->prev)
     {
       gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_PREV_PAGE],
-				FALSE);
+				TRUE);
       gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_PREV_PAGE],
-				FALSE);
+				TRUE);
     }
   else
     {
       gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_PREV_PAGE],
-				TRUE);
+				FALSE);
       gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_PREV_PAGE],
-				TRUE);
+				FALSE);
     }
   
-  if (viewer_data->zoom_index == 0)
-    {
-      gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_ZOOM_OUT],
-				FALSE);     
-      gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_OUT],
-				FALSE);
-    }
-  else
+  if (viewer_data->zoom_index)
     {
       gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_ZOOM_OUT],
 				TRUE);     
       gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_OUT],
 				TRUE);
+
       if (viewer_data->zoom_index == MAX_ZOOM_INDEX)
 	{
 	  gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_ZOOM_IN],
@@ -165,6 +147,13 @@ refresh_widgets (ViewerData *viewer_data)
 	  gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_IN],
 				    TRUE);
 	}
+    }
+  else
+    {
+      gtk_widget_set_sensitive (viewer_data->cmd_menus[VIEW_ZOOM_OUT],
+				FALSE);     
+      gtk_widget_set_sensitive (viewer_data->cmd_buttons[VIEW_ZOOM_OUT],
+				FALSE);
     }
   
   for (bcounter = 0; 

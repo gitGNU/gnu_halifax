@@ -1,3 +1,8 @@
+2002-10-25  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* pl.po: fixed translation for "G3/G4 Options" and "Pixel fill
+	order"
+
 2001-09-29  gettextize  <bug-gnu-utils@gnu.org>
 
 	* Makefile.in.in: Upgrade to gettext-0.10.39.

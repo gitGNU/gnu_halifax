@@ -71,6 +71,13 @@ static gint viewer_def_x, viewer_def_y;
 
 static gint viewer_def_width, viewer_def_height;
 
+/* Some window managers cause problems when positioning windows on the
+   screen. Let's try to work-around this... */
+static struct delta
+{
+  gint x, y;
+} delta;
+
 /* Window accounting */
 
 void
@@ -85,7 +92,7 @@ decrease_win_count ()
   windows_count--;
 
   if (windows_count == 0)
-    gtk_main_quit();
+    gtk_main_quit ();
 }
 
 
@@ -113,26 +120,42 @@ gtk_screen_setup ()
 }
 
 void
+compute_delta (GdkWindow *window)
+{
+  gint x1, x2, y1, y2;
+
+  gdk_window_get_position (window, &x2, &y2);
+/*   g_print ("position: x: %d, y: %d\n", x, y); */
+/*   gdk_window_get_origin (window, &x, &y); */
+/*   g_print ("origin: x: %d, y: %d\n", x, y); */
+/*   gdk_window_get_deskrelative_origin (window, &x, &y); */
+/*   g_print ("deskrelative_origin: x: %d, y: %d\n", x, y); */
+  gdk_window_get_root_origin (window, &x1, &y1);
+/*   g_print ("root_origin: x: %d, y: %d\n", x1, y1); */
+
+  delta.x = x2 - x1;
+  delta.y = y2 - y1;
+}
+
+void
 vwindow_set_def_coords (GdkWindow *window)
 {
   gint x, y;
+  g_print ("set_def_coords\n");
+
+  compute_delta (window);
+
 #ifdef CAN_SAVE_CONFIG
   gdk_window_move_resize (window,
-			  viewer_def_x, viewer_def_y,
-			  viewer_def_width, viewer_def_height);
+			  viewer_def_x + delta.x,
+			  viewer_def_y + delta.y,
+			  viewer_def_width,
+			  viewer_def_height);
 #else
   gdk_window_resize (window,
 		     viewer_def_width,
 		     viewer_def_height);
 #endif
-  gdk_window_get_position (window, &x, &y);
-  g_print ("position: x: %d, y: %d\n", x, y);
-  gdk_window_get_origin (window, &x, &y);
-  g_print ("origin: x: %d, y: %d\n", x, y);
-  gdk_window_get_deskrelative_origin (window, &x, &y);
-  g_print ("deskrelative_origin: x: %d, y: %d\n", x, y);
-  gdk_window_get_root_origin (window, &x, &y);
-  g_print ("root_origin: x: %d, y: %d\n", x, y);
 }
 
 #if !defined (__WIN32__) && defined (ENABLE_NLS)
@@ -151,6 +174,7 @@ save_window_coords (GdkWindow *window)
   gint x, y, width, height;
   GError *gerror;
 
+  g_print ("save_window_coords\n");
   gerror = NULL;
 
   gdk_window_get_root_origin (window, &x, &y);
@@ -175,15 +199,14 @@ save_window_coords (GdkWindow *window)
 			height,
 			&gerror);
 
-  gdk_window_get_position (window, &x, &y);
-  g_print ("position: x: %d, y: %d\n", x, y);
-  gdk_window_get_origin (window, &x, &y);
-  g_print ("origin: x: %d, y: %d\n", x, y);
-  gdk_window_get_deskrelative_origin (window, &x, &y);
-  g_print ("deskrelative_origin: x: %d, y: %d\n", x, y);
-  gdk_window_get_root_origin (window, &x, &y);
-  g_print ("root_origin: x: %d, y: %d\n", x, y);
-
+/*   gdk_window_get_position (window, &x, &y); */
+/*   g_print ("position: x: %d, y: %d\n", x, y); */
+/*   gdk_window_get_origin (window, &x, &y); */
+/*   g_print ("origin: x: %d, y: %d\n", x, y); */
+/*   gdk_window_get_deskrelative_origin (window, &x, &y); */
+/*   g_print ("deskrelative_origin: x: %d, y: %d\n", x, y); */
+/*   gdk_window_get_root_origin (window, &x, &y); */
+/*   g_print ("root_origin: x: %d, y: %d\n", x, y); */
 }
 
 gchar *load_last_directory ()
@@ -257,13 +280,21 @@ stock_init (void)
 static void
 gnome_screen_setup ()
 {
-  GError *gerror;
+  GError *gerror = NULL;
+  GConfValue *value = NULL;
 
-  gerror = NULL;
+  g_print ("%d %d\n", viewer_def_x, viewer_def_y);
+  value = gconf_client_get (gc_client,
+			    CONFIG_KEY KEY_DEF_X,
+			    &gerror);
+  if (!value)
+    g_print ("value = NULL\n");
 
   viewer_def_x = gconf_client_get_int (gc_client,
 				       CONFIG_KEY KEY_DEF_X,
 				       &gerror);
+  if (gerror)
+    g_print ("gerror triggered\n");
   viewer_def_y = gconf_client_get_int (gc_client,
 				       CONFIG_KEY KEY_DEF_Y,
 				       &gerror);
@@ -276,6 +307,8 @@ gnome_screen_setup ()
 
   if (viewer_def_width == 0 && viewer_def_height == 0)
     gtk_screen_setup ();
+
+  g_print ("%d %d\n", viewer_def_x, viewer_def_y);
 }
 #else
 #ifdef __WIN32__
@@ -384,6 +417,7 @@ win32_local_dir ()
       GetModuleFileName (NULL, file_name, sizeof (file_name));
       sep = strrchr (file_name, '\\');
       *sep = '\0';
+      inited = TRUE;
     }
 
   return file_name;
@@ -514,7 +548,7 @@ app_setup (gint *argc, gchar **argv[])
 
   gc_client = gconf_client_get_default ();
   gconf_client_set_error_handling (gc_client,
-				   GCONF_CLIENT_HANDLE_NONE);
+				   GCONF_CLIENT_HANDLE_ALL);
   gnome_screen_setup ();
 #else
   gtk_set_locale ();

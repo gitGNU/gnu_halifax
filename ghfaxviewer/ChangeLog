@@ -1,3 +1,8 @@
+2002-10-25  Wolfgang Sourdeau  <wolfgang@contre.com>
+ 
+ 	* src/gn_print.c (print_page): gnome_print_setfont should be
+	called after ..._beginpage to avoid potential errors.	
+
 2001-11-20  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/prefs.c: Needs to include "i18n.h" to avoid non-resolution

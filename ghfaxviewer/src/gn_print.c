@@ -68,9 +68,12 @@ print_page (GnomePrintContext *context,
 {
   gchar *page_name;
   double *matrix, scale_x, scale_y;
+  GnomeFont *def_font;
 
   page_name = g_strdup_printf ("%d", gray_page->nbr + 1);
   gnome_print_beginpage (context, page_name);
+  def_font = gnome_font_new_closest  ("times", GNOME_FONT_BOOK, 0, 10);
+  gnome_print_setfont (context, def_font);
 
   matrix = create_matrix_from_page (gray_page);
 
@@ -90,6 +93,7 @@ print_page (GnomePrintContext *context,
 
   g_free (matrix);
   g_free (page_name);
+  gnome_font_unref (def_font);
 }
 
 static gboolean
@@ -182,7 +186,6 @@ prepare_print_master (GtkWidget *print_dlg,
 {
   GnomePrintContext *print_context;
   GnomePrintMaster *print_master;
-  GnomeFont *def_font;
   gint copies, collate, range, aborted;
   gint from, to;
   GtkWidget *progress_win;
@@ -191,17 +194,13 @@ prepare_print_master (GtkWidget *print_dlg,
   ghfw_progress_window_set_abortable (GHFW_PROGRESS_WINDOW (progress_win), TRUE);
   transient_window_show (progress_win, print_dlg);
 
-  print_master =
-    gnome_print_master_new_from_dialog (GPD (print_dlg));
-  print_context =
-    gnome_print_master_get_context (print_master);
-
-  def_font = gnome_font_new_closest  ("times", GNOME_FONT_BOOK, 0, 10);
-  gnome_print_setfont (print_context, def_font);
+  print_master = gnome_print_master_new_from_dialog (GPD (print_dlg));
+  print_context = gnome_print_master_get_context (print_master);
 
   gnome_print_dialog_get_copies (GPD (print_dlg), &copies, &collate);
-  range = gnome_print_dialog_get_range_page (GPD (print_dlg), &from,
-					     &to);
+  range = gnome_print_dialog_get_range_page (GPD (print_dlg),
+					     &from, &to);
+
   if (range == GNOME_PRINT_RANGE_CURRENT)
     from = to = current_page->nbr + 1;
   else if (range == GNOME_PRINT_RANGE_ALL)

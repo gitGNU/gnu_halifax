@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gfaxviewer 0.9.9\n"
 "POT-Creation-Date: 2001-10-05 11:18-0400\n"
-"PO-Revision-Date: 2001-02-23 20:39-05:00\n"
+"PO-Revision-Date: 2002-10-25 00:54-0400\n"
 "Last-Translator: Zbigniew Baniewski <zb@ispid.com.pl>\n"
-"Language-Team: none\n"
+"Language-Team: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-2\n"
 "Content-Transfer-Encoding: 8-bit\n"
@@ -214,11 +214,11 @@ msgstr "Rodzaj kompresji"
 
 #: src/info.c:251
 msgid "G3/G4 Options"
-msgstr "Options G3 ou G4"
+msgstr "Opcje G3/G4"
 
 #: src/info.c:254
 msgid "Pixel fill order"
-msgstr "Opcje G3/G4"
+msgstr "Kolejno¶æ wype³niania"
 
 #: src/info.c:257
 msgid "Make and model of receiving fax"

@@ -1,4 +1,4 @@
-/* us_print.c - this file is part of the GNU HaliFAX Viewer
+/* ps_print.c - this file is part of the GNU HaliFAX Viewer
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
@@ -19,8 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/* This file implement the functions needed to get dumb UNIX printing
- */
+/* This file implement the functions needed to get dumb UNIX printing */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -34,8 +33,6 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include <ghfaxwidgets/ghfaxwidgets.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 #include "tiffimages.h"
 #include "viewer.h"
@@ -43,6 +40,7 @@
 #include "i18n.h"
 #include "errors.h"
 #include "setup.h"
+#include "ps_export.h"
 #include "callbcks.h"
 
 /* Shorthand for type of comparison functions.  */
@@ -53,7 +51,6 @@
 typedef struct _PList PList;
 typedef struct _PDlgWidgets PDlgWidgets;
 typedef struct _PrintData PrintData;
-typedef struct _OutputData OutputData;
 
 typedef enum
 {
@@ -87,22 +84,13 @@ struct _PrintData
   GtkWidget *parent_window, *print_dialog;
 };
 
-struct _OutputData
-{
-  FILE *output_stream;
-  FaxFile *document;
-  gchar *out_file_name;
-  gint from_page, to_page;
-  GtkWidget *parent_window, *print_dialog, *err_dialog;;
-};
-
 #define MAX_PLIST 8
 static gchar *lpc_command = NULL;
 static gchar *lpstat_command = NULL;
 static gboolean printer_enabled;
 
 /* Do various tests to determine how to get the list of printers.
-   There are so many veriants of the lpr system... */
+   There are so many variants of the lpr system... */
 static gchar *
 cmd_result (gchar *cmd)
 {
@@ -187,6 +175,9 @@ ensure_commands (GtkWidget *viewer_window)
       "/bin",
       NULL
     };
+
+  lpc = NULL;
+  lpstat = NULL;
 
   if (!lpc_command && !lpstat_command)
     {
@@ -621,207 +612,6 @@ create_temp_print_file (gchar **outfile_name)
   return file_stream;
 }
 
-static guint
-size_of_page (FaxPage *page)
-{
-  gfloat f_result;
-  guint result;
-  
-  f_result = (gfloat) page->width * (gfloat) page->height / 8.0;
-  result = (guint) f_result;
-
-  return result;
-}
-
-static guint
-size_of_output (OutputData *output_data)
-{
-  FaxPage *cur_page;
-  guint result, pcount, from_p, to_p;
-  
-  result = 0;
-  from_p = output_data->from_page;
-  to_p = output_data->to_page;
-  cur_page = output_data->document->first;
-
-  for (pcount = from_p; pcount <= to_p; pcount++)
-    {
-      result += size_of_page (cur_page);
-      cur_page = cur_page->next;
-    }
-  
-  return result;
-}
-
-static guint
-print_image (FILE *print_file, FaxPage *fax_image,
-	     GtkWidget *progress_win,
-	     guint progress, guint unit, guint total_bytes)
-{
-  gboolean aborted;
-  guint full_length, counter, new_progress;
-  guchar cur_char;
-  
-  full_length = size_of_page (fax_image);
-
-  aborted = FALSE;
-  new_progress = progress;
-  
-  for (counter = 0; (counter < full_length) && !aborted; counter++)
-    {
-      new_progress++;
-      if ((new_progress % unit) == 0)
-	aborted = ghfw_progress_window_update_with_value
-	  (GHFW_PROGRESS_WINDOW (progress_win), new_progress, total_bytes);
-      if (!aborted)
-	{
-	  cur_char = *(fax_image->image + counter);
-	  fprintf (print_file, "%.2x", (unsigned char) ~cur_char);
-		
-	  if ((counter + 1) % 40 == 0)
-	    fprintf (print_file, "\n");
-	}
-      else
-	new_progress = 0;
-    }
-
-  if (!aborted && ((counter + 1) % 40 != 0))
-    fprintf (print_file, "\n");
-
-  return new_progress;
-}
-
-static gboolean
-output_document (OutputData *output_data)
-{
-  gint cur_page_nbr;
-  guint cur_byte, unit, total_bytes;
-  gboolean success;
-  gchar *time_string, *ps_title, *ps_creator, *p_action;
-  FaxPage *cur_page;
-  GtkWidget *progress_win;
-  time_t cur_time;
-
-#ifdef ENABLE_NLS
-  /* If we don't do this, our floating-point numbers might
-   * become floating-comma numbers which postscript doesn't
-   * understand that well... */
-  setlocale (LC_NUMERIC, "C");
-#endif
-
-  cur_page_nbr = output_data->from_page;
-  time (&cur_time);
-  time_string = ctime (&cur_time);
-  
-  success = TRUE;
-  cur_byte = 0;
-  total_bytes = size_of_output (output_data);
-  unit = total_bytes / 100;
-
-  ps_creator = g_strdup_printf(_("The GNU HaliFAX Viewer"));
-  ps_title = g_strdup_printf ("%s %s - %s",
-			      _("The GNU HaliFAX Viewer"),
-			      VERSION,
-			      output_data->document->file_name);
-
-  fprintf (output_data->output_stream,
-	   "%%!PS-Adobe-3.0\n"
-	   "%%%%Creator: %s\n"
-	   "%%%%Title: %s\n"
-	   "%%%%CreationDate: %s"
-	   "%%%%DocumentData: Clean7Bit\n"
-	   "%%%%Origin: 0 0\n"
-	   "%%%%BoundingBox: 0 0 612 792\n"
-	   "%%%%LanguageLevel: 1\n"
-	   "%%%%Pages: (atend)\n"
-	   "%%%%EndComments\n"
-	   "%%%%BeginSetup\n"
-	   "%%%%EndSetup\n",
-	   ps_creator, ps_title, time_string);
-  
-  g_free (ps_title);
-  g_free (ps_creator);
-  
-  progress_win = ghfw_progress_window_new (_("Please wait..."), NULL);
-  ghfw_progress_window_set_abortable (GHFW_PROGRESS_WINDOW (progress_win),
-				      TRUE);
-  transient_window_show (progress_win, output_data->print_dialog);
-
-  while (cur_page_nbr <= output_data->to_page && success)
-    {
-      p_action = g_strdup_printf (_("Printing page %d (%d left)"),
-				  cur_page_nbr,
-				  output_data->to_page
-				  - cur_page_nbr);
-      ghfw_progress_window_set_action (GHFW_PROGRESS_WINDOW (progress_win),
-				       p_action);
-      g_free (p_action);
-      cur_page = ti_seek_fax_page (output_data->document,
-				   cur_page_nbr - 1);
-
-      fprintf (output_data->output_stream,
-	       "%%%%Page: %d %d\n",
-	       cur_page_nbr,
-	       cur_page_nbr);
-      fprintf (output_data->output_stream,
-	       "gsave\n"
-	       "100 dict begin\n"
-	       "%f %f scale\n",
-	       ((float) cur_page->width * 72.0
-		/ (float) output_data->document->x_res),
-	       ((float) cur_page->height
-		* 72.0
-		/ (float) output_data->document->y_res));
-      fprintf (output_data->output_stream,
-	       "%%ImageData: %d %d 1 1 0 1 2 \"image\"\n",
-	       cur_page->width, cur_page->height);
-      fprintf (output_data->output_stream,
-	       "/scanLine %d string def\n",
-	       (int) (cur_page->width / 8));
-      fprintf (output_data->output_stream,
-	       "%d %d 1\n", cur_page->width, cur_page->height);
-      fprintf (output_data->output_stream,
-	       "[%d 0 0 -%d 0 %d]\n", cur_page->width,
-	       cur_page->height, cur_page->height);
-      fprintf (output_data->output_stream,
-	       "{currentfile scanLine readhexstring pop} bind\n"
-	       "image\n");
-      
-      ti_load_fax_page (output_data->document, cur_page);
-      cur_byte = print_image (output_data->output_stream,
-			      cur_page, progress_win,
-			      cur_byte, unit, total_bytes);
-
-      if (!cur_byte)
-	success = FALSE;
-      else
-	{
-	  fprintf (output_data->output_stream,
-		   "end\n"
-		   "grestore\n"
-		   "showpage\n");
-
-	  cur_page_nbr++;
-	}
-
-      ti_unload_fax_page (cur_page);
-    }
-
-  if (success)
-    fprintf (output_data->output_stream,
-	     "%%%%Trailer\n"
-	     "%%%%Pages: %d\n"
-	     "%%%%EOF\n", (cur_page_nbr - output_data->from_page));
-
-#ifdef ENABLE_NLS
-  setlocale (LC_NUMERIC, "");
-#endif
-
-  gtk_widget_destroy (progress_win);
-
-  return success;
-}
-
 static void
 print_to_file_anyway_cb (GtkWidget *yes_button,
 			 OutputData *output_data)
@@ -916,7 +706,7 @@ launch_print_job_cb (GtkWidget *widget,
 
   output_data = g_malloc (sizeof (OutputData));
   output_data->document = print_data->document;
-  output_data->parent_window = print_data->parent_window;
+/*   output_data->parent_window = print_data->parent_window; */
   
   if (gtk_toggle_button_get_active
       (GTK_TOGGLE_BUTTON (print_data->widgets.printer_rb)))
@@ -1034,7 +824,7 @@ print_dialog (ViewerData *viewer_data)
   print_data = g_malloc (sizeof (PrintData));
   print_data->document = viewer_data->fax_file;
   print_data->current_page = viewer_data->current_page;
-  print_data->parent_window = viewer_data->viewer_window;
+/*   print_data->parent_window = viewer_data->viewer_window; */
   print_data->print_dialog = print_dialog;
 
   table = gtk_table_new (3, 2, FALSE);
