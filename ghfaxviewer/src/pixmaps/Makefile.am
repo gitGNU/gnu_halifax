@@ -26,6 +26,7 @@ EXTRA_DIST = hand-closed-data.xbm hand-closed-mask.xbm \
 	     printer.xpm \
 	     left90.xpm right90.xpm reverse.xpm \
              right_arrow.xpm left_arrow.xpm \
+	     viewer_prefs.xpm printer_prefs.xpm \
              zoom_in.xpm zoom_out.xpm info.xpm \
 	     ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm
 
