@@ -1,6 +1,8 @@
 /* toolbar.c - this file is part of the GNU HaliFAX Viewer
  *
- * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ * Copyright (C) 2000-2001 Wolfgang Sourdeau 
+ *
+ * Time-stamp: <2002-10-25 01:08:21 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *

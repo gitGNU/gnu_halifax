@@ -2,6 +2,8 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
+ * Time-stamp: <2002-10-25 01:08:15 wolfgang>
+ *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -318,7 +320,7 @@ fill_index (FaxPage *fax_page)
     {
       if (!is_open && *char_ptr) 
 	{
-	  index = g_slist_append (index, char_ptr);
+	  index = g_slist_prepend (index, char_ptr);
 	  is_open = TRUE;
 
 	  if (progress_func
@@ -335,7 +337,8 @@ fill_index (FaxPage *fax_page)
 	
       char_ptr++;
     }
-  
+
+  index = g_slist_reverse(index);
   fax_page->image_index = index;
 }
 

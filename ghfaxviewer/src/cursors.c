@@ -3,6 +3,8 @@
  * Copyright (C) 2000 The Free Software Foundation, inc.
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
+ * Time-stamp: <2002-10-25 01:07:41 wolfgang>
+ *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  * 
  * NOTE: This code was originally taken from the Eye of GNOME image viewer,

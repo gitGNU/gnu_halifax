@@ -2,6 +2,8 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
+ * Time-stamp: <2002-10-25 01:07:15 wolfgang>
+ *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
  * This program is free software; you can redistribute it and/or modify

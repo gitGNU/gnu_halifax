@@ -1,3 +1,9 @@
+2003-01-30  Wolfgang Sourdeau  <Wolfgang@Contre.COM>
+
+	* src/tiffimages.c (fill_index): make indexing slightly faster by
+	prepending elements to index and reversing it afterwards. Thanks
+	to Michael Karcher <michael.karcher@dpk.berlin.fido.de>.
+
 2002-10-25  Wolfgang Sourdeau  <wolfgang@contre.com>
  
  	* src/gn_print.c (print_page): gnome_print_setfont should be
