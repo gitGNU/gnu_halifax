@@ -1,3 +1,11 @@
+2001-04-25  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/pixmaps/ghfaxviewer-icon.xpm: made the icon compliant with
+	the standard 24 colour palette of Debian, for standard compliance.
+
+	* src/setup.c (gnome_screen_setup): initialized gerror to NULL for
+	platforms that don't make pointers point to NULL automatically
+
 2001-04-18  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* configure.in: new release before going to Québec,

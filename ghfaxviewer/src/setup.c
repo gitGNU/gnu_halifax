@@ -82,6 +82,7 @@ static void
 gtk_screen_setup ()
 {
   gint scr_width, scr_height;
+
   /* Not a perfect mechanism, but acceptable for now. */
   scr_width = gdk_screen_width ();
   scr_height = gdk_screen_height ();
@@ -128,6 +129,8 @@ save_window_coords (GdkWindow *window)
   gint x, y, width, height;
   GError *gerror;
 
+  gerror = NULL;
+
   gdk_window_get_root_origin (window, &x, &y);
   gdk_window_get_size (window, &width, &height);
 
@@ -154,6 +157,8 @@ gchar *load_last_directory ()
   GError *gerror;
   gchar *last_dir, *last_dir_slash;
 
+  gerror = NULL;
+
   last_dir = gconf_client_get_string (gc_client,
 				      CONFIG_KEY "default_dir",
 				      &gerror);
@@ -172,6 +177,8 @@ void save_last_directory (gchar *path)
 {
   GError *gerror;
 
+  gerror = NULL;
+
   gconf_client_set_string (gc_client,
 			   CONFIG_KEY "default_dir",
 			   path,
@@ -182,6 +189,8 @@ static void
 gnome_screen_setup ()
 {
   GError *gerror;
+
+  gerror = NULL;
 
   viewer_def_x = gconf_client_get_int (gc_client,
 				       CONFIG_KEY "viewer_def_x",

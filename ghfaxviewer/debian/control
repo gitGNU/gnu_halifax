@@ -1,7 +1,7 @@
 Source: ghfaxviewer
 Section: graphics
 Priority: optional
-Maintainer: Wolfgang Sourdeau <Wolfgang@ultim.net>
+Maintainer: Wolfgang Sourdeau <was@debian.org>
 Build-Depends: debhelper, gettext, libtiffg3-dev, libgtk1.2-dev, libgnome-dev, libgconf-dev, libgnomeprint-dev
 Standards-Version: 3.5.2
 
