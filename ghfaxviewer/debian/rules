@@ -60,7 +60,7 @@ binary-arch: build install
 	#dh_installmime
 	#dh_installinit
 	#dh_installcron
-	dh_installman ghfaxviewer.1
+	dh_installman docs/ghfaxviewer.1
 	#dh_installinfo
 	#dh_undocumented ghfaxviewer.1.gz
 	dh_installchangelogs ChangeLog
