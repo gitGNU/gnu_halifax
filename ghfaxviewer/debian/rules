@@ -39,7 +39,9 @@ install-stamp: build-stamp
 		sysconfdir=`pwd`/debian/$(package)/etc		\
 		infodir=`pwd`/debian/$(package)/usr/share/info	\
 		mandir=`pwd`/debian/$(package)/usr/share/man   \
-		datadir=`pwd`/debian/$(package)/usr/share
+		man1dir=`pwd`/debian/$(package)/usr/share/man/man1 \
+		datadir=`pwd`/debian/$(package)/usr/share \
+		localedir=`pwd`/debian/$(package)/usr/share/locale
 	touch install-stamp
 
 

@@ -1,5 +1,7 @@
 2001-05-06  Wolfgang Sourdeau  <wolfgang@contre.com>
 
+	* version 0.22.0
+
 	* src/callbcks.c (nextpage_cb): the actions callbacks don't check
 	if a file is opened anymore since their widget are enabled or
 	disabled as needed.

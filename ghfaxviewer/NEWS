@@ -3,7 +3,7 @@ although an effort is made to keep it so. For even more
 programming-related informations, see the file 'ChangeLog'.
 
 05/06/2001:
-- widgets are enabled or disabled at need;
+- widgets are enabled or disabled as needed;
 - all the dialog windows are escapable;
 - the dialog windows are managed through one consistant api;
 - fixes for compilation on FreeBSD;
