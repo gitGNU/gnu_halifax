@@ -717,9 +717,6 @@ print_to_file_anyway_cb (GtkWidget *yes_button,
   gboolean success;
   DialogWindow *print_dialog;
   
-  while (gtk_events_pending ())
-    gtk_main_iteration ();
-  
   output_data->output_stream = fopen (output_data->out_file_name, "w+");
   success = output_document (output_data);
   fclose (output_data->output_stream);
