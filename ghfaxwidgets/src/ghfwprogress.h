@@ -1,4 +1,4 @@
-/* progress.h - this file is part of the GNU HaliFAX Viewer
+/* ghfwprogress.h - this file is part of the GNU HaliFAX Widgets library
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
@@ -24,30 +24,61 @@
 #ifndef PROGRESS_H
 #define PROGRESS_H
 
-typedef void GfvProgressData;                      /* private */
+#include <ghfwdlgwindow.h>
 
-typedef enum
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+#define GHFW_TYPE_PROGRESS_WINDOW            (ghfw_progress_window_get_type ())
+#define GHFW_PROGRESS_WINDOW(obj)		(GTK_CHECK_CAST (obj, GHFW_TYPE_PROGRESS_WINDOW, GhfwProgressWindow))
+#define GHFW_PROGRESS_WINDOW_CLASS(obj)	(GTK_CHECK_CAST (obj, GHFW_TYPE_PROGRESS_WINDOW, GhfwProgressWindowClass))
+#define GHFW_IS_PROGRESS_WINDOW(obj)         (GTK_CHECK_TYPE (obj, GHFW_TYPE_PROGRESS_WINDOW))
+#define GHFW_IS_PROGRESS_WINDOW_CLASS(klass) (GTK_CHECK_CLASS_TYPE (klass, GHFW_TYPE_PROGRESS_WINDOW))
+
+typedef struct _GhfwProgressWindow GhfwProgressWindow;
+typedef struct _GhfwProgressWindowClass GhfwProgressWindowClass;
+
+struct _GhfwProgressWindow
 {
-  ABORT_BTN = 1,
-  DISPLAY_WHEN_NEEDED = 2,
-} GfvProgressTag;
+  GhfwDlgWindow window;
 
-GfvProgressData *gfv_progress_new (GtkWidget *parent_window,
-				   gchar *title,
-				   gchar *action_string,
-				   GfvProgressTag tag);
-void gfv_progress_destroy (GfvProgressData *progress_data);
+  GtkWidget *vbox, *content, *button_box;
+  GtkWidget *label, *progress_bar, *abort_btn;
+
+  gchar *action_string;
+
+  /* flags */
+  gboolean done;
+  gboolean aborted;
+  gboolean abortable;
+};
+
+struct _GhfwProgressWindowClass
+{
+  GhfwDlgWindowClass parent_class;
+
+  void (*aborted) (GhfwProgressWindow *progress_window);
+};
+
+GtkType   ghfw_progress_window_get_type (void);
+
+GtkWidget *ghfw_progress_window_new (gchar *title,
+					   gchar *action_string);
 
 /* convenient callback functions */
 
-gboolean gfv_progress_update_with_percentage (guint value, guint total,
-					      guint percentage, gpointer data);
-gboolean gfv_progress_update_with_value (guint value, guint total,
-					 guint percentage, gpointer data);
+gboolean ghfw_progress_window_update_with_percentage (GhfwProgressWindow *progress_window,
+						      guint percentage);
+gboolean ghfw_progress_window_update_with_value (GhfwProgressWindow *progress_window,
+						 guint value, guint total);
 
 /* convenient functions */
-void gfv_progress_set_action (GfvProgressData *progress_data,
-			      gchar *new_action);
-void gfv_progress_set_done (GfvProgressData *progress_data);
+void ghfw_progress_window_set_action (GhfwProgressWindow *progress_win,
+				      gchar *new_action);
+void ghfw_progress_window_set_done (GhfwProgressWindow *progress_win,
+				    gboolean done);
+void ghfw_progress_window_set_abortable (GhfwProgressWindow *progress_window,
+					 gboolean abortable);
 
 #endif

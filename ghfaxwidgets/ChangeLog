@@ -1,3 +1,8 @@
+2001-10-05  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/ghfwprogress.c: the GhfwProgressWindows's are now GTK
+	widgets too, GhfwDlgWindow being its parent class.
+
 2001-10-01  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/ghfwdlgwindow.c: the dialog windows are now pure GTK widgets.

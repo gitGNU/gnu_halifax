@@ -63,6 +63,8 @@ ghfw_dlg_window_key_press_event (GtkWidget *widget,
   return ret_code;
 }
 
+/* local functions */
+
 static GtkWidget *
 ghfw_dlg_window_bbox ()
 {
