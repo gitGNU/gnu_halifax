@@ -68,6 +68,7 @@ Notes
 links
 -----
 
+GNU HaliFAX	       (http://www.gnu.org/software/halifax/halifax.html)
 HylaFAX                (http://www.hylafax.org)
 GTK+                   (http://www.gtk.org)
 GTK+ for Win32         (http://www.gimp.org/~tml/gimp/win32)
@@ -77,9 +78,3 @@ cygwin                 (http://sources.redhat.com/cygwin)
 GNOME                  (http://www.gnome.org)
 GNU                    (http://www.gnu.org)
 Richard Stallman       (http://www.stallman.org)
-
-The GNU HaliFAX Viewer (http://www.ultim.net/~wolfgang/gnu_halifax/ghfv.html)
-The GNU HaliFAX Sender (http://www.gmsys.com/gnome-gfax.html)
-The GNU HaliFAX Library (???)
-The GNU HaliFAX Administrator (???)
-The GNU HaliFAX Watcher (???)

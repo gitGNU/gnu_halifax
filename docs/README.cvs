@@ -1,0 +1,62 @@
+GNU HaliFAX and CVS
+-------------------
+
+
+Downloading GNU HaliFAX
+-----------------------
+
+As from April 13, 2001 it is possible to download the GNU HaliFAX project
+from the GNU cvs repository. If you don't have an account on
+subversions.gnu.org, you can download the package as user "anoncvs". Here is
+what you will need to type:
+
+export CVSROOT=:pserver:anoncvs@subversions.gnu.org:/cvsroot/halifax
+cvs login
+cvs -z3 co halifax
+
+Not every modules are in cvs yet. Some of them have not yet been imported, some
+of them have not yet been written.
+
+Currently, are available from the CVS repository:
+- ghfaxviewer
+- gfax (soon)
+
+Instead of downloading the big halifax module, we have setup CVS so that
+you can download each one separately. This is currently useful because
+ghfaxviewer and gfax are not yet interdependent. To do this, just type:
+
+cvs -z3 co [submodulename]
+
+
+Making patches
+--------------
+
+Whenever you have an interesting change to send us. Please issue the following
+command from the top directory of the active module:
+
+cvs -z3 diff u > [module]-[description].diff
+
+Please note that any changes is not guaranteed to be accepted. We are going
+to discuss this patch within the development team and with you to evaluate
+how much this patch will be needed, useful, appropriate and bugfree.
+
+Also, DO NOT FORGET to fill the appropriate entry in $(topdir)/ChangeLog.
+If you use emacs, put those lines in you ~/.emacs file:
+
+;; ChangeLogs
+(defun changelog-virtual-hook () "Virtual hook to add changelog entries"
+  (interactive)
+  (add-change-log-entry)
+  (auto-fill-mode 1))
+(global-set-key "\C-c\S-a" 'changelog-virtual-hook)
+
+This will enable the Control-Shift-A key sequence to the function described
+above. I have chosen that combination to not clash with others, but feel free
+to modify the indicated sequence if you need or would like to do so.
+
+Using this sequence inside of any emacs mode will chose the appropriate
+ChangeLog file and initiate an entry for you. For example, if you make a
+change to $(topdir)/src/anyfile.c, the ChangeLog will be $(topdir)/ChangeLog.
+But if you are modifying a translation file, the ChangeLog will be
+$(topdir)/po/ChangeLog instead.
+
