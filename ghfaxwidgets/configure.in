@@ -45,12 +45,16 @@ MANPAGES=ghfaxviewer.1
 if test "x$cache_file" == "x.././config.cache"; then
   SUPPSUBDIRS= 
   docsubdir=no
+  if test ! -f macros/Makefile.in; then
+    mkdir macros
+    echo "install clean distclean dist:" > macros/Makefile.in
+  fi
   if test ! -f docs/Makefile.in; then
     mkdir docs
     echo "install clean distclean dist:" > docs/Makefile.in
   fi
 else
-  SUPPSUBDIRS=docs
+  SUPPSUBDIRS=docs macros
   docsubdir=yes
 fi
 
@@ -229,6 +233,7 @@ AC_OUTPUT([
 Makefile
 intl/Makefile
 docs/Makefile
+macros/Makefile
 src/Makefile
 src/pixmaps/Makefile
 po/Makefile.in
