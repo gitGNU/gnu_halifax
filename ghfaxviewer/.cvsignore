@@ -5,7 +5,7 @@ config.cache
 config.h
 config.log
 configure
-*.tar.gz
+*.gz
 ghfaxviewer.spec
 Makefile
 Makefile.in

@@ -1,3 +1,15 @@
+2001-04-12  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* configure.in: minimal gnome-print version is 0.28
+
+	* src/ps_print.c (get_printers): removed unused name[];
+	(make_default_pr): choose a default printer following the value
+	return by getenv ("PRINTER"), makes the first printer in the list
+	(which is also the first in /etc/printcap) the default so that
+	systems with BSD LPR will have a default printer anyway.
+	(get_printers): defname is filled anyway with at least the first
+	entry obtained from lpc
+
 2001-04-11  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/ps_print.c (get_printers): fixed bug which might prevents

@@ -1,4 +1,12 @@
-2001-04-10  gettextize  <bug-gnu-utils@gnu.org>
+2001-04-12  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* de.po: Tilman Bubeck as last translator;
+	"translation" should be translated to "Übersetzung"
+	"traditional Chineses" ... "Traditonnell-Chinesische"
+	and "Polish" ... "Polnische"
+
+	* pl.po: "File" should be translated with "Plik", not "Pliku"
+
+2001-04-12  gettextize  <bug-gnu-utils@gnu.org>
 
 	* Makefile.in.in: Upgrade to gettext-0.10.36.
-

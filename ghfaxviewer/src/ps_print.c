@@ -97,13 +97,20 @@ void
 make_default_pr (PList *plist, int nbr_pr, char *defname)
 {
   int count;
+  gchar *printer_env, *new_default;
 
-  if (strlen (defname))
+  printer_env = getenv ("PRINTER");
+  if (printer_env)
+    new_default = printer_env;
+  else
+    new_default = defname;
+
+  if (strlen (new_default))
     {
       count = 0;
       while (count < nbr_pr)
 	{
-	  if (!strcmp (plist->name, defname))
+	  if (!strcmp (plist->name, new_default))
 	    plist->is_default = TRUE;
 	  plist++;
 	  count++;
@@ -119,7 +126,7 @@ get_printers (void)
   PList *plist;
 #if defined(LPC_COMMAND) || defined(LPSTAT_COMMAND)
   FILE *pfile;
-  char line[129], name[17];
+  char line[129];
 #endif	
 	
   defname[0] = '\0';
@@ -140,6 +147,8 @@ get_printers (void)
 	  {
 	    *strchr(line, ':') = '\0';
 	    strcpy(plist[plist_count].name, line);
+	    if (plist_count == 0)
+	      strcpy(defname, line);
 	    plist[plist_count].active = TRUE;
 	    plist[plist_count].is_default = FALSE;
 	    plist_count++;

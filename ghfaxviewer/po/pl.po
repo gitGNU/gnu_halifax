@@ -102,7 +102,7 @@ msgstr "W³a¶ciwo¶ci..."
 
 #: src/menu.c:141 src/ps_print.c:303 src/ps_print.c:314
 msgid "File"
-msgstr "Pliku"
+msgstr "Plik"
 
 #: src/menu.c:145
 msgid "Open..."

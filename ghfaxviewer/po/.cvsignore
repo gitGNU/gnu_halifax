@@ -6,3 +6,4 @@ de.gmo
 Makefile
 Makefile.in
 Makefile.in.in
+*.gz

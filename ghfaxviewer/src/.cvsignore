@@ -3,3 +3,4 @@ ghfaxviewer
 ghfaxviewer-res.rc
 Makefile
 Makefile.in
+*.gz
