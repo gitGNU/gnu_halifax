@@ -211,6 +211,14 @@ layout_resize_cb (GtkWidget *layout,
 }
 
 #ifdef __WIN32__
+/* This is a dirty hack waiting for GTK+ for Windows to be fixed... */
+void win32_layout_changed_cb (GtkWidget *widget, LayoutData *layout_data)
+{
+  gtk_widget_size_allocate (layout_data->gtk_layout,
+			    &(layout_data->gtk_layout->allocation));
+}
+#endif
+
 static gint
 mouse_scroll_event_cb (GtkWidget *ref_widget,
 			GdkEventScroll *event,
@@ -354,15 +362,6 @@ layout_set_width (LayoutData *layout_data, gint width)
   gtk_widget_set_usize (layout_data->gtk_layout,
 			width, -1);
 }
-
-#ifdef __WIN32__
-/* This is a dirty hackm waiting for GTK+ for Windows to be fixed... */
-void win32_layout_changed_cb (GtkWidget *widget, LayoutData *layout_data)
-{
-  gtk_widget_size_allocate (layout_data->gtk_layout,
-			    &(layout_data->gtk_layout->allocation));
-}
-#endif
 
 GtkWidget *
 layout_new (GtkWidget *ref_widget, gint spacing, gint width)
