@@ -19,9 +19,6 @@ ALL_LINGUAS="de fr pl zh_TW.Big5"
 
 CFLAGS=""
 
-GCONF_CFLAGS=""
-GCONF_LIBS=""
-
 MANPAGES=ghfaxviewer.1
 
 AC_PATH_PROG(LIBTOOL, "libtool")
@@ -82,8 +79,6 @@ USE_NLS="yes"
 CATALOGS="`for cats in $ALL_LINGUAS; do echo -n "$cats.gmo "; done`"
 GMSGFMT="msgfmt"
 
-XPM2WICO=""
-
 AC_PATH_PROG(XGETTEXT, "xgettext")
 AC_PATH_PROG(GETTEXT, "gettext")
 AC_PATH_PROG(MSGFMT, "msgfmt")
@@ -109,6 +104,7 @@ AC_SUBST(GMSGFMT)
 AC_SUBST(GENCAT)
 AC_SUBST(MSGMERGE)
 AC_SUBST(XPM2WICO)
+AC_SUBST(WIN32_LIBS)
 
 AC_DEFINE(ENABLE_NLS)
 AC_DEFINE(HAVE_GETTEXT)
@@ -136,16 +132,27 @@ if test "x$want_gnome" = "xyes"; then
    AC_MSG_CHECKING(for gnome-libs >= 1.0.55)
    if gnome-config --version > /dev/null 2>&1; then
       AC_MSG_RESULT(found)
+
+      USING_GNOME="yes"
       CFLAGS="$CFLAGS `gnome-config --cflags gnomeui`"
       LDFLAGS="$LDFLAGS `gnome-config --libs gnomeui`"
-      USING_GNOME="yes"
+      PIXMAPS_DIR="`gnome-config --datadir`/pixmaps/ghfaxviewer"
+      GNOME_GRAPH_APP_DIR="`gnome-config --datadir`/gnome/apps/Graphics"
+
       AM_PATH_GNOME_PRINT(0.25.0)
       AM_PATH_GCONF(1.0.0,,,gconf-gtk)
+
+      AC_SUBST(GNOME_GRAPH_APP_DIR)
+      AC_SUBST(GCONF_LIBS)
+      AC_SUBST(GCONF_CFLAGS)
+
       if test "x$no_gconf" = xyes; then
 	AC_MSG_ERROR([You need gconf installed to compile this application for GNOME.
 	              Use the --without-gnome to fall back on the GTK+ only version.])
       fi
    else
+      PIXMAPS_DIR="$datadir/pixmaps/ghfaxviewer"
+
       AC_MSG_WARN(Did not find gnome-libraries, falling back on GTK+)
 dnl Checks for libraries.
       AM_PATH_GLIB([1.2.0],[],[
@@ -157,6 +164,8 @@ dnl Checks for libraries.
       no_gnome_print=yes
    fi
 else
+   PIXMAPS_DIR="$datadir/pixmaps/ghfaxviewer"
+
    AC_MSG_WARN(GNOME support disabled, falling back on GTK+)
    AM_PATH_GLIB([1.2.0],[],[
    	   AC_MSG_ERROR([You need GLib installed.])
@@ -203,32 +212,10 @@ if test "$window_system" = "yes"; then
   fi
 fi
 
-if test "x$no_gnome_print" = xyes; then
-  AC_MSG_WARN(Switching back to standard UNIX print system...)
-#tests for print commands
-  ac_old_path=$PATH
-  PATH=/usr/sbin:$PATH
-  AC_PATH_PROG(LPC_COMMAND, "lpc")
-  if test "x$LPC_COMMAND" != "x"; then
-    AC_DEFINE_UNQUOTED(LPC_COMMAND, "$LPC_COMMAND")
-  fi
-
-  AC_PATH_PROG(LPSTAT_COMMAND, "lpstat")
-  if test "x$LPSTAT_COMMAND" != "x"; then
-    AC_DEFINE_UNQUOTED(LPSTAT_COMMAND, "$LPSTAT_COMMAND")
-  fi
-  PATH=$ac_old_path
-fi
-
 # no_gnome_print
 fi
 
-AM_CONDITIONAL(WITHOUT_GNOMEPRINT, test "x$no_gnome_print" = xyes)
-
 deps="$TIFF_LIBS"
-
-AC_SUBST(TIFF_LIBS)
-AM_CONDITIONAL(HAVE_TIFF, test "x$TIFF_LIBS" != x)
 
 AC_ARG_ENABLE(debug,
   [  --enable-debug          warnings, debugging codes and messages],
@@ -249,15 +236,16 @@ else
     fi
 fi
 
+AC_SUBST(PIXMAPS_DIR)
 AC_SUBST(MANPAGES)
-AC_SUBST(WIN32_LIBS)
+AC_SUBST(TIFF_LIBS)
 AC_SUBST(RC_ICON_DIRECTIVE)
+
 AM_CONDITIONAL(TARGET_GNU, test $OS = GNU)
 AM_CONDITIONAL(TARGET_WIN32, test $OS = WIN32)
+AM_CONDITIONAL(HAVE_TIFF, test "x$TIFF_LIBS" != x)
 AM_CONDITIONAL(GNOME, test x"$USING_GNOME" = xyes)
-
-AC_SUBST(GCONF_LIBS)
-AC_SUBST(GCONF_CFLAGS)
+AM_CONDITIONAL(WITHOUT_GNOMEPRINT, test "x$no_gnome_print" = xyes)
 
 AC_OUTPUT([
 Makefile

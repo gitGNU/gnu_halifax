@@ -74,7 +74,7 @@
 /*    return ret_str; */
 /*  } */
 
-static void
+void
 display_failure (GtkWidget *window,
 		 gchar *title, gchar *message, gchar *but_text)
 {

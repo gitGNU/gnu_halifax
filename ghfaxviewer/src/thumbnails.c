@@ -42,7 +42,7 @@ struct _DrawReqData
 {
   ViewerData *viewer_data;
   FaxPage *requested_page;
-  GtkPixmap *pixmap;
+/*   GtkPixmap *pixmap; */
 };
 
 inline static gint
@@ -158,7 +158,7 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
   draw_request = g_malloc (sizeof (DrawReqData));
   draw_request->viewer_data = viewer_data;
   draw_request->requested_page = cur_page;
-  draw_request->pixmap = GTK_PIXMAP (gtk_pixmap);
+/*   draw_request->pixmap = GTK_PIXMAP (gtk_pixmap); */
 
   gtk_signal_connect (GTK_OBJECT(button), "destroy",
 		      GTK_SIGNAL_FUNC (free_data_on_destroy_cb),

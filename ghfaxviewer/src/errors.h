@@ -23,5 +23,7 @@
 #define ERRORS_H
 
 void file_open_error (GtkWidget *window, gchar *file_name);
+void display_failure (GtkWidget *window,
+		      gchar *title, gchar *message, gchar *but_text);
 
 #endif

@@ -2,11 +2,16 @@ This file lists user-visible changes. It might not be up-to-date
 although an effort is made to keep it so. For even more
 programming-related informations, see the file 'ChangeLog'.
 
-05/06/2001:
-- widgets are enabled or disabled as needed;
+05/08/2001:
+- menu and toolbar widgets are enabled or disabled as needed;
 - all the dialog windows are escapable;
-- the dialog windows are managed through one consistant api;
+- the dialog windows are managed through one consistent api;
 - fixes for compilation on FreeBSD;
+- the viewer doesn't get randomly resized after being mapped anymore;
+- the path to lpc and to lpstat are not hard-coded any longer;
+- different versions of lpc are now tolerated;
+- a bug which caused low-res faxes to be displayed incorrectly has
+  been fixed.
 
 
 04/07/2001:
@@ -19,8 +24,10 @@ programming-related informations, see the file 'ChangeLog'.
 - the Windows icon is built automatically from the .xpm equivalent;
 - the GNOME version is using GNOME native icons;
 - the GNOME version is using gnome-print;
-- the GNOME and Win32 versions are able to recover its last window position and size;
-- the GNOME and Win32 versions are able to remember the last directory from where a file was open;
+- the GNOME and Win32 versions are able to recover its last window
+  position and size;
+- the GNOME and Win32 versions are able to remember the last directory
+  from where a file was open;
 - the UNIX printing version is putting the default printer at the top of the list;
 - the UNIX printing version is supposed to work with the "standard" BSD LPR system;
 

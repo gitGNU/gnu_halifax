@@ -1,10 +1,10 @@
 SUBDIRS = pixmaps
 
 gnulocaledir = $(datadir)/locale
+pixmapsdir = @PIXMAPS_DIR@
+gnome_graph_app_dir = @GNOME_GRAPH_APP_DIR@
 
 LIBS = @GTK_LIBS@ @TIFF_LIBS@ @WIN32_LIBS@ @GNOME_PRINT_LIBS@ @GCONF_LIBS@
-
-DEFS = @DEFS@ -DLOCALEDIR="\"$(gnulocaledir)\"" -DPIXMAP_DIR="\"$(datadir)/pixmaps/@PACKAGE@\""
 
 INCLUDES = -I.. -I. @GTK_CFLAGS@ @GNOME_PRINT_CFLAGS@ @GCONF_CFLAGS@
 
@@ -19,6 +19,7 @@ PRINTSRC = gn_print.c
 NOPRINTSRC = winprint.c ps_print.c
 endif
 RCSRC =
+SYSDEPDEFS = -DLOCALEDIR="\"$(gnulocaledir)\"" -DPIXMAP_DIR="\"$(pixmapsdir)\""
 else
 if TARGET_WIN32
 NOPRINTSRC = ps_print.c gn_print.c
@@ -30,6 +31,8 @@ RCSRC = ghfaxviewer-res.rc
 
 endif
 endif
+
+DEFS = @DEFS@ $(SYSDEPDEFS)
 
 SUFFIXES = .rc .o
 
@@ -45,16 +48,14 @@ ghfaxviewer_SOURCES = setup.c fileopen.c cursors.c draw_page.c thumbnails.c \
 EXTRA_DIST = ghfaxviewer.desktop ghfaxviewer-res.rc
 
 if GNOME
-GNOME_UTILITIES_DIR = $(prefix)/share/gnome/apps/Graphics
-
 install-data-local:
-	$(mkinstalldirs) $(GNOME_UTILITIES_DIR)
+	$(mkinstalldirs) $(gnome_graph_app_dir)
 	$(INSTALL_DATA) $(srcdir)/ghfaxviewer.desktop \
-		$(GNOME_UTILITIES_DIR)
+		$(gnome_graph_app_dir)
 
 uninstall-local:
-	test -f $(GNOME_UTILITIES_DIR)/ghfaxviewer.desktop && \
-		rm -f $(GNOME_UTILITIES_DIR)/ghfaxviewer.desktop
-	test -d $(GNOME_UTILITIES_DIR) && \
-		rmdir --ignore-fail-on-non-empty $(GNOME_UTILITIES_DIR)
+	test -f $(gnome_graph_app_dir)/ghfaxviewer.desktop && \
+		rm -f $(gnome_graph_app_dir)/ghfaxviewer.desktop
+	test -d $(gnome_graph_app_dir) && \
+		rmdir --ignore-fail-on-non-empty $(gnome_graph_app_dir)
 endif

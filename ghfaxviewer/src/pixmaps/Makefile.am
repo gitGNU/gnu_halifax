@@ -7,12 +7,12 @@ all: ghfaxviewer-icon.ico
 endif
 endif
 
-pixmapdir = $(prefix)/share/pixmaps/ghfaxviewer
+pixmapsdir = @PIXMAPS_DIR@
 
 if GNOME
-pixmap_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm
+pixmaps_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm
 else
-pixmap_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm \
+pixmaps_DATA = info.xpm ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm \
 	      printer.xpm left90.xpm right90.xpm reverse.xpm \
               right_arrow.xpm left_arrow.xpm zoom_in.xpm zoom_out.xpm
 endif
@@ -28,5 +28,5 @@ EXTRA_DIST = hand-closed-data.xbm hand-closed-mask.xbm \
 	     ghfaxviewer-logo.xpm ghfaxviewer-icon.xpm
 
 uninstall-local:
-	test -d $(pixmapdir) && \
-	  rmdir --ignore-fail-on-non-empty $(pixmapdir)
+	test -d $(pixmapsdir) && \
+	  rmdir --ignore-fail-on-non-empty $(pixmapsdir)

@@ -266,7 +266,7 @@ process_ir_zoom (guchar *ir, ir_data_t *ir_data)
   offset = (gint) ir - (gint) ir_data->orig_page->image;
   line = offset / ir_data->orig_page->cwidth;
   base_column = (offset % ir_data->orig_page->cwidth) * 8;
-  dest_line = dest_coord (line, ir_data->fact_x);
+  dest_line = dest_coord (line, ir_data->fact_y);
 
   real_offset = 0;
   bit_offset = 0;
@@ -302,13 +302,14 @@ static void
 put_pixel_rot_none_unzoom (ir_data_t *ir_data, gint column,
 			   gint line, gint intensity)
 {
-  gint cwidth;
+  gint cwidth, y_pix_count;
   gchar *line_coord;
 
   cwidth = ir_data->new_page->cwidth;
   line_coord = ir_data->new_page->image + line * cwidth;
 
-  set_pixel (line_coord, column, intensity);
+  for (y_pix_count = 0; y_pix_count < ir_data->y_pix_size; y_pix_count++)
+    set_pixel (line_coord + y_pix_count * cwidth, column, intensity);
 }
 
 static void
@@ -327,14 +328,15 @@ static void
 put_pixel_rot_right90_unzoom (ir_data_t *ir_data, gint column,
 			      gint line, gint intensity)
 {
-  gint tr_line;
+  gint tr_line, y_pix_count;
   gchar *line_coord;
 
   line_coord = ir_data->new_page->image
     + column * ir_data->new_page->height;
   tr_line = ir_data->new_page->height - 1 - line;
 
-  set_pixel (line_coord, tr_line, intensity);
+  for (y_pix_count = 0; y_pix_count < ir_data->y_pix_size; y_pix_count++)
+    set_pixel (line_coord, tr_line - y_pix_count, intensity);
 }
 
 static void
@@ -371,8 +373,8 @@ process_ir_unzoom (guchar *ir, ir_data_t *ir_data)
      We assume that each index record only covers pixels of the same
      line, but of course this may not be true. */
   line = offset / ir_data->orig_page->cwidth;
-  dest_line = line * ir_data->fact_y;
-
+/*   dest_line = line * ir_data->fact_y; */
+  dest_line = dest_coord (line, ir_data->fact_y);
   bit_offset = 0;
   byte_ptr = ir;
   dest_pix_size = unfloat (ir_data->x_rel_step);
@@ -488,6 +490,7 @@ ti_zoomed_fax_page (FaxPage *orig_page,
     {
       ir_data->max_intensity = 255 / ir_data->y_rel_step;
       ir_data->put_pixel = choose_pixel_func (rotation, TRUE);
+      ir_data->y_pix_size = unfloat (ir_data->fact_y);
 
       g_slist_foreach (orig_page->image_index->next,
 		       (GFunc) process_ir_unzoom, ir_data);

@@ -40,7 +40,7 @@
 #include "print.h"
 #include "i18n.h"
 #include "gtkutils.h"
-
+#include "errors.h"
 
 /* Shorthand for type of comparison functions.  */
 #ifndef __GLIBC__
@@ -95,6 +95,142 @@ struct _OutputData
 };
 
 #define MAX_PLIST 8
+static gchar *lpc_command = NULL;
+static gchar *lpstat_command = NULL;
+
+/* Do various tests to determine how to get the list of printers.
+   There are so many veriants of the lpr system... */
+static gchar *
+where_is (gchar *command)
+{
+  gchar **cur_dir, *path, *test_cmd, *result;
+  gchar *test_dirs[] =
+    {
+      "/usr/sbin",
+      "/usr/bin",
+      "/sbin",
+      "/bin",
+      NULL
+    };
+
+  result = NULL;
+  cur_dir = test_dirs;
+
+  while (!result && *cur_dir)
+    {
+      path = *cur_dir;
+      test_cmd = g_strdup_printf ("%s/%s", path, command);
+
+      if (access (test_cmd, X_OK))
+	{
+	  g_free (test_cmd);
+	  cur_dir++;
+	}
+      else
+	result = test_cmd;
+    }
+
+  return result;
+}
+
+static gchar *
+cmd_result (gchar *cmd)
+{
+  FILE *pfile;
+  gchar *result;
+
+  result = NULL;
+  pfile = popen (cmd, "r");
+
+  if (pfile)
+    {
+      result = g_malloc (129);
+      fgets(result, 129, pfile);
+      pclose (pfile);
+    }
+
+  return result;
+}
+
+static gboolean
+test_lpc (gchar *lpc)
+{
+  gboolean ret_code;
+  gchar *command, *result;
+
+  ret_code = FALSE;
+  command = g_strdup_printf ("%s status < /dev/null", lpc);
+  result = cmd_result (command);
+
+  /* FreeBSD lpr needs to have a printer specified or "all", while
+     other versions don't */
+  if (!strncmp (result, "Usage:", 6))
+    {
+      g_free (result);
+      g_free (command);
+
+      command = g_strdup_printf ("%s status all < /dev/null", lpc);
+      result = cmd_result (command);
+      
+      if (strncmp (result, "unknown", 7))
+	{
+	  lpc_command = command;
+	  ret_code = TRUE;
+	}
+      else
+	g_free (command);
+
+      g_free (result);
+    }
+  else
+    {
+      g_free (result);
+      lpc_command = command;
+      ret_code = TRUE;
+    }	    
+  
+  return ret_code;
+}
+
+static gboolean
+test_lpstat (gchar *lpstat)
+{
+  gboolean ret_code;
+/*   gchar *command, *result; */
+
+  /* I have yet to test multiple versions of lpstat... */
+  ret_code = TRUE;
+  lpstat_command = g_strdup_printf ("%s -d -p < /dev/null", lpstat);
+
+  return ret_code;
+}
+
+static gboolean
+ensure_commands ()
+{
+  gboolean ret_code;
+  gchar *lpc, *lpstat;
+  
+  if (lpc_command || lpstat_command)
+    ret_code = TRUE;
+  else
+    {
+      lpc = where_is ("lpc");
+      lpstat = where_is ("lpstat");
+         
+      if (lpc)
+	ret_code = test_lpc (lpc);
+      else if (lpstat)
+	ret_code = test_lpstat (lpstat);
+      else
+	ret_code = FALSE;
+
+      g_free (lpc);
+      g_free (lpstat);
+    }
+
+  return ret_code;
+}
 
 static int
 compare_printers (PList *p1, PList *p2)
@@ -130,47 +266,46 @@ make_default_pr (PList *plist, int nbr_pr, char *defname)
 static PList*
 get_printers (void)
 {
-  int plist_count;
-  char defname[17];
+  gint plist_count;
+  gchar defname[17], name[17];
+  gchar line[129];
   PList *plist;
-#if defined(LPC_COMMAND) || defined(LPSTAT_COMMAND)
   FILE *pfile;
-  char line[129];
-#endif	
 	
   defname[0] = '\0';
   
   plist = g_malloc0 (sizeof (PList) * MAX_PLIST);
   plist_count = 0;
-  
-#ifdef LPC_COMMAND
-  pfile = popen (LPC_COMMAND " status < /dev/null", "r");
-  if (pfile)
-    {
-      while (fgets(line, sizeof (line), pfile) != NULL
-	     && plist_count < MAX_PLIST)
-	if (strchr(line, ':') != NULL
-	    && line[0] != ' '
-	    && line[0] != '\t'
-	    && strncmp(line, "Press RETURN to continue", 24))
-	  {
-	    *strchr(line, ':') = '\0';
-	    strcpy(plist[plist_count].name, line);
-	    if (plist_count == 0)
-	      strcpy(defname, line);
-	    plist[plist_count].active = TRUE;
-	    plist[plist_count].is_default = FALSE;
-	    plist_count++;
-	  }
+
+  if (lpc_command)
+    {  
+      pfile = popen (lpc_command, "r");
+
+      if (pfile)
+	{
+	  while (fgets(line, sizeof (line), pfile)
+		 && plist_count < MAX_PLIST)
+	    if (strchr(line, ':')
+		&& line[0] != ' '
+		&& line[0] != '\t'
+		&& strncmp(line, "Press RETURN to continue", 24))
+	      {
+		*strchr(line, ':') = '\0';
+		strcpy(plist[plist_count].name, line);
+		if (plist_count == 0)
+		  strcpy(defname, line);
+		plist[plist_count].active = TRUE;
+		plist[plist_count].is_default = FALSE;
+		plist_count++;
+	      }
       
-      pclose(pfile);
+	  pclose(pfile);
+	}
     }
-#endif /* LPC_COMMAND */
-	
-#ifdef LPSTAT_COMMAND
-  if (!plist_count)
+
+  if (!plist_count && lpstat_command)
     {
-      pfile = popen (LPSTAT_COMMAND " -d -p", "r");
+      pfile = popen (lpstat_command, "r");
       if (pfile)
 	{
 	  while (fgets (line, sizeof (line), pfile) != NULL
@@ -191,7 +326,6 @@ get_printers (void)
 	  pclose(pfile);
 	}
     }
-#endif /* LPSTAT_COMMAND */
 	
   if (plist_count)
     {
@@ -250,8 +384,8 @@ make_printer_menu (PrintData *print_data)
 	  cur_printer++;
 	}
 
-      gtk_object_set_data_full (GTK_OBJECT (menu), "printer_list",
-				plist, g_free);
+      gtk_signal_connect (GTK_OBJECT (menu), "destroy",
+			  free_data_on_destroy_cb, plist);
     }
   else
     menu = NULL;
@@ -495,8 +629,6 @@ create_temp_print_file (gchar **outfile_name)
   
   template = g_strdup ("/tmp/gfo-XXXXXX");
 
-#warning Ignore the warning about mktemp at link time,
-#warning it is used securely here...
   while (!file_stream && counter < 64)
     {
       file_name = mktemp (template);
@@ -951,6 +1083,23 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
 {
   DialogWindow *print_dlg;
 
-  print_dlg = print_dialog (viewer_data);
-  dialog_window_show (print_dlg, GTK_WINDOW (viewer_data->viewer_window));
+  if (ensure_commands ())
+    {
+      print_dlg = print_dialog (viewer_data);
+      dialog_window_show (print_dlg, GTK_WINDOW (viewer_data->viewer_window));
+    }
+  else
+    {
+      display_failure (viewer_data->viewer_window,
+		       _("This is weird..."),
+		       _("I was not able to determine how to work\n"
+			 "with your printing system appropriately.\n\n"
+			 "Please have your administrator verify if\n"
+			 "a descent printing system is installed.\n"
+			 "If this is so, there must be a bug in\n"
+			 "ghfaxviewer.\n"
+			 "In this case, please fill a bug report\n"
+			 "and send it to halifax-bugs@gnu.org."),
+		       _("I promise!"));
+    }
 }

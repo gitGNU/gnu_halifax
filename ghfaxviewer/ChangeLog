@@ -1,6 +1,17 @@
-2001-05-06  Wolfgang Sourdeau  <wolfgang@contre.com>
+2001-05-08  Wolfgang Sourdeau  <wolfgang@contre.com>
 
-	* version 0.22.0
+	* src/ps_print.c (get_printers): lpc and lpstat are not hard-coded
+	anymore. We use "ensure_commands" to test for and check the
+	printing system sanity. This is a bit cleaner that before.
+
+	* src/zoom.c (ti_zoomed_fax_page): unzooming requires y_pix_size
+	too, if ever the fax resolution is low. The fact that we "zoom" is
+	because new_width > width, but height was not taken into account,
+	hence our problem displaying low-res images correctly.
+	(put_pixel_rot_none_unzoom): in the same case as above, we may
+	need to draw two pixels instead of one.
+
+2001-05-06  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/callbcks.c (nextpage_cb): the actions callbacks don't check
 	if a file is opened anymore since their widget are enabled or

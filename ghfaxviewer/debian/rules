@@ -41,7 +41,9 @@ install-stamp: build-stamp
 		mandir=`pwd`/debian/$(package)/usr/share/man   \
 		man1dir=`pwd`/debian/$(package)/usr/share/man/man1 \
 		datadir=`pwd`/debian/$(package)/usr/share \
-		localedir=`pwd`/debian/$(package)/usr/share/locale
+		localedir=`pwd`/debian/$(package)/usr/share/locale \
+		pixmapsdir=`pwd`/debian/$(package)/usr/share/pixmaps/ghfaxviewer \
+		gnome_graph_app_dir=`pwd`/debian/$(package)/usr/share/gnome/apps/Graphics
 	touch install-stamp
 
 

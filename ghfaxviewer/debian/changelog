@@ -1,8 +1,9 @@
 ghfaxviewer (0.22.0-1) unstable; urgency=low
 
   * New upstream release.
+  * specify pixmapsdir and gnome_graph_app_dir during make install.
 
- -- Wolfgang Sourdeau <was@debian.org>  Sun,  6 May 2001 08:40:46 -0400
+ -- Wolfgang Sourdeau <was@debian.org>  Tue,  8 May 2001 05:59:44 -0400
 
 ghfaxviewer (0.21.1-3) unstable; urgency=low
 
