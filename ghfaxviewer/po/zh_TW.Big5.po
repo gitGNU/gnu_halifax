@@ -255,14 +255,9 @@ msgstr ""
 msgid "I am sorry"
 msgstr "很抱歉"
 
-#: src/progress.c:94 src/ps_print.c:1036
+#: src/ps_print.c:1036
 msgid "Cancel"
 msgstr "取消"
-
-#: src/progress.c:218
-#, c-format
-msgid "%s (done)"
-msgstr "%s (已完成)"
 
 #: src/winprint.c:141
 msgid "Printer cannot display bitmaps."

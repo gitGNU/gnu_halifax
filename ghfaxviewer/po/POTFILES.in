@@ -8,7 +8,6 @@ src/about.c
 src/info.c
 src/fileopen.c
 src/errors.c
-src/progress.c
 src/winprint.c
 src/ps_print.c
 src/gn_print.c
