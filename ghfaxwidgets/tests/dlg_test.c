@@ -31,24 +31,42 @@ escaped_cb (GtkWidget *dlg_window, gpointer null)
   g_print ("escaped\n");
 }
 
-int main (int argc, char *argv[])
+GtkWidget *dlg_content ()
 {
-  GtkWidget *main_window, *dlg_window;
+  GtkWidget *fixed, *label;
+
+  fixed = gtk_fixed_new ();
+  label = gtk_label_new ("Dialog content");
+  gtk_fixed_put (GTK_FIXED (fixed), label, 50, 50);
+  gtk_widget_set_usize (fixed, 140, 100);
+
+  return fixed;
+}
+
+int
+main (int argc, char *argv[])
+{
+  GtkWidget *main_window, *dlg_window, *content;
   gboolean escapable;
 
   gtk_init (&argc, &argv);
   
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), "Main Window");
+  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
+		      G_CALLBACK (gtk_main_quit), NULL);
 
-  dlg_window = ghfw_dlg_window_new ("Dialog Window");
+  dlg_window = GTK_WIDGET (ghfw_dlg_window_new ("Dialog Window"));
 
   gtk_signal_connect (GTK_OBJECT (dlg_window), "escaped",
-		      escaped_cb, NULL);
+		      G_CALLBACK (escaped_cb), NULL);
   gtk_widget_show (main_window);
 
   escapable = TRUE;
   gtk_object_set (GTK_OBJECT (dlg_window), "escapable", escapable);
+  content = dlg_content ();
+  g_object_set (G_OBJECT (dlg_window), "content", content);
+
   transient_window_show (dlg_window, main_window);
 
   gtk_main ();
