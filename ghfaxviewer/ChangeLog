@@ -1,3 +1,8 @@
+2001-04-18  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* configure.in: new release before going to Québec,
+	version 0.21.0
+
 2001-04-15  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/viewer.c: added a short description at the beginning of

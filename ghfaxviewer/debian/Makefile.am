@@ -1,1 +1,1 @@
-EXTRA_DIST = changelog control copyright dirs rules ghfaxviewer-gtk.menu ghfaxviewer-gnome.menu
+EXTRA_DIST = changelog control copyright rules ghfaxviewer.menu

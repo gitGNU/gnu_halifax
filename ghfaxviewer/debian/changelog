@@ -1,3 +1,13 @@
+ghfaxviewer (0.21.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * reunified package. Only the gnome package will be available as a
+    binary package from now.
+  * conflicts with ghfaxviewer-gtk and ghfaxviewer-gnome.
+  * policy conformance set to 3.5.2.
+
+ -- Wolfgang Sourdeau <wolfgang@contre.com>  Wed, 18 Apr 2001 15:02:07 -0400
+
 ghfaxviewer (0.10-2) unstable; urgency=low
 
   * Added Debian menu.
