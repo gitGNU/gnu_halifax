@@ -30,7 +30,7 @@
 
 #include "tiffimages.h"
 #include "viewer.h"
-#include "gtkutils.h"
+#include "dialog_window.h"
 
 /*  static gchar* */
 /*  list_to_text (GSList *string_list) */

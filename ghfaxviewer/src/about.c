@@ -40,6 +40,7 @@
 
 #include "urlzone.h"
 #include "gtkutils.h"
+#include "dialog_window.h"
 #include "setup.h"
 #include "i18n.h"
 

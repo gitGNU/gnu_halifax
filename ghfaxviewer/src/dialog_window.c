@@ -20,16 +20,43 @@
  */
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "gtkutils.h"
 
+typedef struct _EscCallbackData EscCallbackData;
 typedef struct _DialogWindow DialogWindow;
+
+struct _EscCallbackData
+{
+  GtkSignalFunc callback;
+  gpointer user_data;
+};
 
 struct _DialogWindow
 {
   GtkWidget *window, *vbox;
   GtkWidget *content, *button_box;
 };
+
+/* callbacks */
+
+static gboolean
+key_press_event_cb (GtkWidget *window, GdkEventKey *event,
+		    EscCallbackData *esc_cb_data)
+{
+  gboolean ret_code;
+
+  if (event->keyval == GDK_Escape)
+    {
+      esc_cb_data->callback (window, esc_cb_data->user_data);
+      ret_code = FALSE;
+    }
+  else
+    ret_code = FALSE;
+
+  return ret_code;
+}
 
 /* dialog windows */
 
@@ -55,7 +82,7 @@ dialog_window_new (gchar *title)
 void
 dialog_window_set_escapable (DialogWindow *window)
 {
-  gtk_window_set_escapable ((GtkWindow*) window->window);
+  gtk_window_set_escapable (window->window);
 }
 
 void
@@ -72,7 +99,7 @@ dialog_window_set_escapable_with_callback (DialogWindow *window,
 		      (GtkSignalFunc) free_data_on_destroy_cb,
 		      esc_cb_data);
   gtk_signal_connect (GTK_OBJECT (window->window), "key-press-event",
-		      GTK_SIGNAL_FUNC (key_press_event_cb), esc_cb_data);
+                      GTK_SIGNAL_FUNC (key_press_event_cb), esc_cb_data);
 }
 
 GtkWidget *

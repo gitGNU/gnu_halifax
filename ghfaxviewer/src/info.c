@@ -31,7 +31,7 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
-#include "gtkutils.h"
+#include "dialog_window.h"
 #include "setup.h"
 #include "tiffimages.h"
 #include "tiffinfo.h"

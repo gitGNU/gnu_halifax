@@ -33,7 +33,7 @@
 #endif
 
 #include "i18n.h"
-#include "gtkutils.h"
+#include "dialog_window.h"
 
 typedef struct _GfvProgressData GfvProgressData;
 

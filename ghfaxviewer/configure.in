@@ -72,7 +72,6 @@ case $ac_cv_build in
 esac
 
 if test "$WINDOWS_DETECTED" = yes; then
-echo XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # under Windows
 OS=WIN32
 AC_MSG_WARN(It seems we are compiling for WIN32...)

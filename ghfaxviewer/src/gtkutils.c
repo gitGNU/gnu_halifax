@@ -44,14 +44,6 @@
 
 #include "setup.h"
 
-typedef struct _EscCallbackData EscCallbackData;
-
-struct _EscCallbackData
-{
-  GtkSignalFunc callback;
-  gpointer user_data;
-};
-
 /* This function happens to be present in more than one place. Let's
    clean up some... */
 void
@@ -214,22 +206,14 @@ transient_window_show (GtkWidget *transient, GtkWidget *parent)
 
 static gboolean
 key_press_event_cb (GtkWidget *window, GdkEventKey *event,
-		    EscCallbackData *esc_cb_data)
+		    gpointer nothing)
 {
   gboolean ret_code;
 
   if (event->keyval == GDK_Escape)
     {
-      if (esc_cb_data)
-	{
-	  esc_cb_data->callback (window, esc_cb_data->user_data);
-	  ret_code = FALSE;
-	}
-      else
-	{
-	  gtk_widget_destroy (window);
-	  ret_code = TRUE;
-	}
+      gtk_widget_destroy (window);
+      ret_code = TRUE;
     }
   else
     ret_code = FALSE;
