@@ -50,7 +50,7 @@ if test "x$cache_file" == "x.././config.cache"; then
     echo "install clean distclean dist:" > docs/Makefile.in
   fi
 else
-  SUPPSUBDIRS=docs
+  SUPPSUBDIRS="docs macros"
   docsubdir=yes
 fi
 
