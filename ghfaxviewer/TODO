@@ -1,5 +1,6 @@
-Before version 1.0 (2001/05/06):
+Before version 1.0 (2001/10/14):
 
+- fix problems specific to IceWM;
 - add better handling of paper size in both Win32 and UNIX versions;
 - add paper selection for common types of paper format,
   the viewer currently assumes that the output format is

@@ -1,3 +1,8 @@
+2001-10-12  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* configure.in: fixed problem with the gnome version detection
+	script.
+
 2001-10-05  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/errors.c: Adapted to the new GhfwDlgWindow widget.

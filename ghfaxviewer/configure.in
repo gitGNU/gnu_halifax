@@ -3,7 +3,7 @@ AC_PREREQ(2.50)
 AC_INIT(src/cursors.c)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(ghfaxviewer, 0.29.9)
+AM_INIT_AUTOMAKE(ghfaxviewer, 0.29.10)
 
 AC_CANONICAL_HOST
 
@@ -33,6 +33,7 @@ case $host_os in
 esac
 
 AC_PROG_INSTALL
+AC_LANG_C
 
 WINDOWS_DETECTED=no
 
@@ -188,13 +189,43 @@ if test "x$want_gnome" = "xyes"; then
       gnome_minor=`echo $gnome_version | cut -d . -f 2`
       gnome_micro=`echo $gnome_version | cut -d . -f 3`
 
-      if test $gnome_major -lt 1 -o $gnome_minor -lt 2 -o $gnome_micro -lt 13;
+      if test $gnome_major = 1
       then
-	 AC_MSG_RESULT([failed (found $gnome_version instead)])
-	 AC_MSG_ERROR([Please upgrade your version of the GNOME libraries to
-	               at least version 1.2.13 and try again.])
+	if test $gnome_minor =  2
+	then
+	  if test $gnome_micro -lt 13
+	  then
+	    AC_MSG_RESULT([found $gnome_version])
+	  else
+	    if test $gnome_micro -gt 13
+	    then
+	      AC_MSG_RESULT([found $gnome_version])
+	    else
+	      AC_MSG_RESULT([failed (found $gnome_version instead)])
+	      AC_MSG_ERROR([Please upgrade your version of the GNOME libraries 
+			    at least version 1.2.13 and try again.])
+	    fi
+	  fi
+	else
+	  if test $gnome_minor -gt 2
+	  then
+	    AC_MSG_RESULT([found $gnome_version])
+	  else
+	    AC_MSG_RESULT([failed (found $gnome_version instead)])
+	    AC_MSG_ERROR([Please upgrade your version of the GNOME libraries 
+			  at least version 1.2.13 and try again.])
+	  fi
+	fi
       else
-         AC_MSG_RESULT([found $gnome_version])
+	if test $gnome_major -gt 2
+	then
+	  AC_MSG_RESULT([failed (found $gnome_version instead)])
+	  AC_MSG_ERROR([GhfaxViewer has yet to be ported to GNOME 2.])
+	else
+	  AC_MSG_RESULT([failed (found $gnome_version instead)])
+	  AC_MSG_ERROR([Please upgrade your version of the GNOME libraries to
+			at least version 1.2.13 and try again.])
+	fi
       fi
 
       USING_GNOME="yes"

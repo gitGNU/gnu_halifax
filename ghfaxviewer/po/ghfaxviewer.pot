@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-07-16 17:31-0400\n"
+"POT-Creation-Date: 2001-10-05 11:18-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,17 +14,17 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/thumbnails.c:133
+#: src/thumbnails.c:132
 #, c-format
 msgid "Page %d"
 msgstr ""
 
-#: src/gn_print.c:187 src/ps_print.c:768 src/thumbnails.c:159
-#: src/winprint.c:166
+#: src/gn_print.c:190 src/ps_print.c:739 src/thumbnails.c:156
+#: src/winprint.c:167
 msgid "Please wait..."
 msgstr ""
 
-#: src/thumbnails.c:173
+#: src/thumbnails.c:172
 #, c-format
 msgid "Computing index for page %d of %d..."
 msgstr ""
@@ -54,178 +54,182 @@ msgstr ""
 msgid "permission to read %s is missing"
 msgstr ""
 
-#: src/viewer.c:272 src/viewer.c:445 src/viewer.c:450
+#: src/viewer.c:271 src/viewer.c:444 src/viewer.c:449
 msgid "GNU HaliFAX - Viewer"
 msgstr ""
 
-#: src/menu.c:70 src/menu.c:191 src/toolbar.c:71 src/toolbar.c:188
+#: src/menu.c:71 src/menu.c:192 src/toolbar.c:71 src/toolbar.c:188
 msgid "Go to previous page"
 msgstr ""
 
-#: src/menu.c:64 src/menu.c:188 src/toolbar.c:77 src/toolbar.c:195
+#: src/menu.c:65 src/menu.c:189 src/toolbar.c:77 src/toolbar.c:195
 msgid "Go to next page"
 msgstr ""
 
-#: src/menu.c:77 src/menu.c:197 src/toolbar.c:84 src/toolbar.c:204
+#: src/menu.c:78 src/menu.c:198 src/toolbar.c:84 src/toolbar.c:204
 msgid "Zoom in"
 msgstr ""
 
-#: src/menu.c:83 src/menu.c:200 src/toolbar.c:90 src/toolbar.c:211
+#: src/menu.c:84 src/menu.c:201 src/toolbar.c:90 src/toolbar.c:211
 msgid "Zoom out"
 msgstr ""
 
-#: src/menu.c:96 src/menu.c:209 src/toolbar.c:97 src/toolbar.c:220
+#: src/menu.c:97 src/menu.c:210 src/toolbar.c:97 src/toolbar.c:220
 msgid "Rotate 90 degrees counter-clockwise"
 msgstr ""
 
-#: src/menu.c:102 src/menu.c:212 src/toolbar.c:103 src/toolbar.c:227
+#: src/menu.c:103 src/menu.c:213 src/toolbar.c:103 src/toolbar.c:227
 msgid "Reverse image"
 msgstr ""
 
-#: src/menu.c:90 src/menu.c:206 src/toolbar.c:109 src/toolbar.c:234
+#: src/menu.c:91 src/menu.c:207 src/toolbar.c:109 src/toolbar.c:234
 msgid "Rotate 90 degrees clockwise"
 msgstr ""
 
-#: src/menu.c:164 src/toolbar.c:116 src/toolbar.c:243
+#: src/menu.c:165 src/toolbar.c:116 src/toolbar.c:243
 msgid "Print fax"
 msgstr ""
 
-#: src/menu.c:169 src/toolbar.c:123 src/toolbar.c:253
+#: src/menu.c:170 src/toolbar.c:123 src/toolbar.c:253
 msgid "Properties..."
 msgstr ""
 
-#: src/menu.c:153 src/ps_print.c:453 src/ps_print.c:465
+#: src/menu.c:154 src/ps_print.c:427 src/ps_print.c:439
 msgid "File"
 msgstr ""
 
-#: src/menu.c:157
+#: src/menu.c:158
 msgid "Open..."
 msgstr ""
 
-#: src/about.c:107 src/info.c:327 src/menu.c:159
+#: src/about.c:102 src/info.c:328 src/menu.c:160
 msgid "Close"
 msgstr ""
 
-#: src/menu.c:173
+#: src/menu.c:174
 msgid "Quit"
 msgstr ""
 
-#: src/menu.c:183
+#: src/menu.c:184
 msgid "View"
 msgstr ""
 
-#: src/menu.c:223
+#: src/menu.c:224
 msgid "Settings"
 msgstr ""
 
-#: src/menu.c:227
+#: src/menu.c:228
 msgid "Preferences..."
 msgstr ""
 
-#: src/menu.c:237
+#: src/menu.c:238
 msgid "Help"
 msgstr ""
 
-#: src/about.c:102 src/menu.c:241
+#: src/about.c:96 src/menu.c:242
 msgid "About..."
 msgstr ""
 
-#: src/info.c:49
+#: src/about.c:61 src/ps_print.c:715 src/ps_print.c:717 src/winprint.c:158
+msgid "The GNU HaliFAX Viewer"
+msgstr ""
+
+#: src/info.c:50
 msgid "this fax is clean"
 msgstr ""
 
-#: src/info.c:52
+#: src/info.c:53
 msgid "some lines have been regenerated"
 msgstr ""
 
-#: src/info.c:55
+#: src/info.c:56
 msgid "this fax is not clean"
 msgstr ""
 
-#: src/info.c:58 src/info.c:84 src/info.c:110 src/info.c:151 src/info.c:186
+#: src/info.c:59 src/info.c:85 src/info.c:111 src/info.c:152 src/info.c:187
 msgid "invalid data"
 msgstr ""
 
-#: src/info.c:75
+#: src/info.c:76
 msgid "low resolution (204 dpi x 98 dpi)"
 msgstr ""
 
-#: src/info.c:78
+#: src/info.c:79
 msgid "high resolution (204 dpi x 196 dpi)"
 msgstr ""
 
-#: src/info.c:81
+#: src/info.c:82
 msgid "strange resolution"
 msgstr ""
 
-#: src/info.c:107
+#: src/info.c:108
 msgid "strange compression type"
 msgstr ""
 
-#: src/info.c:155
+#: src/info.c:156
 msgid "2D encoding"
 msgstr ""
 
-#: src/info.c:158
+#: src/info.c:159
 msgid "uncompressed"
 msgstr ""
 
-#: src/info.c:161
+#: src/info.c:162
 msgid "fill bits"
 msgstr ""
 
-#: src/info.c:180
+#: src/info.c:181
 msgid "least to most significant bit (big endian)"
 msgstr ""
 
-#: src/info.c:183
+#: src/info.c:184
 msgid "most to least significant bit (little endian)"
 msgstr ""
 
 #. label = gtk_label_new (_("Fax properties"));
 #. gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
 #. gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 0, 1);
-#: src/info.c:232
+#: src/info.c:233
 msgid "Sender ID"
 msgstr ""
 
-#: src/info.c:235
+#: src/info.c:236
 msgid "Destination subaddress"
 msgstr ""
 
-#: src/info.c:238
+#: src/info.c:239
 msgid "Date & time of reception"
 msgstr ""
 
-#: src/info.c:241
+#: src/info.c:242
 msgid "Fax data cleanliness"
 msgstr ""
 
-#: src/info.c:244
+#: src/info.c:245
 msgid "Resolution"
 msgstr ""
 
-#: src/info.c:247
+#: src/info.c:248
 msgid "Compression type"
 msgstr ""
 
-#: src/info.c:250
+#: src/info.c:251
 msgid "G3/G4 Options"
 msgstr ""
 
-#: src/info.c:253
+#: src/info.c:254
 msgid "Pixel fill order"
 msgstr ""
 
-#: src/info.c:256
+#: src/info.c:257
 msgid "Make and model of receiving fax"
 msgstr ""
 
-#: src/info.c:259
+#: src/info.c:260
 msgid "Software"
 msgstr ""
 
-#: src/info.c:262
+#: src/info.c:263
 msgid "Receiving computer hostname"
 msgstr ""
 
@@ -237,11 +241,11 @@ msgstr ""
 msgid "Please choose a FAX G3 file to open..."
 msgstr ""
 
-#: src/errors.c:113
+#: src/errors.c:112
 msgid "Something strange happened..."
 msgstr ""
 
-#: src/errors.c:115
+#: src/errors.c:114
 #, c-format
 msgid ""
 "The specified file, %s, could not be opened\n"
@@ -249,104 +253,95 @@ msgid ""
 "Please fix this and try again later."
 msgstr ""
 
-#: src/errors.c:119
+#: src/errors.c:118
 msgid "I am sorry"
 msgstr ""
 
-#: src/progress.c:94 src/ps_print.c:1036
-msgid "Cancel"
-msgstr ""
-
-#: src/progress.c:218
-#, c-format
-msgid "%s (done)"
-msgstr ""
-
-#: src/winprint.c:141
+#: src/winprint.c:142
 msgid "Printer cannot display bitmaps."
 msgstr ""
 
-#: src/winprint.c:142
+#: src/winprint.c:143
 msgid "Device Error"
 msgstr ""
 
-#: src/ps_print.c:743 src/ps_print.c:745 src/winprint.c:157
-msgid "The GNU HaliFAX Viewer"
-msgstr ""
-
-#: src/gn_print.c:118 src/gn_print.c:152 src/ps_print.c:772 src/winprint.c:176
+#: src/gn_print.c:119 src/gn_print.c:154 src/ps_print.c:746 src/winprint.c:177
 #, c-format
 msgid "Printing page %d (%d left)"
 msgstr ""
 
-#: src/ps_print.c:439
+#: src/ps_print.c:413
 msgid "Output to"
 msgstr ""
 
-#: src/ps_print.c:448
+#: src/ps_print.c:422
 msgid "Printer"
 msgstr ""
 
-#: src/ps_print.c:462
+#: src/ps_print.c:436
 msgid "Command"
 msgstr ""
 
-#: src/ps_print.c:473
+#: src/ps_print.c:447
 msgid "Fax Output.ps"
 msgstr ""
 
-#: src/ps_print.c:545
+#: src/ps_print.c:519
 msgid "Page selection"
 msgstr ""
 
-#: src/ps_print.c:553
+#: src/ps_print.c:527
 msgid "All pages"
 msgstr ""
 
-#: src/ps_print.c:566
+#: src/ps_print.c:540
 msgid "From"
 msgstr ""
 
-#: src/ps_print.c:588
+#: src/ps_print.c:562
 msgid "to"
 msgstr ""
 
-#: src/gn_print.c:294 src/ps_print.c:605
+#: src/gn_print.c:299 src/ps_print.c:579
 msgid "Current page only"
 msgstr ""
 
-#: src/ps_print.c:884
+#: src/ps_print.c:857
 #, c-format
 msgid ""
 "%s already exists.\n"
 "Do you want to overwrite it?"
 msgstr ""
 
-#: src/ps_print.c:888
+#: src/ps_print.c:861
 msgid "Please answer..."
 msgstr ""
 
-#: src/ps_print.c:902
+#: src/ps_print.c:877
 msgid "Yes, please do"
 msgstr ""
 
-#: src/ps_print.c:910
+#: src/ps_print.c:885
 msgid "No thanks"
 msgstr ""
 
-#: src/ps_print.c:1028
+#: src/ps_print.c:1002
 msgid "Print"
 msgstr ""
 
-#: src/gn_print.c:285 src/ps_print.c:1053
+#: src/ps_print.c:1010
+msgid "Cancel"
+msgstr ""
+
+#: src/gn_print.c:290 src/ps_print.c:1026
 msgid "Print..."
 msgstr ""
 
-#: src/ps_print.c:1096
+#: src/ps_print.c:1068
 msgid "This is weird..."
 msgstr ""
 
-#: src/ps_print.c:1097
+#: src/ps_print.c:1069
 msgid ""
 "I was not able to determine how to work\n"
 "with your printing system appropriately.\n"
@@ -363,14 +358,14 @@ msgid ""
 "halifax-bugs@gnu.org."
 msgstr ""
 
-#: src/ps_print.c:1107
+#: src/ps_print.c:1079
 msgid "I promise!"
 msgstr ""
 
-#: src/gn_print.c:247
+#: src/gn_print.c:251
 msgid "Print preview..."
 msgstr ""
 
-#: src/gn_print.c:295
+#: src/gn_print.c:300
 msgid "Range"
 msgstr ""

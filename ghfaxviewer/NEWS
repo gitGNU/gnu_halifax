@@ -2,6 +2,12 @@ This file lists user-visible changes. It might not be up-to-date
 although an effort is made to keep it so. For even more
 programming-related informations, see the file 'ChangeLog'.
 
+10/14/2001:
+- Dialog windows, progress windows, icon bar and a few GUI utility functions
+  are separated in a new library (libghfaxwidgets);
+- The thumbnails are displayed in a new icon bar;
+
+
 05/08/2001:
 - menu and toolbar widgets are enabled or disabled as needed;
 - all the dialog windows are escapable;

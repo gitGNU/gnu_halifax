@@ -144,10 +144,9 @@ save_window_coords (GdkWindow *window)
 
   gerror = NULL;
 
-/*   gdk_window_get_root_origin (window, &x, &y); */
-/*   gdk_window_get_position (window, &x, &y); */ 
-/*   gdk_window_get_size (window, &width, &height); */
-  gdk_window_get_geometry (window, &x, &y, &width, &height, NULL);
+  gdk_window_get_root_origin (window, &x, &y);
+/*    gdk_window_get_position (window, &x, &y);  */
+  gdk_window_get_size (window, &width, &height);
   g_print ("%d, %d, %d, %d\n", x, y, width, height);
 
   gconf_client_set_int (gc_client,
@@ -166,6 +165,10 @@ save_window_coords (GdkWindow *window)
 			CONFIG_KEY KEY_DEF_HEIGHT,
 			height,
 			&gerror);
+
+  gdk_window_get_position (window, &x, &y); 
+  g_print ("%d, %d, %d, %d\n", x, y, width, height);
+
 }
 
 gchar *load_last_directory ()
