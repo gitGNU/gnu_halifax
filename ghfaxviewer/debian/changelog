@@ -1,3 +1,10 @@
+ghfaxviewer (0.22.0-2) unstable; urgency=low
+
+  * Specifies libtool as a Build dependency in debian/control.
+    (Closes: #119858)
+
+ -- Wolfgang Sourdeau <was@debian.org>  Fri, 16 Nov 2001 16:43:06 -0500
+
 ghfaxviewer (0.22.0-1) unstable; urgency=low
 
   * New upstream release.

@@ -34,10 +34,15 @@
 #include "setup.h"
 
 typedef struct _PrefBtnData PrefBtnData;
+typedef struct _IconBoxData IconBoxData;
 
 struct _PrefBtnData {
   GtkWidget *notebook;
   guint page_nbr;
+};
+
+struct _IconBoxData {
+  GtkWidget *ref_widget, *notebook;
 };
 
 static void
@@ -103,7 +108,7 @@ create_mixed_btn (GtkWidget *ref_widget,
   pref_btn_data->page_nbr = page_nbr;
 
   gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-  gtk_widget_set_usize (button, 76, 70);
+/*   gtk_widget_set_usize (button, 60, 70); */
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
 		      tab_switch_cb, pref_btn_data);
   gtk_signal_connect (GTK_OBJECT (button), "destroy",
@@ -122,37 +127,68 @@ create_mixed_btn (GtkWidget *ref_widget,
   gtk_widget_modify_style (button, bg_style);
   gtk_rc_style_unref (bg_style);
 
+  gtk_widget_show_all (button);
+
   return button;
+}
+
+static void
+icon_box_realize_cb (GtkWidget *icon_box, IconBoxData *icon_box_data)
+{
+  GtkWidget *button;
+
+/*   while (gtk_events_pending ()) */
+/*     gtk_main_iteration (); */
+
+  button = create_mixed_btn (icon_box_data->ref_widget,
+			     PIXMAP ("viewer_prefs.xpm"), _("Viewer"),
+			     icon_box_data->notebook, 0);
+  layout_add_widget (icon_box, button);
+  gtk_widget_set_sensitive (button, FALSE);
+  gtk_object_set_data (GTK_OBJECT (icon_box_data->notebook),
+		       "cur_selected_btn", button);
+
+  button = create_mixed_btn (icon_box_data->ref_widget,
+			     PIXMAP ("printer_prefs.xpm"), _("Printer"),
+			     icon_box_data->notebook, 1);
+  layout_add_widget (icon_box, button);
+
+  button = create_mixed_btn (icon_box_data->ref_widget,
+			     PIXMAP ("info.xpm"), _("Printer"),
+			     icon_box_data->notebook, 1);
+  layout_add_widget (icon_box, button);
+
+  button = create_mixed_btn (icon_box_data->ref_widget,
+			     PIXMAP ("printer_prefs.xpm"), _("Printer"),
+			     icon_box_data->notebook, 1);
+  layout_add_widget (icon_box, button);
+
+  g_free (icon_box_data);
 }
 
 static GtkWidget *
 create_pref_content (GtkWidget *ref_widget)
 {
-  GtkWidget *content_hbox, *viewport, *notebook, *icon_box, *button;
+  GtkWidget *content_hbox, *viewport, *notebook, *icon_box;
+  IconBoxData *icon_box_data;
 
   content_hbox = gtk_hbox_new (FALSE, 5);
 
   viewport = gtk_viewport_new (NULL, NULL);
   icon_box = layout_new (ref_widget, GTK_ORIENTATION_VERTICAL, 0, 76);
   layout_set_bg_color (icon_box, 45000, 45000, 45000);
-
-  gtk_widget_show (icon_box);
-
   gtk_container_add (GTK_CONTAINER (viewport), icon_box);
   gtk_box_pack_start (GTK_BOX (content_hbox), viewport, FALSE, FALSE, 0);
 
   notebook = create_pref_notebook ();
   gtk_box_pack_start (GTK_BOX (content_hbox), notebook, TRUE, FALSE, 0);
 
-  button = create_mixed_btn (ref_widget, PIXMAP ("viewer_prefs.xpm"), _("Viewer"),
-			     notebook, 0);
-  layout_add_widget (icon_box, button);
-  gtk_widget_set_sensitive (button, FALSE);
-  gtk_object_set_data (GTK_OBJECT (notebook), "cur_selected_btn", button);
+  icon_box_data = g_new (IconBoxData, 1);
+  icon_box_data->ref_widget = ref_widget;
+  icon_box_data->notebook = notebook;
 
-  button = create_mixed_btn (ref_widget, PIXMAP ("printer_prefs.xpm"), _("Printer"),
-			     notebook, 1);
-  layout_add_widget (icon_box, button);
+  gtk_signal_connect (GTK_OBJECT (icon_box), "realize",
+		      icon_box_realize_cb, icon_box_data);
 
   return content_hbox;
 }
