@@ -71,6 +71,7 @@ remaining-installation:
 
 $(DIST_ARCHIVE): src/@PACKAGE@.exe dir-skeleton conversions remaining-installation
 
+win32-bin-dist:
 win32-bin-package: $(DIST_ARCHIVE)
 	( cd tmp ; \
 	  tar czf $(DIST_ARCHIVE) @PACKAGE@ ; \

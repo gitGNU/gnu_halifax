@@ -176,8 +176,7 @@ dialog_window_new (gchar *title)
   gtk_window_set_title (GTK_WINDOW (dialog_win->window), title);
   gtk_window_set_position (GTK_WINDOW (dialog_win->window), GTK_WIN_POS_CENTER);
   gtk_signal_connect (GTK_OBJECT (dialog_win->window), "key-press-event",
-		      key_press_event_cb, NULL);		      
-
+		      GTK_SIGNAL_FUNC (key_press_event_cb), NULL);		      
   dialog_win->vbox = gtk_vbox_new (FALSE, 5);
   gtk_container_add (GTK_CONTAINER (dialog_win->window),
 		     dialog_win->vbox);
