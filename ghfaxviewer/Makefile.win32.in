@@ -76,6 +76,7 @@ win32-bin-package: $(DIST_ARCHIVE)
 	( cd tmp ; \
 	  tar czf $(DIST_ARCHIVE) @PACKAGE@ ; \
 	  mv -f $(DIST_ARCHIVE) .. )
+	rm -rf $(DIST_DIR)
 	@echo done.
 
 .PHONY: win32-bin-package win32-bin-dist
