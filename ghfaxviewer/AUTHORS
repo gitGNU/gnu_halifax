@@ -14,3 +14,5 @@ Thomas Bartschies, Tilman Bubeck: German translation (de.po)
 Kevin Chen: Traditional Chinese (zh_TW.Big5.po)
 Zbigniew Baniewski: Polish translation (pl.po)
 
+Small modifications by Dominik Brettnacher (FreeBSD port) in
+src/ps_print.c to obtain "__compare_fn_t" on non-glibc systems
