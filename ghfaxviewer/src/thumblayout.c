@@ -44,6 +44,8 @@ struct _LayoutData
   GtkWidget *gtk_layout;
   gint height, width, spacing;
 
+  GtkOrientation orientation;
+
   /* Control buttons */
   GtkWidget *up, *down;
 
@@ -71,13 +73,6 @@ reset_timeout (LayoutData *layout_data)
 	gdk_keyboard_ungrab (GDK_CURRENT_TIME);
     }
 }
-
-/* static void */
-/* button_queue_hide (GtkWidget *button) */
-/* { */
-/*   gtk_signal_connect_object ((GtkObject*) button, "released", */
-/* 			     gtk_widget_hide, (GtkObject*) button); */
-/* } */
 
 static void
 refresh_buttons (LayoutData *layout_data)
@@ -215,6 +210,56 @@ layout_resize_cb (GtkWidget *layout,
   refresh_buttons (layout_data);
 }
 
+#ifdef __WIN32__
+static gint
+mouse_scroll_event_cb (GtkWidget *ref_widget,
+			GdkEventScroll *event,
+			LayoutData *layout_data)
+{
+  gboolean modify_value;
+  gint new_value;
+  GtkAdjustment *adjustment;
+
+  adjustment = layout_data->adjustment;
+
+  if (event->direction == GDK_SCROLL_UP)
+    {
+      new_value = adjustment->value - MOUSE_WHEEL_ADJUSTMENT_STEP;
+      modify_value = TRUE;
+    }
+  else if (event->direction == GDK_SCROLL_DOWN)
+    {
+      new_value = adjustment->value + MOUSE_WHEEL_ADJUSTMENT_STEP;
+      modify_value = TRUE;
+    }
+  else
+    {
+      new_value = 0;
+      modify_value = FALSE;
+    }
+
+  if (modify_value)
+    {
+      gtk_adjustment_set_value (adjustment, new_value);
+      refresh_buttons (layout_data);
+    }
+
+  return FALSE;
+}
+
+static void
+widget_mouse_press_realize_cb (GtkWidget *widget, LayoutData *layout_data)
+{
+  gdk_window_set_events (widget->window,
+			 gdk_window_get_events (widget->window)
+			 | GDK_SCROLL_MASK);
+
+  gtk_signal_connect (GTK_OBJECT (widget),
+		      "scroll-event",
+		      GTK_SIGNAL_FUNC (mouse_scroll_event_cb),
+		      layout_data);
+}
+#else /* __WIN32__ */
 static gint
 mouse_press_event_cb (GtkWidget *ref_widget,
 		      GdkEventButton *event,
@@ -257,11 +302,13 @@ widget_mouse_press_realize_cb (GtkWidget *widget, LayoutData *layout_data)
   gdk_window_set_events (widget->window,
 			 gdk_window_get_events (widget->window)
 			 | GDK_BUTTON_PRESS_MASK);
+
   gtk_signal_connect (GTK_OBJECT (widget),
 		      "button-press-event",
 		      GTK_SIGNAL_FUNC (mouse_press_event_cb),
 		      layout_data);
 }
+#endif /* __WIN32__ */
 
 static LayoutData *
 layout_data_create (GtkWidget *ref_widget, GtkAdjustment *adjustment)
@@ -308,6 +355,15 @@ layout_set_width (LayoutData *layout_data, gint width)
 			width, -1);
 }
 
+#ifdef __WIN32__
+/* This is a dirty hackm waiting for GTK+ for Windows to be fixed... */
+void win32_layout_changed_cb (GtkWidget *widget, LayoutData *layout_data)
+{
+  gtk_widget_size_allocate (layout_data->gtk_layout,
+			    &(layout_data->gtk_layout->allocation));
+}
+#endif
+
 GtkWidget *
 layout_new (GtkWidget *ref_widget, gint spacing, gint width)
 {
@@ -350,11 +406,16 @@ layout_new (GtkWidget *ref_widget, gint spacing, gint width)
 			    "_layout_data", layout_data,
 			    g_free);
 
+#ifdef __WIN32__
+  gtk_signal_connect (adjustment, "value_changed",
+  		      win32_layout_changed_cb, layout_data);
+#endif
+
   return vbox;
 }
 
 static gboolean
-check_button_pos (GtkWidget *button, LayoutData *layout_data)
+check_button_pos_cb (GtkWidget *button, LayoutData *layout_data)
 {
   GtkAllocation allocation;
   GtkAdjustment *adjustment;
@@ -414,7 +475,7 @@ usr_btn_realized_real_cb (GtkWidget *button, LayoutData *layout_data)
 {
   gtk_signal_connect (GTK_OBJECT (button),
 		      "released",
-		      GTK_SIGNAL_FUNC (check_button_pos),
+		      GTK_SIGNAL_FUNC (check_button_pos_cb),
 		      layout_data);
 /*
   gtk_signal_connect (GTK_OBJECT (button),
