@@ -33,8 +33,8 @@ GtkWidget *menu_item_new (GtkWidget *menu, gchar *label,
 void gtk_window_set_escapable (GtkWidget *window);
 void transient_window_show (GtkWidget *transient, GtkWidget *parent);
 
-GtkWidget *pixmap_from_xpm (GtkWidget *ref_widget, gchar *file_name);
-GtkWidget *pixmap_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data);
+/* GtkWidget *pixmap_from_xpm (GtkWidget *ref_widget, gchar *file_name); */
+GtkWidget *image_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data);
 
 void back_gtkstyle (GtkRcStyle *style, GtkStateType state,
 		    gushort red, gushort green, gushort blue);

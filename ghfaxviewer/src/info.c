@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-02-17 22:46:31 wolfgang>
+ * Time-stamp: <2003-03-07 02:05:04 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -314,10 +314,11 @@ create_info_table (GtkWidget *window, TiffInfo *file_info)
   return table;
 }
 
-static GtkWidget *
+static GhfwDlgWindow *
 create_info_dialog (GtkWidget *viewer_window, TiffInfo *file_info)
 {
-  GtkWidget  *info_dialog, *table, *ok_button;
+  GtkWidget *table, *ok_button;
+  GhfwDlgWindow *info_dialog;
 
   info_dialog = ghfw_dlg_window_new (_("Fax properties"));
   table = create_info_table (viewer_window, file_info);
@@ -325,9 +326,9 @@ create_info_dialog (GtkWidget *viewer_window, TiffInfo *file_info)
 					  table);
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
-  g_signal_connect_object (G_OBJECT (ok_button), "clicked",
-			   G_CALLBACK (gtk_widget_destroy),
-			   G_OBJECT (info_dialog));
+  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked",
+			    G_CALLBACK (gtk_widget_destroy),
+			    G_OBJECT (info_dialog));
 
   ghfw_dlg_window_set_button ((GhfwDlgWindow *) info_dialog,
 			      ok_button);
@@ -339,7 +340,7 @@ create_info_dialog (GtkWidget *viewer_window, TiffInfo *file_info)
 void
 info_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
 {
-  GtkWidget *info_dialog;
+  GhfwDlgWindow *info_dialog;
   TiffInfo *file_info;
 
   if (viewer_data->fax_file)
@@ -347,7 +348,7 @@ info_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
       file_info = ti_get_file_info (viewer_data->fax_file);
       info_dialog = create_info_dialog (viewer_data->viewer_window,
 					file_info);
-      transient_window_show (info_dialog,
+      transient_window_show (GTK_WIDGET (info_dialog),
 			     viewer_data->viewer_window);
 
       ti_destroy_file_info (file_info);

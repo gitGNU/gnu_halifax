@@ -117,13 +117,13 @@ PKG_CONFIG = /usr/bin/pkg-config
 POSUB = po
 RANLIB = ranlib
 STRIP = strip
-SUPPSUBDIRS = docs macros
+SUPPSUBDIRS = docs
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
 
 PACKAGE = ghfaxwidgets
 VERSION = 0.0.0
-SUBDIRS = docs macros intl po src tests
+SUBDIRS = docs intl po src tests
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = ghfaxwidgets.pc

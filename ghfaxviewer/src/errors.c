@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-02-17 22:39:03 wolfgang>
+ * Time-stamp: <2003-03-07 02:04:55 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -80,7 +80,8 @@ void
 display_failure (GtkWidget *window,
 		 gchar *title, gchar *message, gchar *but_text)
 {
-  GtkWidget  *fail_dialog, *vbox, *msg_lbl, *ok_but;
+  GtkWidget *vbox, *msg_lbl, *ok_but;
+  GhfwDlgWindow *fail_dialog;
 
   fail_dialog = ghfw_dlg_window_new (title);
 
@@ -94,16 +95,15 @@ display_failure (GtkWidget *window,
 		      FALSE, FALSE, 0);
 
   ok_but = gtk_button_new_with_label (but_text); 
-  g_signal_connect_object (G_OBJECT (ok_but), "clicked",
-			   G_CALLBACK (gtk_widget_destroy),
-			   G_OBJECT (fail_dialog));
+  g_signal_connect_swapped (G_OBJECT (ok_but), "clicked",
+			    G_CALLBACK (gtk_widget_destroy),
+			    G_OBJECT (fail_dialog));
 
   ghfw_dlg_window_set_content_with_frame ((GhfwDlgWindow *) fail_dialog, vbox);
   ghfw_dlg_window_set_button ((GhfwDlgWindow *) fail_dialog, ok_but);
   ghfw_dlg_window_set_escapable ((GhfwDlgWindow *) fail_dialog);
 
-  transient_window_show (fail_dialog,
-			 window);
+  transient_window_show (GTK_WIDGET (fail_dialog), window);
 }
 
 static void

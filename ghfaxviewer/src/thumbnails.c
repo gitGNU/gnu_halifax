@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:08:13 wolfgang>
+ * Time-stamp: <2003-03-07 01:39:07 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -110,7 +110,7 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
 
   button = gtk_button_new ();
   gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-  gtk_widget_set_usize (button, 60, th_height + 12);
+  gtk_widget_set_size_request (button, 60, th_height + 12);
   gtk_container_add (GTK_CONTAINER (button), gtk_pixmap);
 
   bg_style = gtk_rc_style_new ();
@@ -148,14 +148,13 @@ thumb_button (ViewerData *viewer_data, FaxPage *cur_page,
 void
 add_thumbs (ViewerData *viewer_data)
 {
-  GtkWidget *progress, *cur_button;
-  GtkWidget **b_arr_ptr;
+  GtkWidget *progress, *cur_button, **b_arr_ptr;
   FaxPage *cur_page;
   gint pos_in_fixed;
   gchar *p_action;
   gint th_height;
   
-  progress = ghfw_progress_window_new (_("Please wait..."), NULL);
+  progress = GTK_WIDGET (ghfw_progress_window_new (_("Please wait..."), NULL));
   ghfw_progress_window_set_abortable (GHFW_PROGRESS_WINDOW (progress), FALSE);
 
   transient_window_show (progress, viewer_data->viewer_window);

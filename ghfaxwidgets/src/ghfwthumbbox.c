@@ -291,15 +291,15 @@ widget_mouse_scroll_prepare (GtkWidget *widget, LayoutData *layout_data)
 			     gdk_window_get_events (widget->window)
 			     | GDK_SCROLL_MASK);
       
-      gtk_signal_connect (GTK_OBJECT (widget),
-			  "scroll-event",
-			  GTK_SIGNAL_FUNC (mouse_scroll_event_cb),
-			  layout_data);
+      g_signal_connect (G_OBJECT (widget),
+			"scroll-event",
+			G_CALLBACK (mouse_scroll_event_cb),
+			layout_data);
     }
   else
-    gtk_signal_connect ((GtkObject*) widget, "realize",
-			widget_mouse_scroll_prepare,
-			layout_data);			
+    g_signal_connect (G_OBJECT (widget), "realize",
+		      widget_mouse_scroll_prepare,
+		      layout_data);			
 }
 #else /* __WIN32__ */
 static gint
@@ -347,15 +347,15 @@ widget_mouse_scroll_prepare (GtkWidget *widget, LayoutData *layout_data)
 			     gdk_window_get_events (widget->window)
 			     | GDK_BUTTON_PRESS_MASK);
 	  
-      gtk_signal_connect (GTK_OBJECT (widget),
-			  "button-press-event",
-			  GTK_SIGNAL_FUNC (mouse_press_event_cb),
-			  layout_data);
+      g_signal_connect (G_OBJECT (widget),
+			"button-press-event",
+			G_CALLBACK (mouse_press_event_cb),
+			layout_data);
     }
   else
-    gtk_signal_connect ((GtkObject*) widget, "realize",
-			widget_mouse_scroll_prepare,
-			layout_data);
+    g_signal_connect (G_OBJECT (widget), "realize",
+		      G_CALLBACK (widget_mouse_scroll_prepare),
+		      layout_data);
 }
 #endif /* __WIN32__ */
 
@@ -369,17 +369,17 @@ layout_data_create (GtkAdjustment *adjustment)
 
   layout_data->up = gtk_button_new ();
   gtk_button_set_relief (GTK_BUTTON (layout_data->up), GTK_RELIEF_HALF);
-  gtk_signal_connect (GTK_OBJECT (layout_data->up), "pressed",
-		      up_pressed_cb, layout_data);
-  gtk_signal_connect (GTK_OBJECT (layout_data->up), "released",
-		      button_released_cb, layout_data);
+  g_signal_connect (G_OBJECT (layout_data->up), "pressed",
+		    G_CALLBACK (up_pressed_cb), layout_data);
+  g_signal_connect (G_OBJECT (layout_data->up), "released",
+		    G_CALLBACK (button_released_cb), layout_data);
 
   layout_data->down = gtk_button_new ();
   gtk_button_set_relief (GTK_BUTTON (layout_data->down), GTK_RELIEF_HALF);
-  gtk_signal_connect (GTK_OBJECT (layout_data->down), "pressed",
-		      down_pressed_cb, layout_data);
-  gtk_signal_connect (GTK_OBJECT (layout_data->down), "released",
-		      button_released_cb, layout_data);
+  g_signal_connect (G_OBJECT (layout_data->down), "pressed",
+		    G_CALLBACK (down_pressed_cb), layout_data);
+  g_signal_connect (G_OBJECT (layout_data->down), "released",
+		    G_CALLBACK (button_released_cb), layout_data);
 
   return layout_data;
 }
@@ -387,34 +387,34 @@ layout_data_create (GtkAdjustment *adjustment)
 static void
 put_icons_on_buttons (GtkWidget *ref_widget, LayoutData *layout_data)
 {
-  GtkWidget *pixmap;
+  GtkWidget *image;
 
   if (layout_data->orientation
       == GTK_ORIENTATION_HORIZONTAL)
     {
-      pixmap = pixmap_from_xpm_data (ref_widget,
-				     layout_left_arrow_xpm);
+      image = image_from_xpm_data (ref_widget,
+				   layout_left_arrow_xpm);
       gtk_container_add (GTK_CONTAINER (layout_data->up),
-			 pixmap);
-      gtk_widget_show (pixmap);
-      pixmap = pixmap_from_xpm_data (ref_widget,
-				     layout_right_arrow_xpm);
+			 image);
+      gtk_widget_show (image);
+      image = image_from_xpm_data (ref_widget,
+				   layout_right_arrow_xpm);
       gtk_container_add (GTK_CONTAINER (layout_data->down),
-			 pixmap);
-      gtk_widget_show (pixmap);
+			 image);
+      gtk_widget_show (image);
     }
   else
     {
-      pixmap = pixmap_from_xpm_data (ref_widget,
-				     layout_up_arrow_xpm);
+      image = image_from_xpm_data (ref_widget,
+				   layout_up_arrow_xpm);
       gtk_container_add (GTK_CONTAINER (layout_data->up),
-			 pixmap);
-      gtk_widget_show (pixmap);
-      pixmap = pixmap_from_xpm_data (ref_widget,
-				     layout_down_arrow_xpm);
+			 image);
+      gtk_widget_show (image);
+      image = image_from_xpm_data (ref_widget,
+				   layout_down_arrow_xpm);
       gtk_container_add (GTK_CONTAINER (layout_data->down),
-			 pixmap);
-      gtk_widget_show (pixmap);
+			 image);
+      gtk_widget_show (image);
     }
 }
 
@@ -424,17 +424,25 @@ layout_set_width (LayoutData *layout_data, gint width)
   if (layout_data->orientation
       == GTK_ORIENTATION_HORIZONTAL)
     {
-      gtk_widget_set_usize (layout_data->up, -1, width);
-      gtk_widget_set_usize (layout_data->down, -1, width);
-      gtk_widget_set_usize (layout_data->gtk_layout,
-			    -1, width);
+      gtk_widget_set_size_request (layout_data->up, -1, width);
+      gtk_widget_set_size_request (layout_data->down, -1, width);
+      gtk_widget_set_size_request (layout_data->gtk_layout,
+				   -1, width);
+/*       gtk_widget_set_usize (layout_data->up, -1, width); */
+/*       gtk_widget_set_usize (layout_data->down, -1, width); */
+/*       gtk_widget_set_usize (layout_data->gtk_layout, */
+/* 			    -1, width); */
     }
   else
     {
-      gtk_widget_set_usize (layout_data->up, width, -1);
-      gtk_widget_set_usize (layout_data->down, width, -1);
-      gtk_widget_set_usize (layout_data->gtk_layout,
+      gtk_widget_set_size_request (layout_data->up, width, -1);
+      gtk_widget_set_size_request (layout_data->down, width, -1);
+      gtk_widget_set_size_request (layout_data->gtk_layout,
 			    width, -1);
+/*       gtk_widget_set_usize (layout_data->up, width, -1); */
+/*       gtk_widget_set_usize (layout_data->down, width, -1); */
+/*       gtk_widget_set_usize (layout_data->gtk_layout, */
+/* 			    width, -1); */
     }
 
   layout_data->width = width;
@@ -492,55 +500,55 @@ setup_usr_btn (GtkWidget *button, LayoutData *layout_data)
 {
   if (GTK_WIDGET_REALIZED (button))
     {
-      gtk_signal_connect (GTK_OBJECT (button),
-			  "released",
-			  (GtkSignalFunc) check_button_pos_cb,
-			  layout_data);
-      gtk_signal_connect_after (GTK_OBJECT (button),
-				"state-changed",
-				(GtkSignalFunc) usr_btn_state_changed_cb,
-				NULL);
+      g_signal_connect (G_OBJECT (button),
+			"released",
+			G_CALLBACK (check_button_pos_cb),
+			layout_data);
+      g_signal_connect_after (G_OBJECT (button),
+			      "state-changed",
+			      G_CALLBACK (usr_btn_state_changed_cb),
+			      NULL);
 
       widget_mouse_scroll_prepare (button, layout_data);
     }
   else
-    gtk_signal_connect ((GtkObject*) button, "realize",
-			setup_usr_btn, layout_data);
+    g_signal_connect (G_OBJECT (button), "realize",
+		      G_CALLBACK (setup_usr_btn), layout_data);
 }
 
 /* GTK widget stuff */
 
-static void
-ghfw_dlg_window_class_init (GhfwDlgWindowClass *klass)
-{
-  GtkObjectClass *object_class;
-  GtkWidgetClass *widget_class;
+/* static void */
+/* ghfw_dlg_window_class_init (GhfwDlgWindowClass *klass) */
+/* { */
+/*   GObjectClass *object_class; */
+/*   GtkWidgetClass *widget_class; */
 
-  object_class = (GtkObjectClass *) klass;
-  widget_class = (GtkWidgetClass *) klass;
+/*   object_class = (GObjectClass *) klass; */
+/*   widget_class = (GtkWidgetClass *) klass; */
 
-  parent_class = gtk_type_class (GTK_TYPE_WINDOW);
+/*   parent_class = gtk_type_class (GTK_TYPE_WINDOW); */
 
-  gtk_object_add_arg_type ("GhfwDlgWindow::escapable",
-			   GTK_TYPE_BOOL, GTK_ARG_READWRITE,
-			   ARG_ESCAPABLE);
-  gtk_object_add_arg_type ("GhfwDlgWindow::content",
-			   GTK_TYPE_POINTER, GTK_ARG_READWRITE,
-			   ARG_CONTENT);
-  gtk_object_add_arg_type ("GhfwDlgWindow::button_box",
-			   GTK_TYPE_POINTER, GTK_ARG_READWRITE,
-			   ARG_BUTTON_BOX);
-  gtk_object_add_arg_type ("GhfwDlgWindow::vbox",
-			   GTK_TYPE_POINTER, GTK_ARG_READABLE,
-			   ARG_VBOX);
+/*   g_object_add_arg_type ("GhfwDlgWindow::escapable", */
+/* 			   G_TYPE_BOOLEAN, GTK_ARG_READWRITE, */
+/* 			   ARG_ESCAPABLE); */
+/*   g_object_add_arg_type ("GhfwDlgWindow::content", */
+/* 			   G_TYPE_POINTER, GTK_ARG_READWRITE, */
+/* 			   ARG_CONTENT); */
+/*   g_object_add_arg_type ("GhfwDlgWindow::button_box", */
+/* 			   G_TYPE_POINTER, GTK_ARG_READWRITE, */
+/* 			   ARG_BUTTON_BOX); */
+/*   g_object_add_arg_type ("GhfwDlgWindow::vbox", */
+/* 			   G_TYPE_POINTER, GTK_ARG_READABLE, */
+/* 			   ARG_VBOX); */
 
-  object_class->set_arg = ghfw_dlg_window_set_arg;
-  object_class->get_arg = ghfw_dlg_window_get_arg;
+/*   object_class->set_arg = ghfw_dlg_window_set_arg; */
+/*   object_class->get_arg = ghfw_dlg_window_get_arg; */
 
-}
+/* } */
 
-static void
-ghfw_thumbbox_init (GhfwProgressWindow *progress_window)
+/* static void */
+/* ghfw_thumbbox_init (GhfwProgressWindow *progress_window) */
 
 
 GtkWidget *
@@ -587,23 +595,23 @@ layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
   layout_set_width (layout_data, width);
 
   /* signal stuff */
-  gtk_signal_connect (GTK_OBJECT (gtk_layout),
-		      "size-allocate",
-		      (GtkSignalFunc) layout_resize_cb,
-		      layout_data);
+  g_signal_connect (G_OBJECT (gtk_layout),
+		    "size-allocate",
+		    G_CALLBACK (layout_resize_cb),
+		    layout_data);
   gtk_widget_add_events (gtk_layout, GDK_BUTTON_PRESS_MASK);
   widget_mouse_scroll_prepare (gtk_layout, layout_data);
   if (GTK_WIDGET_REALIZED (ref_widget))
     put_icons_on_buttons (ref_widget, layout_data);
   else
-    gtk_signal_connect ((GtkObject*) ref_widget, "realize",
-			put_icons_on_buttons, layout_data);
+    g_signal_connect (G_OBJECT (ref_widget), "realize",
+		      G_CALLBACK (put_icons_on_buttons), layout_data);
 #ifdef __WIN32__
-  gtk_signal_connect (adjustment, "value_changed",
-  		      win32_layout_changed_cb, layout_data);
+  g_signal_connect (adjustment, "value_changed",
+		    G_CALLBACK (win32_layout_changed_cb), layout_data);
 #endif
 
-  gtk_object_set_data_full (GTK_OBJECT (box),
+  g_object_set_data_full (G_OBJECT (box),
 			    "_layout_data", layout_data,
 			    g_free);
 
@@ -748,8 +756,9 @@ widget_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation,
 {
   gint position;
 
-  gtk_signal_disconnect_by_func ((GtkObject*) widget, widget_size_allocate_cb,
-				 layout_data);
+  g_signal_handlers_disconnect_matched (widget,
+					(GSignalMatchType) (G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA),
+					0, 0, NULL, widget_size_allocate_cb, layout_data);
 
   position = layout_widget_position (layout_data, widget);
 
@@ -784,7 +793,7 @@ layout_add_widget (GtkWidget *layout, GtkWidget *widget)
 {
   LayoutData *layout_data;
 
-  layout_data = gtk_object_get_data (GTK_OBJECT (layout),
+  layout_data = g_object_get_data (G_OBJECT (layout),
 				     "_layout_data");
   layout_data->children_list = 
     g_list_append (layout_data->children_list, widget);
@@ -795,9 +804,9 @@ layout_add_widget (GtkWidget *layout, GtkWidget *widget)
   layout_data->height += layout_data->spacing;
 
   if (!widget_height (widget, layout_data->orientation))
-    gtk_signal_connect ((GtkObject*) widget, "size-allocate",
-			(GtkSignalFunc) widget_size_allocate_cb,
-			layout_data);
+    g_signal_connect (G_OBJECT (widget), "size-allocate",
+		      G_CALLBACK (widget_size_allocate_cb),
+		      layout_data);
 
   gtk_widget_queue_resize (layout_data->gtk_layout);
 }
@@ -815,13 +824,13 @@ layout_reset (GtkWidget *layout)
   GtkContainer *gtk_layout;
   GList *children;
 
-  layout_data = gtk_object_get_data (GTK_OBJECT (layout), "_layout_data");
+  layout_data = g_object_get_data (G_OBJECT (layout), "_layout_data");
   layout_data->height = 0;
   gtk_adjustment_set_value (layout_data->adjustment, 0.0);
   refresh_buttons (layout_data);
 
   gtk_layout = (GtkContainer*) layout_data->gtk_layout;
-  children = gtk_container_children (gtk_layout);
+  children = gtk_container_get_children (gtk_layout);
   g_list_foreach (children, destroy_thumb, gtk_layout);
   g_list_free (layout_data->children_list);
   layout_data->children_list = g_list_alloc ();
@@ -834,7 +843,7 @@ layout_set_bg_color (GtkWidget *layout,
   LayoutData *layout_data;
   GtkRcStyle *bg_style;
 
-  layout_data = gtk_object_get_data (GTK_OBJECT (layout), "_layout_data");
+  layout_data = g_object_get_data (G_OBJECT (layout), "_layout_data");
 
   bg_style = gtk_rc_style_new ();
   back_gtkstyle (bg_style, GTK_STATE_NORMAL, red, green, blue);

@@ -22,15 +22,13 @@
 #ifndef GHFW_DLG_WINDOW_H
 #define GHFW_DLG_WINDOW_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
-#define GHFW_TYPE_DLG_WINDOW            (ghfw_dlg_window_get_type ())
-#define GHFW_DLG_WINDOW(obj)		(GTK_CHECK_CAST (obj, GHFW_TYPE_DLG_WINDOW, GhfwDlgWindow))
-#define GHFW_DLG_WINDOW_CLASS(obj)	(GTK_CHECK_CAST (obj, GHFW_TYPE_DLG_WINDOW, GhfwDlgWindowClass))
-#define GHFW_IS_DLG_WINDOW(obj)         (GTK_CHECK_TYPE (obj, GHFW_TYPE_DLG_WINDOW))
-#define GHFW_IS_DLG_WINDOW_CLASS(klass) (GTK_CHECK_CLASS_TYPE (klass, GHFW_TYPE_DLG_WINDOW))
+#define GHFW_DLG_WINDOW_TYPE            (ghfw_dlg_window_get_type ())
+#define GHFW_DLG_WINDOW(obj)		(GTK_CHECK_CAST (obj, GHFW_DLG_WINDOW_TYPE, GhfwDlgWindow))
+#define GHFW_DLG_WINDOW_CLASS(obj)	(GTK_CHECK_CAST (obj, GHFW_DLG_WINDOW_TYPE, GhfwDlgWindowClass))
+#define GHFW_IS_DLG_WINDOW(obj)         (GTK_CHECK_TYPE (obj, GHFW_DLG_WINDOW_TYPE))
+#define GHFW_IS_DLG_WINDOW_CLASS(klass) (GTK_CHECK_CLASS_TYPE (klass, GHFW_DLG_WINDOW_TYPE))
 
 
 typedef struct _GhfwDlgWindow GhfwDlgWindow;
@@ -42,7 +40,7 @@ struct _GhfwDlgWindow
 
   GtkWidget *vbox, *content, *button_box;
 
-  guint escapable:1;
+  gboolean escapable;
 };
 
 struct _GhfwDlgWindowClass
@@ -55,7 +53,7 @@ struct _GhfwDlgWindowClass
 GtkType        ghfw_dlg_window_get_type       (void);
 
 
-GtkWidget *ghfw_dlg_window_new (gchar *title);
+GhfwDlgWindow* ghfw_dlg_window_new (gchar *title);
 void ghfw_dlg_window_set_content (GhfwDlgWindow *window, GtkWidget *content);
 void ghfw_dlg_window_set_content_with_frame (GhfwDlgWindow *window,
 					     GtkWidget *content);
@@ -68,8 +66,6 @@ void ghfw_dlg_window_set_escapable (GhfwDlgWindow *window);
 
 GtkWidget *ghfw_dlg_window_button_box ();
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif /* GHFW_DLG_WINDOW_H */

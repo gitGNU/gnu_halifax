@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:07:28 wolfgang>
+ * Time-stamp: <2003-03-07 02:01:08 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -40,6 +40,7 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
+#include <string.h>
 #include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "setup.h"
@@ -62,10 +63,10 @@ void about_pixmap_realize_cb (GtkWidget *ref_window, GtkWidget *pixmap)
     {
       text = _("The GNU HaliFAX Viewer");
       text_len = strlen (text);
-      gdk_draw_text (GTK_PIXMAP (pixmap)->pixmap, gdk_font,
-		     pixmap->style->black_gc,
-		     128, 58,
-		     text, text_len);
+/*       gdk_draw_text (GTK_PIXMAP (pixmap)->pixmap, gdk_font, */
+/* 		     pixmap->style->black_gc, */
+/* 		     128, 58, */
+/* 		     text, text_len); */
     }
   else
     g_print ("error loading font\n");
@@ -74,18 +75,17 @@ void about_pixmap_realize_cb (GtkWidget *ref_window, GtkWidget *pixmap)
 static GtkWidget*
 about_content (GtkWidget *ref_window)
 {
-  GtkWidget *layout, *pixmap;
+  GtkWidget *layout, *image;
 
   layout = gtk_layout_new (NULL, NULL);
-  gtk_widget_set_usize (layout, 350, 300);
+  gtk_widget_set_size_request (layout, 350, 300);
 
-  pixmap = pixmap_from_xpm (ref_window,
-			    PIXMAP ("ghfaxviewer-logo.xpm"));
-  gtk_layout_put (GTK_LAYOUT (layout), pixmap, 0, 0);
+  image = gtk_image_new_from_file (PIXMAP ("ghfaxviewer-logo.xpm"));
+  gtk_layout_put (GTK_LAYOUT (layout), image, 0, 0);
 
-  gtk_signal_connect_after (GTK_OBJECT (pixmap), "realize",
-			    (GtkSignalFunc) about_pixmap_realize_cb,
-			    pixmap);
+  g_signal_connect_after (G_OBJECT (image), "realize",
+			  G_CALLBACK (about_pixmap_realize_cb),
+			  image);
 
   return layout;
 }
@@ -93,7 +93,8 @@ about_content (GtkWidget *ref_window)
 void
 about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 {
-  GtkWidget *about_dialog, *content, *ok_button;
+  GtkWidget *content, *ok_button;
+  GhfwDlgWindow *about_dialog;
 
   about_dialog = ghfw_dlg_window_new (_("About..."));
   content = about_content (viewer_window);
@@ -102,12 +103,12 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 					  content);
 
   ok_button = gtk_button_new_with_label (_("Close"));
-  gtk_signal_connect_object (GTK_OBJECT (ok_button), "clicked",
-			     gtk_widget_destroy,
-			     GTK_OBJECT (about_dialog));
+  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked",
+			    G_CALLBACK (gtk_widget_destroy),
+			    G_OBJECT (about_dialog));
 
   ghfw_dlg_window_set_button ((GhfwDlgWindow*) about_dialog, ok_button);
   ghfw_dlg_window_set_escapable ((GhfwDlgWindow*) about_dialog);
 
-  transient_window_show (about_dialog, viewer_window);
+  transient_window_show (GTK_WIDGET (about_dialog), viewer_window);
 }

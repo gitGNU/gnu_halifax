@@ -25,16 +25,18 @@
 #include "ghfwdlgwindow.h"
 #include "ghfwgtkutils.h"
 
+#include "i18n.h"
+
 enum {
-  ARG_0,
-  ARG_ESCAPABLE,
-  ARG_CONTENT,
-  ARG_BUTTON_BOX,
-  ARG_VBOX
+  PARAM_0,
+  ESCAPABLE,
+  CONTENT,
+  BUTTON_BOX,
+  VBOX
 };
 
 static guint dlg_window_escaped_signal;
-static GtkWindowClass *parent_class = NULL;
+static GObjectClass *parent_class = NULL;
 
 /* callbacks */
 
@@ -51,8 +53,8 @@ ghfw_dlg_window_key_press_event (GtkWidget *widget,
       event->keyval == GDK_Escape &&
       dlg_window->escapable)
     {
-      gtk_signal_emit (GTK_OBJECT (widget), dlg_window_escaped_signal);
-      gtk_signal_emit_stop_by_name (GTK_OBJECT (widget), "key_press_event");
+      g_signal_emit (G_OBJECT (widget), dlg_window_escaped_signal, 0);
+      g_signal_stop_emission_by_name (G_OBJECT (widget), "key_press_event");
       gtk_widget_destroy (widget);
 
       ret_code = TRUE;
@@ -73,7 +75,7 @@ ghfw_dlg_window_button_box ()
   button_box = gtk_hbutton_box_new ();
   gtk_container_set_border_width (GTK_CONTAINER (button_box), 5);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (button_box), GTK_BUTTONBOX_END);
-  gtk_button_box_set_spacing (GTK_BUTTON_BOX (button_box), 5);
+  gtk_box_set_spacing (GTK_BOX (button_box), 5);
 
   gtk_widget_show (button_box);
 
@@ -81,59 +83,64 @@ ghfw_dlg_window_button_box ()
 }
 
 static void
-ghfw_dlg_window_set_arg (GtkObject *object,
-			 GtkArg    *arg,
-			 guint      arg_id)
+ghfw_dlg_window_set_property (GObject *object,
+			      guint property_id,
+			      const GValue *value,
+			      GParamSpec *pspec)
 {
   GhfwDlgWindow *dlg_window;
+  gboolean bool_value;
+  gpointer ptr_value;
 
   dlg_window = GHFW_DLG_WINDOW (object);
 
-  switch (arg_id)
+  switch (property_id)
     {
-    case ARG_ESCAPABLE:
-      dlg_window->escapable = GTK_VALUE_BOOL (*arg);
+    case ESCAPABLE:
+      bool_value = g_value_get_boolean (value);
+      dlg_window->escapable = bool_value;
       break;
-    case ARG_CONTENT:
-      ghfw_dlg_window_set_content (dlg_window, GTK_VALUE_POINTER (*arg));
+    case CONTENT:
+      ptr_value = g_value_get_pointer (value);
+      ghfw_dlg_window_set_content (dlg_window, ptr_value);
       break;
-    case ARG_BUTTON_BOX:
-      ghfw_dlg_window_set_button_box (dlg_window, GTK_VALUE_POINTER (*arg));
-      break;
-    default:
+    case BUTTON_BOX:
+      ptr_value = g_value_get_pointer (value);
+      ghfw_dlg_window_set_button_box (dlg_window, ptr_value);
       break;
     }
 }
 
 static void
-ghfw_dlg_window_get_arg (GtkObject *object,
-			 GtkArg    *arg,
-			 guint      arg_id)
+ghfw_dlg_window_get_property (GObject *object,
+			      guint property_id,
+			      GValue *value,
+			      GParamSpec *pspec)
 {
   GhfwDlgWindow *dlg_window;
 
   dlg_window = GHFW_DLG_WINDOW (object);
 
-  switch (arg_id)
+  switch (property_id)
     {
-    case ARG_ESCAPABLE:
-      GTK_VALUE_BOOL (*arg) = dlg_window->escapable;
+    case ESCAPABLE:
+      g_value_set_boolean (value, dlg_window->escapable);
       break;
-    case ARG_CONTENT:
-      GTK_VALUE_POINTER (*arg) = dlg_window->content;
+    case CONTENT:
+      g_value_set_pointer (value, dlg_window->content);
       break;
-    case ARG_BUTTON_BOX:
+    case BUTTON_BOX:
       if (!dlg_window->button_box)
-	GTK_VALUE_POINTER (*arg) = ghfw_dlg_window_button_box ();
+	g_value_set_pointer (value, ghfw_dlg_window_button_box ());
       else
-	GTK_VALUE_POINTER (*arg) = dlg_window->button_box;
+	g_value_set_pointer (value, dlg_window->button_box);
       break;
-    case ARG_VBOX:
-      GTK_VALUE_POINTER (*arg) = dlg_window->vbox;
+    case VBOX:
+      g_value_set_pointer (value, dlg_window->vbox);
       break;
-    default:
-      arg->type = GTK_TYPE_INVALID;
-      break;
+/*     default: */
+/*       property->type = G_TYPE_INVALID; */
+/*       break; */
     }
 }
 
@@ -142,39 +149,54 @@ ghfw_dlg_window_get_arg (GtkObject *object,
 static void
 ghfw_dlg_window_class_init (GhfwDlgWindowClass *klass)
 {
-  GtkObjectClass *object_class;
+  GObjectClass *object_class;
   GtkWidgetClass *widget_class;
 
-  object_class = (GtkObjectClass *) klass;
+  object_class = (GObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
-  parent_class = gtk_type_class (GTK_TYPE_WINDOW);
+  parent_class = g_type_class_peek_parent (klass);
 
-  gtk_object_add_arg_type ("GhfwDlgWindow::escapable",
-			   GTK_TYPE_BOOL, GTK_ARG_READWRITE,
-			   ARG_ESCAPABLE);
-  gtk_object_add_arg_type ("GhfwDlgWindow::content",
-			   GTK_TYPE_POINTER, GTK_ARG_READWRITE,
-			   ARG_CONTENT);
-  gtk_object_add_arg_type ("GhfwDlgWindow::button_box",
-			   GTK_TYPE_POINTER, GTK_ARG_READWRITE,
-			   ARG_BUTTON_BOX);
-  gtk_object_add_arg_type ("GhfwDlgWindow::vbox",
-			   GTK_TYPE_POINTER, GTK_ARG_READABLE,
-			   ARG_VBOX);
+  g_object_class_install_property
+    (object_class, ESCAPABLE,
+     g_param_spec_boolean ("escapable",
+			   _("Escapable"),
+			   _("Whether the dialog can be close with the"
+			     " Esc key."),
+			   0, G_PARAM_READWRITE));
+  g_object_class_install_property
+     (object_class, CONTENT,
+      g_param_spec_object ("content",
+			   _("Content"),
+			   _("The content appearing within the frame."),
+			   GTK_TYPE_WIDGET, G_PARAM_READWRITE));
+
+  g_object_class_install_property
+     (object_class, BUTTON_BOX,
+     g_param_spec_object ("button_box",
+			   _("Button Box"),
+			   _("The button box at the botton of the window."),
+			   GTK_TYPE_BUTTON_BOX, G_PARAM_READWRITE));
+  g_object_class_install_property
+     (object_class, VBOX,
+     g_param_spec_object ("vbox",
+			   _("Vbox"),
+			   _("A random vbox...."),
+			   GTK_TYPE_VBOX, G_PARAM_READWRITE));
 
   dlg_window_escaped_signal =
-    gtk_signal_new ("escaped",
-		    GTK_RUN_FIRST,
-		    object_class->type,
-		    GTK_SIGNAL_OFFSET (GhfwDlgWindowClass, escaped),
-		    gtk_marshal_NONE__NONE,
-		    GTK_TYPE_NONE, 0);
+    g_signal_new ("escaped",
+		  G_TYPE_FROM_CLASS (object_class),
+		  G_SIGNAL_RUN_FIRST,
+		  G_STRUCT_OFFSET (GhfwDlgWindowClass, escaped),
+		  NULL, NULL,
+		  g_cclosure_marshal_VOID__VOID,
+		  G_TYPE_NONE, 0);
 
-  gtk_object_class_add_signals (object_class, &dlg_window_escaped_signal, 1);
+/*   g_object_class_add_signals (object_class, &dlg_window_escaped_signal, 1); */
 
-  object_class->set_arg = ghfw_dlg_window_set_arg;
-  object_class->get_arg = ghfw_dlg_window_get_arg;
+  object_class->set_property = ghfw_dlg_window_set_property;
+  object_class->get_property = ghfw_dlg_window_get_property;
 
   widget_class->key_press_event = ghfw_dlg_window_key_press_event;
 
@@ -196,26 +218,30 @@ ghfw_dlg_window_init (GhfwDlgWindow *dlg_window)
   gtk_widget_show (dlg_window->vbox);
 }
 
-GtkType
+GType
 ghfw_dlg_window_get_type (void)
 {
-  static GtkType dlg_window_type = 0;
+  static GType dlg_window_type = 0;
 
   if (!dlg_window_type)
     {
-      static const GtkTypeInfo dlg_window_info =
+      GTypeInfo dlg_window_info =
 	{
-	  "GhfwDlgWindow",
-	  sizeof (GhfwDlgWindow),
 	  sizeof (GhfwDlgWindowClass),
-	  (GtkClassInitFunc) ghfw_dlg_window_class_init,
-	  (GtkObjectInitFunc) ghfw_dlg_window_init,
-	  /* reserved_1 */ NULL,
-	  /* reserved_2 */ NULL,
-	  (GtkClassInitFunc) NULL,
+	  (GBaseInitFunc) NULL,
+	  (GBaseFinalizeFunc) NULL,
+	  (GClassInitFunc) ghfw_dlg_window_class_init,
+	  (GClassFinalizeFunc) NULL,
+	  NULL,
+	  sizeof (GhfwDlgWindow),
+	  0,
+	  (GInstanceInitFunc) ghfw_dlg_window_init,
 	};
 
-      dlg_window_type = gtk_type_unique (GTK_TYPE_WINDOW, &dlg_window_info);
+      dlg_window_type = g_type_register_static (GTK_TYPE_WINDOW,
+						"GhfwDlgWindow",
+						&dlg_window_info,
+						0);
     }
 
   return dlg_window_type;
@@ -223,13 +249,13 @@ ghfw_dlg_window_get_type (void)
 
 /* Regular public stuff */
 
-GtkWidget*
+GhfwDlgWindow*
 ghfw_dlg_window_new (gchar *title)
 {
-  GtkWidget *dlg_window;
+  GhfwDlgWindow *dlg_window;
   
-  dlg_window = GTK_WIDGET (gtk_type_new (ghfw_dlg_window_get_type ()));
-  GTK_WINDOW (dlg_window)->type = GTK_WINDOW_DIALOG;
+  dlg_window = g_object_new (GHFW_DLG_WINDOW_TYPE, NULL);
+/*   GTK_WINDOW (dlg_window)->type = GTK_WINDOW_DIALOG; */
   gtk_window_set_title (GTK_WINDOW (dlg_window), title);
 
   return dlg_window;
@@ -299,6 +325,6 @@ ghfw_dlg_window_set_button (GhfwDlgWindow *window,
   ghfw_dlg_window_set_button_box (window,
 				button_box);
 
-  GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (button);
 }

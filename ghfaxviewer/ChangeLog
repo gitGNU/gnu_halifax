@@ -1,3 +1,14 @@
+2003-03-07  Wolfgang Sourdeau  <Wolfgang@Contre.COM>
+
+	* src/prefs.c (prefs_cb): gtk_signal_connect_object ->
+	g_signal_connect_swapped
+
+	* src/thumbnails.c (thumb_button): gtk_widget_set_usize -> 
+	gtk_widget_set_size_request
+
+	* src/draw_page.c (draw_page): gtk_drawing_area_size ->
+	gtk_widget_set_size_request
+
 2003-01-30  Wolfgang Sourdeau  <Wolfgang@Contre.COM>
 
 	* src/tiffimages.c (fill_index): make indexing slightly faster by

@@ -15,9 +15,6 @@ SYSDEPDEFS = -DLOCALEDIR="\"$(gnulocaledir)\"" -DPIXMAP_DIR="\"$(pixmapsdir)\"" 
 .rc.o:
 	@WINDRES@ --include-dir=$(prefix)/include $< $@
 
-endif
-endif
-
 DEFS = @DEFS@ $(SYSDEPDEFS)
 
 SUFFIXES = .rc .o
@@ -35,7 +32,6 @@ ghfaxviewer_LDADD = @GHFW_LIBS@
 
 EXTRA_DIST = ghfaxviewer.desktop ghfaxviewer-res.rc
 
-if GNOME
 install-data-local:
 	$(mkinstalldirs) $(gnome_graph_app_dir)
 	$(INSTALL_DATA) $(srcdir)/ghfaxviewer.desktop \

@@ -681,7 +681,7 @@ file_exists_dialog (OutputData *output_data, GtkWidget *print_dialog)
   GTK_WIDGET_SET_FLAGS (yes_but, GTK_CAN_DEFAULT);
 
   no_but = gtk_button_new_with_label (_("No thanks"));
-  gtk_signal_connect_object (GTK_OBJECT (no_but), "clicked",
+  gtk_signal_connect_swapped (GTK_OBJECT (no_but), "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			     GTK_OBJECT (err_dialog));
   gtk_box_pack_start (GTK_BOX (button_box), no_but,
@@ -808,7 +808,7 @@ print_dialog_bbox (PrintData *print_data)
   cancel_but = gtk_button_new_with_label (_("Cancel"));
   GTK_WIDGET_SET_FLAGS(cancel_but, GTK_CAN_DEFAULT);
   gtk_box_pack_start (GTK_BOX (button_box), cancel_but, FALSE, FALSE, 0);
-  gtk_signal_connect_object (GTK_OBJECT (cancel_but), "clicked",
+  gtk_signal_connect_swapped (GTK_OBJECT (cancel_but), "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			     GTK_OBJECT (print_data->print_dialog));
 

@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:07:43 wolfgang>
+ * Time-stamp: <2003-03-07 01:35:56 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -260,11 +260,11 @@ draw_page (ViewerData *viewer_data)
 
   if (viewer_data->rotation == ROT_NONE
       || viewer_data->rotation == ROT_180)
-    gtk_drawing_area_size (GTK_DRAWING_AREA (viewer_data->page_area),
-			   area_width + 2, area_height + 2);
+    gtk_widget_set_size_request (viewer_data->page_area,
+				 area_width + 2, area_height + 2);
   else
-    gtk_drawing_area_size (GTK_DRAWING_AREA (viewer_data->page_area),
-			   area_height + 2, area_width + 2);
+    gtk_widget_set_size_request (viewer_data->page_area,
+				 area_height + 2, area_width + 2);
 
   gdkcursor_set (viewer_data->page_area->window,
 		 GDK_WATCH);

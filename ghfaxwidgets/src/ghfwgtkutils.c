@@ -39,6 +39,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #endif
@@ -103,9 +104,9 @@ menu_item_new (GtkWidget *menu, gchar *label,
 /* } */
 
 GtkWidget *
-pixmap_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data)
+image_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data)
 {
-  GtkWidget *gtk_pixmap;
+  GtkWidget *gtk_image;
   GdkPixmap *pixmap;
   GdkBitmap *mask;
 
@@ -114,9 +115,9 @@ pixmap_from_xpm_data (GtkWidget *ref_widget, gchar **xpm_data)
      &(ref_widget->style->bg[GTK_STATE_NORMAL]),
      xpm_data);
 
-  gtk_pixmap = gtk_pixmap_new (pixmap, mask);
+  gtk_image = gtk_image_new_from_pixmap (pixmap, mask);
 
-  return gtk_pixmap;
+  return gtk_image;
 }
 
 void
@@ -181,13 +182,12 @@ transient_window_show (GtkWidget *transient, GtkWidget *parent)
 
   if (((GtkWindow *) parent)->modal)
     {
-      gtk_object_set_data (G_OBJECT (transient), "parent_was_modal",
-			   parent);
+      g_object_set_data (G_OBJECT (transient), "parent_was_modal", parent);
       gtk_window_set_modal ((GtkWindow *) parent, FALSE);
     }
 
   gtk_window_set_modal ((GtkWindow *) transient, TRUE);
-  gtk_window_set_policy ((GtkWindow *) transient, FALSE, FALSE, TRUE);
+/*   gtk_window_set_policy ((GtkWindow *) transient, FALSE, FALSE, TRUE); */
 
   g_signal_connect (G_OBJECT (transient), "destroy",
 		    G_CALLBACK (transient_destroy_cb), NULL);

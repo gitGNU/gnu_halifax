@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:08:23 wolfgang>
+ * Time-stamp: <2003-03-07 01:40:07 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -315,8 +315,7 @@ static void
 page_area_realize_cb (GtkWidget *drawing_area,
 		      ViewerData *viewer_data)
 {
-  gtk_drawing_area_size
-    (GTK_DRAWING_AREA (drawing_area), 0, 0);
+  gtk_widget_set_size_request (drawing_area, 0, 0);
 
   gdk_window_set_events
     (drawing_area->window,

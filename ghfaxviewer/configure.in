@@ -50,29 +50,26 @@ dnl Test for libtiff
   
 AC_PATH_X
   
-if test "$have_x" = "yes"; then
-  AC_CHECK_LIB(tiff, TIFFReadScanline,
-      AC_CHECK_HEADER(tiffio.h,
-                    TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff",
-      AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
-      AC_CHECK_LIB(tiff, TIFFWriteScanline,
-        AC_CHECK_HEADER(tiffio.h,
-                        TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff -ljpeg -lz",
-          AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
-          AC_CHECK_LIB(tiff34, TIFFFlushData,
-            AC_CHECK_HEADER(tiffio.h,
-                            TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff34 -ljpeg -lz",
-              AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
-             AC_MSG_WARN(*** please install libtiff (TIFF library not found) ***), -ljpeg -lz -lm), -ljpeg -lz -lm), -lm)
-fi
-
-# no_gnome_print
-fi
+dnl if test x"$have_x" = x"yes"; then
+dnl  AC_CHECK_LIB(tiff, TIFFReadScanline,
+dnl       AC_CHECK_HEADER(tiffio.h,
+dnl                     TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff",
+dnl       AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
+dnl       AC_CHECK_LIB(tiff, TIFFWriteScanline,
+dnl         AC_CHECK_HEADER(tiffio.h,
+dnl                         TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff -ljpeg -lz",
+dnl           AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
+dnl           AC_CHECK_LIB(tiff34, TIFFFlushData,
+dnl             AC_CHECK_HEADER(tiffio.h,
+dnl                             TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff34 -ljpeg -lz",
+dnl               AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
+dnl              AC_MSG_WARN(*** please install libtiff (TIFF library not found) ***), -ljpeg -lz -lm), -ljpeg -lz -lm), -lm)
+dnl fi
 
 dnl deps="$TIFF_LIBS"
 
 AC_MSG_CHECKING([whether debugging is requested])
-if test "$debug" = "yes"; then
+if test x"$debug" = x"yes"; then
     AC_MSG_RESULT([yes])
     CFLAGS="$CFLAGS -Wall -O0 -ggdb3"
 else

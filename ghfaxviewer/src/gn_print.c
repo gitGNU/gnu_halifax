@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-02-17 22:36:13 wolfgang>
+ * Time-stamp: <2003-03-07 01:46:28 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -32,7 +32,7 @@
 #include <libgnomeprint/gnome-print.h>
 #include <libgnomeprint/gnome-print-paper.h>
 #include <libgnomeprintui/gnome-print-dialog.h>
-#include <libgnomeprintui/gnome-print-preview.h>
+#include <libgnomeprintui/gnome-print-job-preview.h>
 #include <ghfaxwidgets/ghfaxwidgets.h>
 
 #include "setup.h"
@@ -189,7 +189,7 @@ prepare_print_job (GtkWidget *print_dlg,
   gint from, to;
   GtkWidget *progress_win;
 
-  progress_win = ghfw_progress_window_new (_("Please wait..."), NULL);
+  progress_win = GTK_WIDGET (ghfw_progress_window_new (_("Please wait..."), NULL));
   ghfw_progress_window_set_abortable (GHFW_PROGRESS_WINDOW (progress_win), TRUE);
   transient_window_show (progress_win, print_dlg);
 
@@ -234,9 +234,9 @@ print_or_preview (GtkWidget *print_dlg,
   gint result;
 
   result = FALSE;
-  print_master = prepare_print_master (print_dlg,
-				       viewer_data->fax_file,
-				       viewer_data->current_page);
+  viewer_data->print_job = prepare_print_job (print_dlg,
+					      viewer_data->fax_file,
+					      viewer_data->current_page);
 
   if (viewer_data->print_job)
     {
@@ -246,8 +246,7 @@ print_or_preview (GtkWidget *print_dlg,
 	{
 	  preview =
  	    GTK_WIDGET (gnome_print_job_preview_new (viewer_data->print_job,
-						     _("Print"
-						       " preview...")));
+						     _("Print preview...")));
 
 	  transient_window_show (preview, print_dlg);
 	  window_set_icon (preview, PIXMAP ("ghfaxviewer-icon.xpm"));

@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000-2001 Wolfgang Sourdeau
  *
- * Time-stamp: <2002-10-25 01:07:53 wolfgang>
+ * Time-stamp: <2003-03-07 02:03:16 wolfgang>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -83,11 +83,11 @@ file_dialog (ViewerData *viewer_data)
 		      "clicked",
 		      G_CALLBACK (file_dlg_ok_cb),
 		      viewer_data);
-  g_signal_connect_object (G_OBJECT (GTK_FILE_SELECTION
+  g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION
 					 (open_dialog)->cancel_button),
 			     "clicked",
 			     G_CALLBACK (gtk_widget_destroy),
-			     G_OBJECT (open_dialog), 0);
+			     G_OBJECT (open_dialog));
 
   transient_window_show (open_dialog,
 			 viewer_data->viewer_window);
