@@ -34,26 +34,33 @@ enum {
 };
 
 static guint dlg_window_escaped_signal;
+static GtkWindowClass *parent_class = NULL;
 
 /* callbacks */
 
 static gboolean
-ghfw_dlg_window_key_press_event (GtkWidget *window,
+ghfw_dlg_window_key_press_event (GtkWidget *widget,
 				 GdkEventKey *event)
 {
   GhfwDlgWindow *dlg_window;
+  gboolean ret_code;
 
-  dlg_window = GHFW_DLG_WINDOW (window);
+  dlg_window = GHFW_DLG_WINDOW (widget);
 
   if (event->type == GDK_KEY_PRESS &&
       event->keyval == GDK_Escape &&
       dlg_window->escapable)
     {
-      gtk_signal_emit (GTK_OBJECT (window), dlg_window_escaped_signal);
-      gtk_widget_destroy (window);
-    }
+      gtk_signal_emit (GTK_OBJECT (widget), dlg_window_escaped_signal);
+      gtk_signal_emit_stop_by_name (GTK_OBJECT (widget), "key_press_event");
+      gtk_widget_destroy (widget);
 
-  return TRUE;
+      ret_code = TRUE;
+    }
+  else
+    ret_code = FALSE;
+
+  return ret_code;
 }
 
 static GtkWidget *
@@ -65,6 +72,8 @@ ghfw_dlg_window_bbox ()
   gtk_container_set_border_width (GTK_CONTAINER (button_box), 5);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (button_box), GTK_BUTTONBOX_END);
   gtk_button_box_set_spacing (GTK_BUTTON_BOX (button_box), 5);
+
+  gtk_widget_show (button_box);
 
   return button_box;
 }
@@ -113,8 +122,9 @@ ghfw_dlg_window_get_arg (GtkObject *object,
       break;
     case ARG_BUTTON_BOX:
       if (!dlg_window->button_box)
-	dlg_window->button_box = ghfw_dlg_window_bbox ();
-      GTK_VALUE_POINTER (*arg) = dlg_window->button_box;
+	GTK_VALUE_POINTER (*arg) = ghfw_dlg_window_bbox ();
+      else
+	GTK_VALUE_POINTER (*arg) = dlg_window->button_box;
       break;
     case ARG_VBOX:
       GTK_VALUE_POINTER (*arg) = dlg_window->vbox;
@@ -135,6 +145,8 @@ ghfw_dlg_window_class_init (GhfwDlgWindowClass *klass)
 
   object_class = (GtkObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
+
+  parent_class = gtk_type_class (GTK_TYPE_WINDOW);
 
   gtk_object_add_arg_type ("GhfwDlgWindow::escapable",
 			   GTK_TYPE_BOOL, GTK_ARG_READWRITE,
@@ -173,8 +185,13 @@ ghfw_dlg_window_init (GhfwDlgWindow *dlg_window)
   dlg_window->escapable = FALSE;
 
   dlg_window->vbox = gtk_vbox_new (FALSE, 5);
+  gtk_container_add (GTK_CONTAINER (dlg_window),
+		     dlg_window->vbox);
+
   dlg_window->content = NULL;
   dlg_window->button_box = NULL;
+
+  gtk_widget_show (dlg_window->vbox);
 }
 
 GtkType
@@ -244,8 +261,10 @@ ghfw_dlg_window_set_content_with_frame (GhfwDlgWindow *window, GtkWidget *conten
   frame = gtk_frame_new (NULL);
   gtk_container_set_border_width (GTK_CONTAINER (frame), 10);
   gtk_container_add (GTK_CONTAINER (frame), content);
+  gtk_widget_show (frame);
+
   ghfw_dlg_window_set_content (window, frame);
-  
+
   window->content = content;
 }
 
@@ -266,7 +285,7 @@ ghfw_dlg_window_set_button_box (GhfwDlgWindow *window,
 
 void
 ghfw_dlg_window_set_button (GhfwDlgWindow *window,
-			  GtkWidget *button)
+			    GtkWidget *button)
 {
   GtkWidget *button_box;
 

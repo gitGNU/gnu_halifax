@@ -1,4 +1,5 @@
 2001-10-01  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/ghfwdlgwindow.c: the dialog windows are now pure GTK widgets.
+	(ghfw_dlg_window_init): vbox was not put in dlg_window container.
 
