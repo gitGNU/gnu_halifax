@@ -9,6 +9,7 @@ build-stamp:
 	dh_testdir
 	dh_clean
 
+	CFLAGS="-O2 -m486"			\
 	./configure 				\
 		--prefix=/usr			\
 		--sysconfdir=/etc		\

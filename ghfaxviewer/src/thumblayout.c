@@ -29,6 +29,7 @@
 #include "pixmaps/down_arrow.xpm"
 
 #define ADJUSTMENT_STEP 10
+#define ADJUSTMENT_DELAY 50
 
 typedef struct _LayoutData LayoutData;
 
@@ -138,7 +139,7 @@ up_pressed_cb (GtkWidget *button, LayoutData *layout_data)
 {
   layout_data->up_pressed = TRUE;
   layout_timeout_cb (layout_data);
-  layout_data->timeout_id = gtk_timeout_add (250,
+  layout_data->timeout_id = gtk_timeout_add (ADJUSTMENT_DELAY,
 					     (GtkFunction) layout_timeout_cb,
 					     layout_data);
 }
@@ -148,7 +149,7 @@ down_pressed_cb (GtkWidget *button, LayoutData *layout_data)
 {
   layout_data->down_pressed = TRUE;
   layout_timeout_cb (layout_data);
-  layout_data->timeout_id = gtk_timeout_add (250,
+  layout_data->timeout_id = gtk_timeout_add (ADJUSTMENT_DELAY,
 					     (GtkFunction) layout_timeout_cb,
 					     layout_data);
 }
@@ -166,6 +167,8 @@ layout_resize_cb (GtkWidget *layout,
 {
   GtkAdjustment *adjustment;
   gint delta;
+
+  g_print ("caught\n");
 
   adjustment = layout_data->adjustment;
 
@@ -255,7 +258,7 @@ layout_new (GtkWidget *ref_widget, gint spacing, gint width)
 
   layout_data->gtk_layout = gtk_layout;
   gtk_object_set_data_full (GTK_OBJECT (vbox),
-			    "layout_data", layout_data,
+			    "_layout_data", layout_data,
 			    g_free);
   gtk_signal_connect (GTK_OBJECT (gtk_layout),
 		      "size-allocate",
@@ -273,6 +276,28 @@ layout_new (GtkWidget *ref_widget, gint spacing, gint width)
   return vbox;
 }
 
+static void
+check_button_pos (GtkWidget *button, LayoutData *layout_data)
+{
+  GtkAllocation allocation;
+  GtkAdjustment *adjustment;
+  gint delta;
+
+  allocation = button->allocation;
+  adjustment = layout_data->adjustment;
+
+  delta = allocation.y + allocation.height - adjustment->page_size;
+
+  if (delta > 0)
+    gtk_adjustment_set_value (adjustment, adjustment->value + delta);
+
+  delta = allocation.y;
+  if (delta < 0)
+    gtk_adjustment_set_value (adjustment, adjustment->value + delta);
+
+  refresh_buttons (layout_data);
+}
+
 void
 layout_add_button (GtkWidget *layout, GtkWidget *button)
 {
@@ -282,18 +307,20 @@ layout_add_button (GtkWidget *layout, GtkWidget *button)
   GtkRequisition requisition;
 
   layout_data = gtk_object_get_data (GTK_OBJECT (layout),
-				     "layout_data");
+				     "_layout_data");
 
   gtk_widget_get_child_requisition (button, &requisition);
 
   gtk_layout = layout_data->gtk_layout;
 
   x = (gtk_layout->allocation.width - requisition.width) / 2;
-
   layout_data->height += layout_data->spacing / 2;
 
   gtk_layout_put (GTK_LAYOUT (gtk_layout),
 		  button, x, layout_data->height);
+
+  gtk_signal_connect (GTK_OBJECT (button), "pressed",
+		      check_button_pos, layout_data);
 
   layout_data->height += requisition.height + layout_data->spacing / 2;
 
@@ -305,7 +332,6 @@ static void
 destroy_thumb (gpointer layout_child, gpointer container)
 {
   gtk_container_remove (GTK_CONTAINER (container), layout_child);
-/*   gtk_widget_destroy (layout_child); */
 }
 
 void
@@ -315,11 +341,13 @@ layout_reset (GtkWidget *layout)
   GtkContainer *gtk_layout;
   GList *children;
 
-  layout_data = gtk_object_get_data (GTK_OBJECT (layout), "layout_data");
+  layout_data = gtk_object_get_data (GTK_OBJECT (layout), "_layout_data");
   layout_data->height = 0;
+  gtk_adjustment_set_value (layout_data->adjustment, 0.0);
+  refresh_buttons (layout_data);
+
   gtk_layout = (GtkContainer*) layout_data->gtk_layout;
   children = gtk_container_children (gtk_layout);
-
   g_list_foreach (children, destroy_thumb, gtk_layout);
 }
 
@@ -330,7 +358,7 @@ layout_set_bg_color (GtkWidget *layout,
   LayoutData *layout_data;
   GtkRcStyle *bg_style;
 
-  layout_data = gtk_object_get_data (GTK_OBJECT (layout), "layout_data");
+  layout_data = gtk_object_get_data (GTK_OBJECT (layout), "_layout_data");
 
   bg_style = gtk_rc_style_new ();
   back_gtkstyle (bg_style, GTK_STATE_NORMAL, red, green, blue);

@@ -162,9 +162,9 @@ windows_print (ViewerData *viewer_data, PRINTDLG *prt_params)
       
       StartDoc(prt_params->hDC, doc_info);
       
-      p_data = gfv_progress_new
-	(GTK_WINDOW (viewer_data->viewer_window),
-	 _("Please wait..."), NULL, ABORT_BTN);
+      p_data = gfv_progress_new	(viewer_data->viewer_window,
+				 _("Please wait..."), NULL,
+				 ABORT_BTN);
       p_max = size_of_output (viewer_data,
 			      min_page_nbr, max_page_nbr);
       p_val = 0;
