@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ghfaxwidgets 0.0.0\n"
-"POT-Creation-Date: 2001-09-24 17:31-0400\n"
+"POT-Creation-Date: 2001-09-25 07:14-0400\n"
 "PO-Revision-Date: 2001-09-24 00:30-04:00\n"
 "Last-Translator: Wolfgang Sourdeau <wolfgang@contre.com>\n"
 "Language-Team: Traditional Chinese\n"
@@ -12,12 +12,11 @@ msgstr ""
 "Content-Type: text/plain; charset=big5-0\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/progress.c:94 src/ps_print.c:1036
+#: src/ghfwprogress.c:94
 msgid "Cancel"
 msgstr "取消"
 
-#: src/progress.c:218
+#: src/ghfwprogress.c:218
 #, c-format
 msgid "%s (done)"
 msgstr "%s (已完成)"
-
