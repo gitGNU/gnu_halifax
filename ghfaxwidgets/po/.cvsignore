@@ -1,1 +1,5 @@
 *.gmo
+ChangeLog
+Makefile*
+POTFILES
+ghfaxwidgets.pot

@@ -24,3 +24,10 @@ intl
 err
 diff
 ltmain.sh
+COPYING
+INSTALL
+autom4te.cache
+depcomp
+ghfaxwidgets-uninstalled.pc
+ghfaxwidgets.pc
+libtool

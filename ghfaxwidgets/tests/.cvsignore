@@ -2,3 +2,7 @@
 *.la
 Makefile
 Makefile.in
+.deps
+.libs
+dlg_test
+ghfwtest
