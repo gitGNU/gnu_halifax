@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 
-%doc AUTHORS COPYING ChangeLog NEWS README README.cvs TODO
+%doc AUTHORS COPYING ChangeLog NEWS README docs/README.cvs TODO
 %{prefix}/bin/*
 %{prefix}/share/locale/*/LC_MESSAGES/%{name}.mo
 %{prefix}/share/pixmaps/ghfaxviewer/*

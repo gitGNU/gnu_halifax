@@ -1,5 +1,5 @@
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
-SUBDIRS = intl po src debian macros
+SUBDIRS = docs intl po src debian macros
 
-EXTRA_DIST = README.cvs ghfaxviewer.spec Makefile.win32.in gfv_gtkrc
+EXTRA_DIST = ghfaxviewer.spec Makefile.win32.in gfv_gtkrc

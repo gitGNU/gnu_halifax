@@ -251,6 +251,7 @@ Makefile.win32
 ghfaxviewer.spec
 debian/Makefile
 macros/Makefile
+docs/Makefile
 intl/Makefile
 src/Makefile
 src/ghfaxviewer-res.rc

@@ -1,5 +1,7 @@
 2001-04-13  Wolfgang Sourdeau  <wolfgang@contre.com>
 
+	* docs/README.cvs: README.cvs is now in docs/
+
 	* README.cvs: added an explanation on how to obtain GNU HaliFAX
 	from subversions.gnu.org + instructions on how to submit patches;
 	added a note about cvs update.
