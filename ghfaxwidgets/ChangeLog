@@ -1,3 +1,23 @@
+2003-07-10  Wolfgang Sourdeau  <Wolfgang@Contre.COM>
+
+	* src/ghfwthumbbox.c (layout_set_bg_color): commented the whole
+	function temporarily
+
+	* src/ghfwdlgwindow.c (ghfw_dlg_window_class_init): property VBOX
+	removed.
+	(ghfw_dlg_window_key_press_event): pass event signal to
+	parent-class if not handled by us.
+	(ghfw_dlg_window_set_property): references g_value_get_pointer
+	replaced with g_value_get_object
+	(ghfw_dlg_window_get_property): ditto with g_value_set_*
+
+	* tests/dlg_test.c (dlg_content): new function for testing setting
+	the "content" priority of the GhfwDlgWindow.
+
+	* src/ghfwdlgwindow.c (ghfw_dlg_window_class_init): put
+	->set/get_property assignments before calling
+	g_object_class_install_property.
+
 2001-10-16  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/ghfwdlgwindow.c (ghfw_dlg_window_new): Dialog windows are
@@ -23,4 +43,3 @@
 
 	* src/ghfwdlgwindow.c: the dialog windows are now pure GTK widgets.
 	(ghfw_dlg_window_init): vbox was not put in dlg_window container.
-
