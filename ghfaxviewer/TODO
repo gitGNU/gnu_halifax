@@ -1,4 +1,4 @@
-Before version 1.0 (2001/05/02):
+Before version 1.0 (2001/05/06):
 
 - add support for plain G3 format and Winfax format; (->independent image library)
 - add better handling of paper size in both Win32 and UNIX versions;
@@ -7,8 +7,6 @@ Before version 1.0 (2001/05/02):
   the same as the input file;
 - fix problems and conflicts due to different BSD lpr versions and
   behaviours (what a standard)
-- all the relevant buttons and menus should be enabled/disabled when
-  it is visually logical to do so (file opened/closed)
 - integration with libghfl (the GNU HaliFAX Library for transport);
 - LPSTAT_COMMAND and LPC_COMMAND are dirty static macros that should be
   replaced with dynamic functions to handle the printing system.
@@ -25,4 +23,6 @@ D      - check for coherence between images infos and actual image data;
 D - add error dialogs;
 D - add progress dialogs;
 D - make dialogs rely on the DialogWindow pseudo-widget (gtkutils.c)
+D - all the relevant buttons and menus should be enabled/disabled when
+    it is visually logical to do so (file opened/closed)
 
