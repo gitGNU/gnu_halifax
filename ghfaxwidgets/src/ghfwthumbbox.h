@@ -1,4 +1,4 @@
-/* gtkutils.h - this file is part of the GNU HaliFAX Viewer
+/* ghfwthumbbox.h - this file is part of the GNU HaliFAX Widgets library
  *
  * Copyright (C) 2001 Wolfgang Sourdeau
  *
@@ -21,8 +21,8 @@
 
 /* A pseudo-widget to create the thumbnail area */
 
-#ifndef THUMBLAYOUT_H
-#define THUMBLAYOUT_H
+#ifndef GHFW_THUMBBOX_H
+#define GHFW_THUMBBOX_H
 
 GtkWidget *layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
 		       gint spacing, gint width);
@@ -32,4 +32,4 @@ void layout_add_widget (GtkWidget *layout, GtkWidget *widget);
 void layout_set_bg_color (GtkWidget *layout,
 			  gushort red, gushort green, gushort blue);
 
-#endif
+#endif /* GHFW_THUMBBOX_H */

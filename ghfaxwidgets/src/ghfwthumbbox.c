@@ -1,4 +1,4 @@
-/* gtkutils.h - this file is part of the GNU HaliFAX Viewer
+/* ghfwthumbbox.c - this file is part of the GNU HaliFAX Widgets library
  *
  * Copyright (C) 2001 Wolfgang Sourdeau
  *
@@ -360,8 +360,7 @@ widget_mouse_scroll_prepare (GtkWidget *widget, LayoutData *layout_data)
 #endif /* __WIN32__ */
 
 static LayoutData *
-layout_data_create (GtkWidget *ref_widget,
-		    GtkAdjustment *adjustment)
+layout_data_create (GtkAdjustment *adjustment)
 {
   LayoutData *layout_data;
 
@@ -532,8 +531,7 @@ layout_new (GtkWidget *ref_widget, GtkOrientation orientation,
 				   GTK_ADJUSTMENT (adjustment));
     }
 
-  layout_data = layout_data_create (ref_widget,
-				    (GtkAdjustment*) adjustment);
+  layout_data = layout_data_create ((GtkAdjustment*) adjustment);
 
   gtk_box_pack_start (GTK_BOX (box), layout_data->up,
 		      FALSE, TRUE, 0);
