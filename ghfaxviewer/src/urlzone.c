@@ -25,17 +25,27 @@
    whenever the URL is clicked. Due to its specific use, it would be
    useless to turn it to a GTK+ Widget. */
 
+#ifdef NEED_GNOMESUPPORT_H
+#include <gnome.h>
+#else
+#include <gtk/gtk.h>
+#ifdef __WIN32__
+#include <windows.h>
+#endif
+#endif
+
+#include "cursors.h"
+
 typedef struct _UrlZone UrlZone;
 
 struct _UrlZone
 {
   GtkPixmap *zone_pixmap;
-  GdkPixmap *zone_copy;
-  gint x, y, width, height;
+  guint x, y, width, height;
   gchar *url;
 
   /* mouse-related status data */
-  gboolean mouse_over, button_pressed;
+  gboolean mouse_over;
 };
 
 /* callback helpers */
@@ -86,12 +96,41 @@ browse_url (gchar *url)
 
 /* Callbacks */
 static gboolean
-button_press_event_cb (GtkWidget *pixmap_widget,
-		       GdkEventButton *event,
-		       UrlZone *url_zone)
+motion_notify_event_cb (GtkWidget *pixmap_widget,
+			GdkEventMotion *event,
+			UrlZone *url_zone)
 {
-  if (event->button == 1)
-    url_zone->button_pressed = TRUE;
+  guint mouse_x, mouse_y;
+
+  mouse_x = (guint) event->x;
+  mouse_y = (guint) event->y;
+
+  if (url_zone->mouse_over)
+    {
+      if ((mouse_x < url_zone->x)
+	  || (mouse_x > url_zone->x + url_zone->width - 1)
+	  || (mouse_y < url_zone->y)
+	  || (mouse_y > url_zone->y + url_zone->height - 1))
+	{
+	  gdkcursor_set (pixmap_widget->parent->window,
+			 GDK_LEFT_PTR);
+	  url_zone->mouse_over = FALSE;
+	}
+    }
+  else
+    {
+      if ((mouse_x > url_zone->x)
+	  && (mouse_x < url_zone->x + url_zone->width - 1)
+	  && (mouse_y > url_zone->y)
+	  && (mouse_y < url_zone->y + url_zone->height - 1))
+	{
+	  gdkcursor_set (pixmap_widget->parent->window,
+			 GDK_HAND2);
+	  url_zone->mouse_over = TRUE;
+	}      
+    }
+
+  return FALSE;
 }
 
 static gboolean
@@ -99,13 +138,10 @@ button_release_event_cb (GtkWidget *pixmap_widget,
 			 GdkEventButton *event,
 			 UrlZone *url_zone)
 {
-  if (event->button == 1)
-    {
-      if (url_zone->mouse_over)
-	browse_url (url_zone->url);
+  if (event->button == 1 && url_zone->mouse_over)
+    browse_url (url_zone->url);
 
-      url_zone->button_pressed = FALSE;
-    }
+  return FALSE;
 }
 
 UrlZone *
@@ -115,14 +151,21 @@ url_zone_new (gchar *url, gint x, gint y, gint width, gint height)
 
   url_zone = g_malloc (sizeof (UrlZone));
   url_zone->zone_pixmap = NULL;
-  url_zone->zone_copy = NULL;
   url_zone->url = g_strdup (url);
   url_zone->x = x;
   url_zone->y = y;
   url_zone->width = width;
   url_zone->height = height;
+  url_zone->mouse_over = FALSE;
 
   return url_zone;
+}
+
+void
+url_zone_destroy (UrlZone *url_zone)
+{
+  g_free (url_zone->url);
+  g_free (url_zone);
 }
 
 void
@@ -134,19 +177,17 @@ url_zone_attach (UrlZone *url_zone, GtkWidget *pixmap_widget)
   url_zone->zone_pixmap = pixmap;
 
   gdk_window_set_events (pixmap_widget->window,
-			 (gdk_window_get_events (pixmap_widget->pixmap)
+			 (gdk_window_get_events (pixmap_widget->window)
+			  | GDK_POINTER_MOTION_MASK
 			  | GDK_EXPOSURE_MASK
+			  | GDK_BUTTON_PRESS_MASK
 			  | GDK_BUTTON_RELEASE_MASK));
 
-  gtk_signal_connect (GTK_OBJECT (pixmap_widget),
-		      "button-press-event",
-		      GTK_SIGNAL_FUNC (button_press_event_cb),
-		      url_zone);
-  gtk_signal_connect (GTK_OBJECT (pixmap_widget),
+  gtk_signal_connect (GTK_OBJECT (pixmap_widget->parent),
 		      "button-release-event",
 		      GTK_SIGNAL_FUNC (button_release_event_cb),
 		      url_zone);
-  gtk_signal_connect (GTK_OBJECT (pixmap_widget),
+  gtk_signal_connect (GTK_OBJECT (pixmap_widget->parent),
 		      "motion-notify-event",
 		      GTK_SIGNAL_FUNC (motion_notify_event_cb),
 		      url_zone);

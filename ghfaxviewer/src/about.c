@@ -33,81 +33,35 @@
 #include <gtk/gtk.h>
 #endif /* NEED_GNOMESUPPORT_H */
 
-#ifdef __WIN32__
-#include <windows.h>
-#endif
-
-#include "setup.h"
+#include "urlzone.h"
 #include "gtkutils.h"
+#include "setup.h"
 #include "i18n.h"
 
-static void
-url_btn_clicked_cb (GtkObject *widget, gpointer user_data)
+static
+void about_pixmap_realize_cb (GtkWidget *ref_window, GtkWidget *pixmap)
 {
-#ifdef __WIN32__
-  ShellExecute (NULL, "open", HALIFAX_URL,
-	        NULL, NULL, SW_SHOWNORMAL);
-#else
-#ifdef NEED_GNOMESUPPORT_H
-  gnome_url_show (HALIFAX_URL);
-#else
-  gchar *browser, *params[3];
-  gchar *test_dirs[] =
-    {
-      "/usr/bin",
-      "/opt/bin",
-      "/usr/local/bin",
-      "/usr/local/netscape",
-      "/opt/netscape",
-      NULL
-    };
+  UrlZone *url_zone;
 
-  params[1] = HALIFAX_URL;
-  params[2] = NULL;
-
-  browser = where_is (test_dirs, "galeon");
-  if (browser)
-    params[0] = "-w";
-  else
-    {
-      browser = where_is (test_dirs, "mozilla");
-      params[0] = "--remote";
-
-      if (!browser)
-	browser = where_is (test_dirs, "netscape");
-    }
-
-  if (browser)
-    {
-      launch_program (browser, params);
-      g_free (browser);
-    }
-
-#endif
-#endif
+  url_zone = url_zone_new (HALIFAX_URL, 150, 280, 195, 17);
+  url_zone_attach (url_zone, pixmap);
 }
 
 static GtkWidget*
 about_content (GtkWidget *ref_window)
 {
-  GtkWidget *layout, *pixmap, *link_btn;
+  GtkWidget *layout, *pixmap;
 
   layout = gtk_layout_new (NULL, NULL);
-  gtk_widget_set_usize (layout, 467, 393);
-
-  link_btn = gtk_button_new_with_label (HALIFAX_URL);
-  gtk_button_set_relief (GTK_BUTTON (link_btn), GTK_RELIEF_NONE);
-
-  gtk_widget_set_usize (link_btn, -1, 20);
-  gtk_layout_put (GTK_LAYOUT (layout), link_btn, 10, 363);
-  gtk_signal_connect (GTK_OBJECT (link_btn),
-		      "clicked",
-		      url_btn_clicked_cb,
-		      NULL);
+  gtk_widget_set_usize (layout, 350, 300);
 
   pixmap = pixmap_from_xpm (ref_window,
 			    PIXMAP ("ghfaxviewer-logo.xpm"));
   gtk_layout_put (GTK_LAYOUT (layout), pixmap, 0, 0);
+
+  gtk_signal_connect_after (GTK_OBJECT (pixmap), "realize",
+			    (GtkSignalFunc) about_pixmap_realize_cb,
+			    pixmap);
 
   return layout;
 }

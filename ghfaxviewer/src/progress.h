@@ -24,7 +24,7 @@
 #ifndef PROGRESS_H
 #define PROGRESS_H
 
-typedef gpointer GfvProgressData;                      /* private */
+typedef void GfvProgressData;                      /* private */
 
 typedef enum
 {
