@@ -1,3 +1,9 @@
+2001-05-21  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/thumblayout.c (mouse_scroll_event_cb): added support for
+	mouse-wheel in Win32.
+	(mouse_press_event_cb): added support for mouse-wheel in GNU.
+
 2001-05-20  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/thumblayout.c: new file along with thumblayout.h. It creates

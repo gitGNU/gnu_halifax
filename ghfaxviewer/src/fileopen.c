@@ -44,13 +44,13 @@ file_dlg_ok_cb (GtkWidget *ok_button, ViewerData *viewer_data)
 
   if (file_name)
     {
-      fax_viewer_open_file (viewer_data, file_name);
       gtk_widget_destroy (viewer_data->file_dlg);
 #ifdef CAN_SAVE_CONFIG
       last_directory = g_dirname (file_name);
       save_last_directory (last_directory);
       g_free (last_directory);
 #endif
+      fax_viewer_open_file (viewer_data, file_name);
       g_free (file_name);
     }
 }

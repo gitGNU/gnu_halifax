@@ -259,7 +259,6 @@ menu_bar_new (ViewerData *viewer_data)
 		      viewer_data->viewer_window->window);
 
   viewer_menu = gtk_menu_bar_new ();
-  gtk_container_add (GTK_CONTAINER (menu_handle_box), viewer_menu);
 
   file_menu_item = file_menu_new (viewer_data);
   view_menu_item = view_menu_new (viewer_data);
@@ -270,6 +269,8 @@ menu_bar_new (ViewerData *viewer_data)
   gtk_menu_bar_append (GTK_MENU_BAR (viewer_menu), view_menu_item);
   gtk_menu_bar_append (GTK_MENU_BAR (viewer_menu), param_menu_item);
   gtk_menu_bar_append (GTK_MENU_BAR (viewer_menu), help_menu_item);
+
+  gtk_container_add (GTK_CONTAINER (menu_handle_box), viewer_menu);
 
   return menu_handle_box;
 }

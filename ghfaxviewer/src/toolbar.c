@@ -64,6 +64,7 @@ void
 gnome_toolbar_new (ViewerData *viewer_data)
 {
   GtkWidget *toolbar;
+
   GnomeUIInfo toolbar_uiinfo[] =
   {
     {
@@ -126,13 +127,12 @@ gnome_toolbar_new (ViewerData *viewer_data)
     },
     GNOMEUIINFO_END
   };
-  
+
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL,
 			     GTK_TOOLBAR_ICONS);
   gnome_app_fill_toolbar (GTK_TOOLBAR (toolbar),
 			  toolbar_uiinfo,
 			  NULL);
-
   gnome_app_set_toolbar (GNOME_APP (viewer_data->viewer_window),
 			 GTK_TOOLBAR (toolbar));
 
@@ -174,6 +174,7 @@ toolbar_new (ViewerData *viewer_data)
 
   new_bbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL,
 			      GTK_TOOLBAR_ICONS);
+
   gtk_container_add (GTK_CONTAINER (bbar_handle_box), new_bbar);
   gtk_container_set_border_width (GTK_CONTAINER (bbar_handle_box), 2);
 

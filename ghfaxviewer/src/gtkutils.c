@@ -134,7 +134,7 @@ window_set_icon (GtkWidget* ref_widget, gchar *file_name)
     (ref_widget->window, &mask,
      &(ref_widget->style->bg[GTK_STATE_NORMAL]),
      file_name);
-  
+
   gdk_window_set_icon (ref_widget->window, ref_widget->window, pixmap, mask);
 }
 #endif /* __WIN32__ */
@@ -406,23 +406,6 @@ back_gtkstyle (GtkRcStyle *style, GtkStateType state,
   color.blue = blue;
   style->bg[state] = color;
   style->color_flags[state] = GTK_RC_BG;
-}
-
-gint
-widget_height (GtkWidget *widget)
-{
-  gint height;
-  GtkRequisition requisition;
-
-  if (GTK_WIDGET_VISIBLE (widget))
-    {
-      gtk_widget_get_child_requisition (widget, &requisition);
-      height = requisition.height;
-    }
-  else
-    height = 0;
-
-  return height;
 }
 
 /* Handle-box transientization */

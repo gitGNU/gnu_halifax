@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-05-10 03:10-0400\n"
+"POT-Creation-Date: 2001-05-21 17:13-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,17 +14,17 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: src/thumbnails.c:171
+#: src/thumbnails.c:132
 #, c-format
 msgid "Page %d"
 msgstr ""
 
-#: src/gn_print.c:189 src/ps_print.c:768 src/thumbnails.c:195
-#: src/winprint.c:167
+#: src/gn_print.c:187 src/ps_print.c:768 src/thumbnails.c:158
+#: src/winprint.c:166
 msgid "Please wait..."
 msgstr ""
 
-#: src/thumbnails.c:209
+#: src/thumbnails.c:172
 #, c-format
 msgid "Computing index for page %d of %d..."
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 msgid "permission to read %s is missing"
 msgstr ""
 
-#: src/about.c:82 src/viewer.c:277 src/viewer.c:455 src/viewer.c:460
+#: src/about.c:80 src/viewer.c:272 src/viewer.c:443 src/viewer.c:448
 msgid "GNU HaliFAX - Viewer"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "Open..."
 msgstr ""
 
-#: src/about.c:189 src/info.c:327 src/menu.c:159
+#: src/about.c:188 src/info.c:327 src/menu.c:159
 msgid "Close"
 msgstr ""
 
@@ -126,19 +126,19 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/about.c:185 src/menu.c:241
+#: src/about.c:184 src/menu.c:241
 msgid "About..."
 msgstr ""
 
-#: src/about.c:47
+#: src/about.c:45
 msgid "Copyright (C) 2000, 2001 Wolfgang Sourdeau"
 msgstr ""
 
-#: src/about.c:49
+#: src/about.c:47
 msgid "This program displays image files received on a HylaFAX system."
 msgstr ""
 
-#: src/about.c:51
+#: src/about.c:49
 msgid ""
 "This program is free software, you are welcome to use it, modify it and "
 "redistribute it under certain conditions. See the file COPYING for further "
@@ -146,37 +146,37 @@ msgid ""
 "FOR A PARTICULAR PURPOSE."
 msgstr ""
 
-#: src/about.c:110
+#: src/about.c:108
 msgid "About the GNU HaliFAX - Viewer..."
 msgstr ""
 
-#: src/about.c:118
+#: src/about.c:116
 msgid "Version :"
 msgstr ""
 
-#: src/about.c:121
+#: src/about.c:119
 msgid "The GNU HaliFAX team :"
 msgstr ""
 
-#: src/about.c:124
+#: src/about.c:122
 msgid ""
 "The GNU HaliFAX - Viewer was enhanced in various ways thanks to those "
 "people :"
 msgstr ""
 
-#: src/about.c:130
+#: src/about.c:128
 msgid "What is the GNU HaliFAX - Viewer ?"
 msgstr ""
 
-#: src/about.c:133
+#: src/about.c:131
 msgid "Copyright :"
 msgstr ""
 
-#: src/about.c:136
+#: src/about.c:134
 msgid "Licensing :"
 msgstr ""
 
-#: src/about.c:152
+#: src/about.c:150
 msgid ""
 "Thomas Bartschies, German translation\n"
 "Kevin Chen, Traditional Chinese translation\n"
@@ -286,7 +286,7 @@ msgstr ""
 msgid "Fax properties"
 msgstr ""
 
-#: src/fileopen.c:69
+#: src/fileopen.c:67
 msgid "Please choose a FAX G3 file to open..."
 msgstr ""
 
@@ -364,7 +364,7 @@ msgstr ""
 msgid "to"
 msgstr ""
 
-#: src/gn_print.c:296 src/ps_print.c:605
+#: src/gn_print.c:294 src/ps_print.c:605
 msgid "Current page only"
 msgstr ""
 
@@ -391,7 +391,7 @@ msgstr ""
 msgid "Print"
 msgstr ""
 
-#: src/gn_print.c:287 src/ps_print.c:1053
+#: src/gn_print.c:285 src/ps_print.c:1053
 msgid "Print..."
 msgstr ""
 
@@ -420,10 +420,10 @@ msgstr ""
 msgid "I promise!"
 msgstr ""
 
-#: src/gn_print.c:246
+#: src/gn_print.c:247
 msgid "Print preview..."
 msgstr ""
 
-#: src/gn_print.c:297
+#: src/gn_print.c:295
 msgid "Range"
 msgstr ""

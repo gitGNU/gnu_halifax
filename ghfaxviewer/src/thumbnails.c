@@ -69,6 +69,7 @@ draw_req_page_cb (GtkWidget *widget, DrawReqData *request)
   
   request->viewer_data->current_page = rqd_page;
   draw_page (request->viewer_data);
+  gtk_widget_grab_focus (widget->parent);
   
   return FALSE;
 }

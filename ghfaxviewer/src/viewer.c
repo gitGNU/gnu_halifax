@@ -376,7 +376,6 @@ viewer_window_realize_cb (GtkWidget *viewer_window, ViewerData *viewer_data)
 
   viewer_data->thumbs_layout = layout_new (viewer_window,
 					   GTK_ORIENTATION_VERTICAL,
-/* 					   GTK_ORIENTATION_HORIZONTAL, */
 					   24, 80);
   layout_set_bg_color (viewer_data->thumbs_layout,
 		       31488, 32000, 31488);
@@ -549,4 +548,3 @@ main (gint argc, gchar *argv[])
 
   return 0;
 }
-

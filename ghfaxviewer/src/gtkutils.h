@@ -71,8 +71,6 @@ void handle_box_transient_cb (GtkHandleBox *handle_box,
 			      GtkWidget *hb_child,
 			      GdkWindow *parent);
 
-gint widget_height (GtkWidget *widget);
-
 #ifndef __WIN32__
 void window_set_icon (GtkWidget *window, gchar *file_name);
 #endif /* __WIN32__ */
