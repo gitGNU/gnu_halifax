@@ -34,6 +34,8 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include <ghfaxwidgets/ghfaxwidgets.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "tiffimages.h"
 #include "viewer.h"
@@ -597,10 +599,12 @@ create_temp_print_file (gchar **outfile_name)
   gint counter;
   FILE *file_stream;
   char *file_name, *template;
+  mode_t old_umask;
   
   file_stream = NULL;
   counter = 0;
   
+  old_umask = umask (077);
   template = g_strdup ("/tmp/gfo-XXXXXX");
 
   while (!file_stream && counter < 64)
@@ -611,6 +615,8 @@ create_temp_print_file (gchar **outfile_name)
 	*outfile_name = template;
       counter++;
     }
+  umask (old_umask);
+  g_free (template);
 
   return file_stream;
 }

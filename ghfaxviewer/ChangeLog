@@ -1,3 +1,8 @@
+2001-10-29  Wolfgang Sourdeau  <wolfgang@iscream.ca>
+
+	* src/ps_print.c (create_temp_print_file): create file with umask=077.
+	(create_temp_print_file): free template pattern from memory.
+
 2001-10-12  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* configure.in: fixed problem with the gnome version detection
