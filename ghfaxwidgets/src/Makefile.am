@@ -24,4 +24,4 @@ libghfax_widgetsinclude_HEADERS = ghfwdialogwindow.h ghfwprogress.h \
 # ghfwtest
 ghfwtest_SOURCES = ghfwtest.c
 ghfwtest_INCLUDES = -I$(top_srcdir) $(GLIB_CFLAGS) $(GTK_CFLAGS)
-ghfwtest_LDADD = $(top_builddir)/ghfaxwidgets/libghfax_widgets.la @LDFLAGS@ @GTK_LIBS@
+ghfwtest_LDADD = $(top_builddir)/src/libghfax_widgets.la @LDFLAGS@ @GTK_LIBS@

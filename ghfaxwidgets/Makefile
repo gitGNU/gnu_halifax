@@ -87,7 +87,7 @@ GNOME_LIBDIR = -rdynamic -L/usr/lib -L/usr/X11R6/lib
 GNOME_LIBS = -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib
 GNORBA_CFLAGS = -I/usr/include -DNEED_GNOMESUPPORT_H -I/usr/lib/gnome-libs/include -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/gtk-1.2
 GNORBA_LIBS = -rdynamic -L/usr/lib -L/usr/X11R6/lib -lgnorba -lORBitCosNaming -lORBit -lIIOP -lORBitutil -lgnomeui -lart_lgpl -lgdk_imlib -lSM -lICE -lgtk -lgdk -lgmodule -ldl -lXi -lXext -lX11 -lgnome -lgnomesupport -lesd -laudiofile -lm -ldb-3 -lglib
-GTKXMHTML_LIBS = 
+GTKXMHTML_LIBS = -rdynamic -lgtkxmhtml -lXpm -ljpeg -lpng -lz -lSM -lICE -lgtk -lgdk -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
 GTK_CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include
 GTK_CONFIG = /usr/bin/gtk-config
 GTK_LIBS = -lSM -lICE -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
@@ -101,7 +101,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LN_S = ln -s
 MAINT = #
 MAKEINFO = makeinfo
-MANPAGES = ghfaxviewer.1
+MANPAGES = 
 MKINSTALLDIRS = ./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
 MSGMERGE = 
@@ -118,7 +118,7 @@ PTHREAD_LIB = -lpthread
 RANLIB = ranlib
 RC_ICON_DIRECTIVE = 
 STRIP = strip
-SUPPSUBDIRS = docs
+SUPPSUBDIRS = docs macros
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
 WIN32_LIBS = 
@@ -126,13 +126,13 @@ WINDRES =
 WINDRES_INCLUDE_DIR = 
 XGETTEXT = /usr/bin/xgettext
 XPM_LIBS = -lXpm
-ZVT_LIBS = 
+ZVT_LIBS = -rdynamic -lzvt -lutil -lSM -lICE -lgdk_imlib -lgtk -lgdk -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
 cflags_set = yes
 cxxflags_set = @cxxflags_set@
 
 PACKAGE = ghfaxwidgets
 VERSION = 0.0.0
-SUBDIRS = docs intl po src macros
+SUBDIRS = docs macros intl po src
 
 EXTRA_DIST = README 
 
@@ -141,9 +141,10 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES = 
-DIST_COMMON =  README ./stamp-h.in ABOUT-NLS COPYING INSTALL Makefile.am \
-Makefile.in acconfig.h aclocal.m4 config.guess config.h.in config.sub \
-configure configure.in install-sh ltmain.sh missing mkinstalldirs
+DIST_COMMON =  README ./stamp-h.in ABOUT-NLS AUTHORS COPYING ChangeLog \
+INSTALL Makefile.am Makefile.in NEWS acconfig.h aclocal.m4 config.guess \
+config.h.in config.sub configure configure.in install-sh ltmain.sh \
+missing mkinstalldirs
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
