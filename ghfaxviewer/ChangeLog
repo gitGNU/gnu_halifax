@@ -1,0 +1,542 @@
+2001-04-11  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/ps_print.c (get_printers): fixed bug which might prevents
+	more than one default printer on BSD LPR based systems
+
+2001-04-10  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/fileopen.c (file_dialog): reflected previous change all
+	along the file
+
+	* src/setup.h (locale_setup): removed this declaration as locale
+	setup is handled by app_setup
+
+	* src/setup.c: now includes "setup.h"
+
+	* src/setup.h (CAN_SAVE_CONFIG): new macro for platforms that
+	have a native configuration system
+
+	* src/setup.c (save_last_directory): fixed the Win32 function to
+	save the name of the last directory to key "last_directory"
+	instead of "viewer_def_x"
+
+2001-04-07  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/ps_print.c (get_printers): attempt to make it work with
+	"standard" (what's in a name) BSD LPR system.
+	(make_printer_menu): default printer is put on top of the list.
+
+	* src/print.h: moved definitions related to ps_print in that file.
+
+2001-04-06  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/viewer.h (struct _ViewerData): removed file_name as it was
+	not used;
+
+	* src/setup.c (gnome_screen_setup): added ability to remind window
+	position and size with gconf (GNOME only);
+	(load_last_directory): ghfaxviewer will now save and restore the
+	last used directory (GNOME only);
+
+	* src/gn_print.c (print_cb): added check for viewer_data->fax_file
+	so as to avoid a segfault if no file is currently loaded.
+	(prepare_print_master): it seems this dumb gnomeprint library
+	needs a default font even when it is not actually needed.
+
+2001-03-29  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/about.c (about_cb): added credit to Zbigniew Baniewski for
+	its Polish translation;
+
+2001-03-28  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/gn_print.c: new gnome-print backend;
+
+	* src/winprint.c: removed reverse_bits_of. Thanks to our new (the
+	newest, I mean)	drawing algorithm, we can avoid this kind of
+	manipulation, at least on ix86 arch.
+
+	* src/thumbnails.c (thumb_button): slight imitation of Evolution's
+	(and Outlook) left button style;
+
+	* src/gtkutils.c (back_gtkstyle): modified slightly to be able to
+	modify more than one style property. The GtkRcStyle is passed as
+	the first argument instead of being created.
+
+	* src/thumbnails.c (add_thumbs): cur_image changed to cur_page;
+	(add_thumbs): simplified a lot, put a lot of code in thumb_button;
+
+2001-03-27  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/draw_page.c (draw_page_func): function to call as a hook to
+	update the drawing area backpixmap;
+	(pixmap_for_page): don't draw the page on the backpixmap anymore,
+	just prepare it;
+	(prepare_drawing): small func to setup the user_data for the
+	TiDrawFunc hook;
+	(draw_page): changed accordingly to our new drawing method;
+	(draw_page): removed call to gtk_widget_{un,}map
+
+	* src/zoom.c (process_ir_zoom): call commit_draw if needed;
+	(process_ir_unzoom): call commit_draw if needed;
+	(ti_zoomed_fax_page): initialize zoom_function values
+	   (zoom_cancelled, last_drawn_line);
+	(ti_set_draw_func): new func to setup the TiDrawFunc hook
+	(ti_set_draw_func_user_data): new func to setup the TiDrawFunc
+	user data;
+	(ti_cancel_zoom): new function to cancel the current zoom
+	operation, not currently used;
+	(commit_draw): new function to call the TiDrawFunc hook
+
+	* src/draw_page.c: the ints and the floats shall become the gints
+	and the gfloats.
+
+	* src/zoom.c (put_pixel_rot_none_zoom): New test code, trying to
+	optimize the zooming algorithm by using memcpy and memset.
+	(put_pixel_rot_none_zoom): we try memset alone ;-)
+	(put_pixel_rot_none_zoom): simplified again by limiting the number
+	of variables used.
+
+2001-03-26  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/thumbnails.c (add_thumbs): Removed tooltip color change
+	since it doesn't work anyway.
+
+	* src/zoom.c: separated zoom rotation functions from
+	unzoom-related ones. Added reference comments.
+
+	* src/viewer.c (viewer_window_new): cleaned up a lot: instead of
+	using gtk_main_iteration, we draw the page_area when the map
+	signal is emitted.
+	(viewer_window_realize_cb): button_bar renamed to tool_bar;
+
+	* src/gtkutils.c (back_gtkstyle): inserted a new first parameter
+	corresponding to the state of the widget to modify;
+
+	* src/viewer.c: put callback functions in callbcks.c (new file),
+	menu-creation functions in menu.c (new file) and toolbar-creation
+	functions in toolbar.c (new file);
+	(destroy_page_area_cb): renamed to page_area_destroy_cb;
+
+	* src/draw_page.c: removed absurd (too small or too big-slow) zoom
+	factors
+
+2001-03-25  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/zoom.c: changed gfloat to gdouble
+
+2001-03-22  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/zoom.c (process_ir_unzoom): process_ir split in two distinct
+	functions. unzoom is when new_page->width < orig_page->width, zoom
+	is when it is the other way around.
+
+2001-03-18  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/tiffimages.c (process_ir): first shot to obtain smooth
+	unzoomed images
+
+2001-03-15  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/setup.c (app_setup): gdk_rgb_init (), mainly for Win32
+	though I am not sure normal GNU GTK+ doesn't need it.
+
+2001-03-14  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/thumbnails.c (add_thumbs): cleaned up a little bit, part of
+	this function (the button creation) has been put in thumb_button.
+	(thumb_button): create a new background style for selected pixmap.
+	They will now be yellowish so that they will be easier to see.
+
+2001-03-13  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/tiffimages.c (diagnoze_open_error): positivized the
+	magic header test
+
+2001-03-02  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/winprint.c (print_page): Removed progress stuff since we
+	don't need it here anymore.
+
+2001-02-23  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/ps_print.c (make_output_frame): enlarged the output file
+	GtkEntry
+
+2001-02-19  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+	* src/gtkutils.c (window_set_icon): removed call to
+	gdk_window_set_icon_name, since it wasn't used with its right
+	behaviour in mind;
+
+2001-02-12  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+	* src/about.c: new dialog containing the about box of the
+	application;
+
+	* src/info.c: new dialog containing informations about the current
+	fax;
+
+	* src/gtkutils.c: new file containing useful and repetitive
+	GTK+-related functions, mostly to create nice-looking dialog
+	windows;
+
+2001-02-09  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+	* src/viewer.c (toolbar_new): pixmaps are now loaded at runtime
+	instead of being included at compile time;
+	toolbars and menubars are detachable now, this give the GTK+
+	version of the program a look closer to that of the GNOME version.
+
+2001-02-08  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+	* src/draw_page.c (draw_page): no verification on image zoom
+	anymore;
+
+	* src/viewer.c (main): simplified a lot so that code will be
+	cleaner, all init code put in setup.c;
+	(parse_params): new function, parse cmdline params;
+	(fax_viewer_open): new semantic for FaxViewer; will act more like
+	an "object" though just one FaxViewer will be available per process.
+	(fax_viewer_new): changed; just creates a new FaxViewerm as its
+	name tells us;
+	(toolbar_button_new): new function to simplify button_bar_new
+	(renamed to toolbar_new);
+
+2001-02-06  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+	* src/tiffimages.h (enum): NONE, LEFT90, RIGHT90 and UPSIDEDOWN
+	respectively changed to ROT_NONE, ROT_LEFT90, ROT_RIGHT90 and
+	ROT_180
+
+	* src/tiffimages.c: converted types for coherence with glib;
+	new zooming algorithm in place, removed old set_pixel and
+	get_pixel functions and added orientation-relative functions;
+	struct ir removed as we just need a simple pointer now;
+
+2001-01-20  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+	* src/viewer.c: Cleaned up. GNOME_FRONTEND is not used anymore
+	since NEED_GNOMESUPPORT_H seems to mean the same thing.
+
+	* src/setup.c: New file containing the setup functions initially
+	in viewer.c
+	(locale_setup): New function to clean the initialzation mess.
+
+	* src/tiffimages.c (rounded_width): New function to compute the byte-
+	aligned width of a pixel line, which is the real width of each
+	line in memory;
+	(ti_zoomed_fax_page): adjusted to new zooming algorithm;
+	(generate_image): New generic function to generate a
+	zoomed/rotated image, following the new algorithm;
+	(ti_open_fax_file): we "TIFFClose" the TIFF file if it is not a
+	fax file, this frees some memory and a leak of file descriptors.
+	(ti_page_new): new generic function to create a standard page
+	structure.
+
+2000-11-15  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+	* src/tiffimages.c
+	(setpixelto): using set_bit and clear_bit from Linux, quite faster;
+	(getpixel): unrolled the search loop;
+	(struct ir): big optimization trip, we are now caching black areas
+	so as to zoom faster, reading pages will be slighltly slower though;
+
+2000-10-21  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * draw_page.c, postscript_print.c, progress.c, progress.h, thumbnails.c, viewer.c, windows_print.c:
+    - Windows printing can now be aborted too;
+    - Thumbnail computing has its progress bar too;
+    - updated German translation
+    - released version 0.9.8
+
+2000-10-20  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * postscript_print.c, progress.c:
+    - cleanup of postscript_print;
+    - making printing cancellable;
+
+2000-10-19  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * draw_page.c, postscript_print.c, progress.c, thumbnails.c, tiffimages.c, viewer.c, viewer.h:
+    - added possibility to abort an action, needs to be finished for printing;
+
+    * progress.c, progress.h:
+    - convenience functions added:
+      - gfv_progress_set_done: add "done" at the end of the status label;
+      - gfv_progress_update_with_value replaces gfv_print_progress_update
+        with a more generic approach;
+      - same thing for gfv_progress_update_with_percentage and
+        gfv_image_progress_update;
+
+2000-10-18  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * draw_page.c, postscript_print.c, progress.c, progress.h, thumbnails.c, tiffimages.c, tiffimages.h, viewer.c, viewer.h, windows_print.c:
+    - added progress bars when computing images (progress.[ch])
+    - added related callback function in tiffimages.c
+    - added progress bars when printing (needs refining)
+
+2000-10-16  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * tiffimages.c:
+    - a bothering problem which occured with the Windows version, causing
+      a segfault was that accept(file, "R_OK") was 0 even if we couldn't
+      read the file. Maybe it's a bug in Samba, maybe it's a bug in
+      Windows...
+
+2000-10-14  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * draw_page.c, errors.c, errors.h, postscript_print.c, print.c, print.h, thumbnails.c, tiffimages.c, tiffimages.h, viewer.c, viewer.h, windows_print.c:
+    - print.c has been removed, giving place to postscript_print.c and
+      windows_print.c. This, to spare some compile time on my old machine;
+    - every non-public function has been declared static;
+    - a stupid bug which made the file error dialog box popping up has
+      been fixed. The variable viewer.c:main:failures is now initialized
+      to FALSE...
+    - another bug, which caused a segfault when opening a file through
+      the file selection dialog is also fixed. The fail_reason_list was
+      missing from the declaration in error.h. In main, that was ok, but
+      not file_dlg_ok_cb, where a random value was passed to
+      error_bad_files instead.
+
+2000-10-13  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * errors.c, errors.h:
+    - error handling is now complete:
+      - the reason why a file couldn't be opened is displayed
+        precisely now;
+      - "portable" routines have been written, that is, they
+        may be used coherently in the whole code, or even in
+        other projects;
+
+    * i18n.h:
+    - internationalisation macros were moved from viewer.h to i18n.h, so that
+      tiffimages.c can use them while being kept independent from the rest of
+      the program;
+
+    * cursors.c, cursors.h, draw_page.c, print.c, thumbnails.c, tiffimages.c, tiffimages.h, viewer.c, viewer.h:
+    - cursors are now set correctly. Although this was not visible on
+      the GNU platform, it was on the Win32 platform;
+    - patches have been submitted to Tor Lillqvist to make GDK for Windows
+      display mouse cursors correctly;
+    - a segfault happening when using corrupted TIFF files has been fixed;
+    - code cleanup in tiffimages.c, we have now 5 separated routines
+      to obtain a rotated/zoomed image, depending on the requested rotation;
+    - a bug with the Win32 i18n code has been fixed;
+
+2000-10-01  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * tiffimages.c, viewer.c:
+    - initialized is_fax to 0. So that testing if a tiff file is in fax mode
+      returns the correct answer.
+
+2000-09-29  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * draw_page.c, thumbnails.c, tiffimages.c, tiffimages.h, viewer.c, viewer.h:
+    - optimizations in the algorithms of function ti_zoomed_fax_page,
+      at least, where they could be achieved. Barely visible;
+    - added German translation (credit goes to tom@glx.teuto.de);
+    - added clockwise and counter-clockwise 90° rotations;
+    - released version 0.9.6;
+
+2000-09-25  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * viewer.c:
+    - the windows are of reasonable size on screens larger than 800x600;
+    - release 0.9.5;
+
+    * draw_page.c, print.c, print.h, thumbnails.c, tiffimages.c, tiffimages.h, viewer.c, viewer.h:
+    - struct _FaxImage renamed to struct _FaxPage;
+    - functions in tiffimages.[ch] renamed to follow GTK+/GDK/GLib
+      naming convention;
+    - SEGFAULT happening when closing a viewerwin is fixed (viewer.c,
+      tiffimages.c).;
+      We now g_strdup on g_basename so that the name of a file
+      selected from the GtkFileSelDlg is still available when the
+      dialog is destroyed;
+
+2000-09-24  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * tiffimages.c:
+    - fixed a stupid memory leak in tiffimages.c
+    - released version 0.9.4
+
+    * print.c, tiffimages.c, tiffimages.h, viewer.c:
+    - printing should be a bit faster now since we are using the bit
+      reversion table from libtiff instead of computing each value
+      each time;
+    - Win32 printing does work;
+    - we now display the version number in the title bar;
+    - a few usual bug fixes;
+
+2000-09-22  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * viewer.c:
+    - small bug fix related to the scroll hand: when the page is
+      scrolled to its left and/or bottom side and the hand leaves
+      on the right and/or the top of the viewing area, the adjs
+      are adapted correctly.
+
+2000-09-21  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * print.c: *** empty log message ***
+
+    * print.c: - fixed warning generators;
+    - added stuff to build Debian GNU/Linux packages;
+
+2000-09-20  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * print.c, print.h, thumbnails.c, viewer.c:
+    - printing to an existing file can now be done;
+    - screen size is now correctly handled, 800x600A is no longer the reference
+    - fixed a bug which cause gfaxviewer to hang when selecting an invalid file
+      in the file selection box;
+
+2000-09-14  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * thumbnails.c, viewer.c:
+    - removed the GtkTable and replaced it with the GtkFixed, too bad...
+    - released version 0.9.2
+
+2000-09-13  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * viewer.c: - small fixes
+
+    * draw_page.c, viewer.c:
+    - completed Win32 i18n;
+    - fixed a typo in $(topdir)/Makefile.am which made "make distclean" to fail;
+    - added better handling of command-line passed filenames;
+    - added an error dialog box;
+    - fixed a minor bug related to i18n;
+    - fixed a bug which prevented the page to be refreshed on some display;
+    - fixed a bug in $(topdir)/configure.in which prevented tiffio.h to be detected
+      on some systems;
+    - released version 0.9.1;
+    - wrote README and NEWS;
+
+2000-09-12  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * cursors.c, cursors.h, draw_page.c, print.c, print.h, thumbnails.c, tiffimages.c, tiffimages.h, viewer.c, viewer.h:
+    - Copyright is mine, not yet assigned to the FSF
+    - Implemented and completed UNIX Printing !
+    - Release 1 is close now...
+
+2000-08-28  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * draw_page.c, Makefile, print.c, print.h, viewer.c, viewer.h:
+    - started implementation of Win32 printing
+    - finished new icons; some might need some further work though;
+    - some bug fixes;
+
+2000-08-19  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * thumbnails.c, tiffimages.c, tiffimages.h, viewer.c, viewer.h, draw_page.c, print.c:
+    - new feature added which permit to reverse faxes which were sent in the wrong
+      direction
+    - (re)wrote new buttons with The GIMP for zoom and reverse buttons. A bit
+      NeXTish.
+
+2000-08-16  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * Makefile, print.c, viewer.c:
+    - added some basic postscript printing capability (print.c)
+
+2000-08-14  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * draw_page.c, thumbnails.c, viewer.c, viewer.h:
+    - moving page with the little hand now works
+    - clean up some code; the routine used to draw the page area is now the same
+      that's used to draw the thumbnails
+    - we use now gdk_window_set_back_pixmap; display can't be faster
+
+2000-08-10  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * draw_page.c, thumbnails.c, viewer.c, viewer.h:
+    - all wrapper variables are now replaced with their viewer_data->sth
+      equivalent, which makes the code cleaner
+    - the page image is now centered all the time, thanks to a GtkTable;
+      this also fixes the flickering problem which occured on the Win32
+      platform
+    - the thumbnail area has now a nice looking background; maybe I will add
+      another to the page area
+    - now I will focus on printing (Win32, gnome-print, personnal)
+
+2000-08-09  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * cursors.c, thumbnails.c, viewer.c:
+    - We don't need stdlib.h anymore since we are using g_malloc and g_free
+
+    * cursors.c, cursors.h, draw_page.c, thumbnails.c, tiffimages.c, tiffimages.h, viewer.c, viewer.h:
+    - added the GNU General Public License at the beginning of each .[ch] file
+
+    * draw_page.c, thumbnails.c, viewer.c:
+    - fixed some bugs.
+    - removed some temporary variables who were mapped easily to their
+      ViewerData->something equivalent. Code is prettier this way.
+
+    * draw_page.c, gtkfrontend.c, thumbnails.c, tiffimages.c, viewer.c, viewer.h, Makefile:
+    - cleaned up some code
+    - got rid of all static variables; now the viewer can be used to display
+      more than one file at a time
+
+2000-08-08  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * gtkfrontend.c, tiffimages.c, tiffimages.h:
+    - corrected zooming feature; it now checks for pixels in the whole projection
+      of the pixel in the original image. In other words, zoomed images don't lose
+      any pixel when displayed now;
+    - added nice thumbnails button on the left of the page area;
+
+2000-08-03  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * gtkfrontend.c, tiffimages.c, tiffimages.h:
+    Added support for image resizing in tiffimages.c
+    Added support for (de)zooming in gtkfrontend.c
+    Make scrollbar (dis)appear automatically (gtkfrontend.c)
+
+2000-07-10  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * cursors.c, cursors.h, gtkfrontend.c, Makefile, tiffimages.c, tiffimages.h:
+    - added cursors.c cursors.h from eog
+    - removed a gdkpixmap
+    - now we use gdk_bitmap_create_from_data to avoid creating a GdkImage
+    - prepare to switch to GdkPixbuf
+
+2000-07-09  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * gtkfrontend.c:
+    - bitmap is not used as the clipping area of the gtkpixmap anymore. Instead we
+      use the hack recommended by H. Pennington: create 2 gdkpixmap, paint one
+      in black, the other in white, set the bitmap as the clip_mask for the
+      black one and paint the resulting pixmap onto the white pixmap.
+      the time to load an image is now a bit longer, but refresh time is now
+      a lot shorter.
+    - cleaned up memory usage: deallocate gc and bit/pixmaps when not needed
+      anymore
+
+2000-07-07  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * faxexpand.c, faxexpand.h, faxinit.c, faxinput.c, gtkfrontend.c, Makefile, tiffimages.c, tiffimages.h, utilities.c:
+    - We finally use libtiff. Hence our removal of the old viewfax files.
+
+2000-07-03  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * tiffimages.c, tiffimages.h:
+    - beginning the work with libtiff library because we intend
+      to replace the unsuited routines from the viewfax utility
+      with it.
+
+2000-07-01  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * utilities.c, gtkfrontend.c, Makefile:
+    - setup things so that the bitmaps are used as masks
+      (display is now much faster).
+
+2000-06-20  Wolfgang Sourdeau  <wolfgang@ultim.net>
+
+    * faxexpand.c, faxexpand.h, faxinit.c, faxinput.c, gtkfrontend.c, hacker.ico, Makefile, utilities.c:
+    New file.
+
+    * faxexpand.c, faxexpand.h, faxinit.c, faxinput.c, gtkfrontend.c, hacker.ico, Makefile, utilities.c:
+    Viewer upload
+

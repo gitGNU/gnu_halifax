@@ -1,0 +1,25 @@
+ghfaxviewer (0.10-2) unstable; urgency=low
+
+  * Added Debian menu.
+  * Removed the need of PREFIX variable as it caused problem for the rpm
+    build.
+
+ -- Wolfgang Sourdeau <wolfgang@contre.com>  Mon, 19 Feb 2001 23:36:16 -0500
+
+ghfaxviewer (0.10-1) unstable; urgency=low
+
+  * New Upstream release.
+  * Conformized debian build to standards.
+  * Creation of ghfaxviewer-gnome and ghfaxviewer-gtk.
+
+ -- Wolfgang Sourdeau <wolfgang@ultim.net>  Thu,  8 Feb 2001 18:09:40 -0500
+
+gfaxviewer (0.9.8-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Wolfgang Sourdeau <Wolfgang@ultim.net>  Wed, 20 Sep 2000 23:49:50 -0400
+
+Local variables:
+mode: debian-changelog
+End:

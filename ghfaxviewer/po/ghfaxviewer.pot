@@ -1,0 +1,396 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2001-04-10 11:58-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: src/thumbnails.c:188
+#, c-format
+msgid "Page %d"
+msgstr ""
+
+#: src/ps_print.c:617 src/thumbnails.c:212 src/winprint.c:165
+msgid "Please wait..."
+msgstr ""
+
+#: src/thumbnails.c:226
+#, c-format
+msgid "Computing index for page %d of %d..."
+msgstr ""
+
+#: src/tiffimages.c:87
+#, c-format
+msgid "%s is not a G3/G4 Fax File"
+msgstr ""
+
+#: src/tiffimages.c:91
+#, c-format
+msgid "%s is not a TIFF file"
+msgstr ""
+
+#: src/tiffimages.c:95
+#, c-format
+msgid "%s seems corrupted or incomplete"
+msgstr ""
+
+#: src/tiffimages.c:99
+#, c-format
+msgid "%s could not be found"
+msgstr ""
+
+#: src/tiffimages.c:104
+#, c-format
+msgid "permission to read %s is missing"
+msgstr ""
+
+#: src/about.c:67 src/viewer.c:264 src/viewer.c:452 src/viewer.c:457
+msgid "GNU HaliFAX - Viewer"
+msgstr ""
+
+#: src/menu.c:69 src/menu.c:167 src/toolbar.c:53 src/toolbar.c:164
+msgid "Go to previous page"
+msgstr ""
+
+#: src/menu.c:63 src/menu.c:166 src/toolbar.c:59 src/toolbar.c:171
+msgid "Go to next page"
+msgstr ""
+
+#: src/menu.c:76 src/menu.c:169 src/toolbar.c:66 src/toolbar.c:180
+msgid "Zoom in"
+msgstr ""
+
+#: src/menu.c:82 src/menu.c:170 src/toolbar.c:72 src/toolbar.c:187
+msgid "Zoom out"
+msgstr ""
+
+#: src/menu.c:89 src/menu.c:95 src/menu.c:172 src/menu.c:174 src/toolbar.c:79
+#: src/toolbar.c:91 src/toolbar.c:196 src/toolbar.c:210
+msgid "Rotate 90"
+msgstr ""
+
+#: src/menu.c:95 src/menu.c:174 src/toolbar.c:79 src/toolbar.c:196
+msgid " counter-clockwise"
+msgstr ""
+
+#: src/menu.c:101 src/menu.c:176 src/toolbar.c:85 src/toolbar.c:203
+msgid "Reverse image"
+msgstr ""
+
+#: src/menu.c:89 src/menu.c:172 src/toolbar.c:91 src/toolbar.c:210
+msgid " clockwise"
+msgstr ""
+
+#: src/menu.c:148 src/toolbar.c:98 src/toolbar.c:219
+msgid "Print fax"
+msgstr ""
+
+#: src/menu.c:150 src/toolbar.c:105 src/toolbar.c:229
+msgid "Properties..."
+msgstr ""
+
+#: src/menu.c:141 src/ps_print.c:303 src/ps_print.c:314
+msgid "File"
+msgstr ""
+
+#: src/menu.c:145
+msgid "Open..."
+msgstr ""
+
+#: src/about.c:174 src/info.c:327 src/menu.c:146
+msgid "Close"
+msgstr ""
+
+#: src/menu.c:152
+msgid "Quit"
+msgstr ""
+
+#: src/menu.c:162
+msgid "View"
+msgstr ""
+
+#: src/menu.c:187
+msgid "Settings"
+msgstr ""
+
+#: src/menu.c:191
+msgid "Preferences..."
+msgstr ""
+
+#: src/menu.c:201
+msgid "Help"
+msgstr ""
+
+#: src/about.c:168 src/menu.c:205
+msgid "About..."
+msgstr ""
+
+#: src/about.c:95
+msgid "About the GNU HaliFAX - Viewer..."
+msgstr ""
+
+#: src/about.c:103
+msgid "Version :"
+msgstr ""
+
+#: src/about.c:106
+msgid "The GNU HaliFAX team :"
+msgstr ""
+
+#: src/about.c:109
+msgid ""
+"The GNU HaliFAX - Viewer was enhanced in various ways thanks to those "
+"people :"
+msgstr ""
+
+#: src/about.c:115
+msgid "What is the GNU HaliFAX - Viewer ?"
+msgstr ""
+
+#: src/about.c:118
+msgid "Copyright :"
+msgstr ""
+
+#: src/about.c:121
+msgid "Licensing :"
+msgstr ""
+
+#: src/about.c:137
+msgid ""
+"Thomas Bartschies, German translation\n"
+"Kevin Chen, Traditional Chinese translation\n"
+"Zbigniew Baniewski, Polish translation"
+msgstr ""
+
+#: src/info.c:47
+msgid "this fax is clean"
+msgstr ""
+
+#: src/info.c:50
+msgid "some lines have been regenerated"
+msgstr ""
+
+#: src/info.c:53
+msgid "this fax is not clean"
+msgstr ""
+
+#: src/info.c:56 src/info.c:82 src/info.c:108 src/info.c:149 src/info.c:184
+msgid "invalid data"
+msgstr ""
+
+#: src/info.c:73
+msgid "low resolution (204 dpi x 98 dpi)"
+msgstr ""
+
+#: src/info.c:76
+msgid "high resolution (204 dpi x 196 dpi)"
+msgstr ""
+
+#: src/info.c:79
+msgid "strange resolution"
+msgstr ""
+
+#: src/info.c:105
+msgid "strange compression type"
+msgstr ""
+
+#: src/info.c:153
+msgid "2D encoding"
+msgstr ""
+
+#: src/info.c:156
+msgid "uncompressed"
+msgstr ""
+
+#: src/info.c:159
+msgid "fill bits"
+msgstr ""
+
+#: src/info.c:178
+msgid "least to most significant bit (big endian)"
+msgstr ""
+
+#: src/info.c:181
+msgid "most to least significant bit (little endian)"
+msgstr ""
+
+#. label = gtk_label_new (_("Fax properties"));
+#. gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
+#. gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 0, 1);
+#: src/info.c:230
+msgid "Sender ID"
+msgstr ""
+
+#: src/info.c:233
+msgid "Destination subaddress"
+msgstr ""
+
+#: src/info.c:236
+msgid "Date & time of reception"
+msgstr ""
+
+#: src/info.c:239
+msgid "Fax data cleanliness"
+msgstr ""
+
+#: src/info.c:242
+msgid "Resolution"
+msgstr ""
+
+#: src/info.c:245
+msgid "Compression type"
+msgstr ""
+
+#: src/info.c:248
+msgid "G3/G4 Options"
+msgstr ""
+
+#: src/info.c:251
+msgid "Pixel fill order"
+msgstr ""
+
+#: src/info.c:254
+msgid "Make and model of receiving fax"
+msgstr ""
+
+#: src/info.c:257
+msgid "Software"
+msgstr ""
+
+#: src/info.c:260
+msgid "Receiving computer hostname"
+msgstr ""
+
+#: src/info.c:318
+msgid "Fax properties"
+msgstr ""
+
+#: src/fileopen.c:72
+msgid "Please choose a FAX G3 file to open..."
+msgstr ""
+
+#: src/errors.c:130
+msgid "Something strange happened..."
+msgstr ""
+
+#: src/errors.c:132
+#, c-format
+msgid ""
+"The specified file, %s, could not be opened\n"
+"because %s.\n"
+"Please fix this and try again later."
+msgstr ""
+
+#: src/errors.c:136
+msgid "I am sorry"
+msgstr ""
+
+#: src/progress.c:56
+msgid "Processing"
+msgstr ""
+
+#: src/progress.c:73 src/ps_print.c:914
+msgid "Cancel"
+msgstr ""
+
+#: src/progress.c:188
+#, c-format
+msgid "%s (done)"
+msgstr ""
+
+#: src/winprint.c:139
+msgid "Printer cannot display bitmaps."
+msgstr ""
+
+#: src/winprint.c:140
+msgid "Device Error"
+msgstr ""
+
+#: src/ps_print.c:592 src/ps_print.c:594 src/winprint.c:155
+msgid "The GNU HaliFAX Viewer"
+msgstr ""
+
+#: src/ps_print.c:621 src/winprint.c:174
+#, c-format
+msgid "Printing page %d (%d left)"
+msgstr ""
+
+#: src/ps_print.c:289
+msgid "Output to"
+msgstr ""
+
+#: src/ps_print.c:298
+msgid "Printer"
+msgstr ""
+
+#: src/ps_print.c:312
+msgid "Command"
+msgstr ""
+
+#: src/ps_print.c:322
+msgid "Fax Output.ps"
+msgstr ""
+
+#: src/ps_print.c:392
+msgid "Page selection"
+msgstr ""
+
+#: src/ps_print.c:400
+msgid "All pages"
+msgstr ""
+
+#: src/ps_print.c:413
+msgid "From"
+msgstr ""
+
+#: src/ps_print.c:435
+msgid "to"
+msgstr ""
+
+#: src/gn_print.c:236 src/ps_print.c:452
+msgid "Current page only"
+msgstr ""
+
+#: src/ps_print.c:736
+#, c-format
+msgid ""
+"%s already exists.\n"
+"Do you want to overwrite it?"
+msgstr ""
+
+#: src/ps_print.c:741
+msgid "Please answer..."
+msgstr ""
+
+#: src/ps_print.c:758
+msgid "Yes, please do"
+msgstr ""
+
+#: src/ps_print.c:764
+msgid "No thanks"
+msgstr ""
+
+#: src/gn_print.c:225 src/ps_print.c:890
+msgid "Print..."
+msgstr ""
+
+#: src/ps_print.c:906
+msgid "Print"
+msgstr ""
+
+#: src/gn_print.c:185
+msgid "Print preview..."
+msgstr ""
+
+#: src/gn_print.c:237
+msgid "Range"
+msgstr ""

@@ -1,0 +1,74 @@
+This file lists user-visible changes. It might not be up-to-date
+although an effort is made to keep it so. For even more
+programming-related informations, see the file 'ChangeLog'.
+
+
+04/07/2001:
+- zooming functions have been splitted for better optimization;
+- progressive drawing, giving more responsiveness;
+- anti-black-pixel (pseudo anti-aliasing) to have smoother images;
+- the thumbnails have a new look, imitating Evolution left icon bar.
+- removed pixel-reversing operations (a bit faster);
+- added Polish translation (thanks to Zbigniew Baniewski);
+- the Windows icon is built automatically from the .xpm equivalent;
+- the GNOME version is using GNOME native icons;
+- the GNOME version is using gnome-print;
+- the GNOME and Win32 versions are able to recover its last window position and size;
+- the GNOME and Win32 versions are able to remember the last directory from where a file was open;
+- the UNIX printing version is putting the default printer at the top of the list;
+- the UNIX printing version is supposed to work with the "standard" BSD LPR system;
+
+
+02/12/2001:
+
+- the program has an application icon now, both on Win32 and GNU;
+- Win32 has version and copyright information in its executable;
+- the bug which causes Win32 printing to consume all your computer
+  resources, to crash the computer, to make your screen jump on itself,
+  rotate and die... has been identified and worked-around. The culprit is
+  this amazingly buggy Win32 API. Use free software !
+- a new zooming algorithm has been implemented, taking into account
+  the only relevant pixels in a page. Normal fax pages doesn't have
+  that much pixels so the result is a lot faster, although things could
+  still be optimized.
+- a new menubar has been added;
+- the menubar is undockable as well as the toolbar in the GTK+ version;
+- basic GNOMification but the GTK+-only version is still available.
+  Specify "--without-gnome" as command-line parameter when running
+  configure, if you are one of those who like to recompile every
+  program they find.
+- an about box is now available, listing all the people who have
+  contributed to the viewer in a way or another.
+- an info box, containing informations about the current fax file is
+  now available both in the "File->Properties..." menu or in the
+  toolbar, for which I have created another nice icon.
+- zh_TW.Big5 (Taiwan Chinese) translation added, thanks to Kevin Chen.
+- de (German) translation updated, thanks to Till Bubeck.
+
+
+09/25/2000:
+
+- Win32 printing does work now;
+- all known bugs fixed;
+
+
+09/13/2000:
+
+- completed Win32 i18n;
+- fixed a typo in $(topdir)/Makefile.am which made "make distclean" to fail;
+- added better handling of command-line passed filenames;
+- added an error dialog box;
+- fixed a minor bug related to i18n;
+- fixed a bug which prevented the page to be refreshed on some display;
+- fixed a bug in $(topdir)/configure.in which prevented tiffio.h to be detected
+  on some systems
+- released version 0.9.1
+- wrote README and NEWS
+
+
+09/12/2000:
+
+- printing now works on GNU
+- some interface arrangements
+- fixed some memory leaks
+- released version 0.9.0

@@ -1,0 +1,33 @@
+#include <winver.h>
+
+@RC_ICON_DIRECTIVE@
+
+VS_VERSION_INFO VERSIONINFO
+  FILEVERSION 0,1,0,0
+  PRODUCTVERSION 0,1,0,0
+  FILEFLAGSMASK 0
+  FILEFLAGS 0
+  FILEOS VOS__WINDOWS32
+  FILETYPE VFT_APP
+  FILESUBTYPE VFT2_UNKNOWN
+  BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+      BLOCK "000004B0"
+      BEGIN
+	VALUE "CompanyName", "The GNU HaliFAX team" 
+	VALUE "FileDescription", "The GNU HaliFAX - Viewer"
+	VALUE "FileVersion", "@VERSION@"
+	VALUE "InternalName", "@PACKAGE@"
+	VALUE "LegalCopyright", "Copyright © 2000, 2001 Wolfgang Sourdeau"
+	VALUE "OriginalFilename", "ghfaxviewer.exe"
+	VALUE "ProductName", "The GNU HaliFAX"
+	VALUE "ProductVersion", "unknown"
+	VALUE "Comment", "This program is free software. You are welcome to modify and distribute it under certains conditions. Please refer to the file named COPYING.txt, or to any copy of the GNU General Public License version 2 for further information regarding your rights."
+      END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+	VALUE "Translation", 0x0, 1200
+    END
+  END

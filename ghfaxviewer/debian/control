@@ -1,0 +1,39 @@
+Source: ghfaxviewer
+Section: graphics
+Priority: optional
+Maintainer: Wolfgang Sourdeau <Wolfgang@ultim.net>
+Build-Depends: debmake, libtiffg3-dev, libgtk1.2-dev | libgnome-dev
+Standards-Version: 3.5.0
+
+Package: ghfaxviewer-gtk
+Section: graphics
+Priority: optional
+Replaces: gfaxviewer
+Conflicts: gfaxviewer, ghfaxviewer-gnome
+Architecture: any
+Depends: ${shlibs:Depends}
+description: The GNU HaliFAX - Viewer
+ The GNU HaliFAX project will be a complete free client package for HylaFAX
+ and maybe for other fax systems in the future.
+ It is intended to run on both the Win32 platform and the GNU system.
+ "GNU HaliFAX" is the new name for "GNU FaXile".
+ .
+ This is the GTK+-only version. For the GNOME version, please install the
+ ghfaxviewer-gnome package instead.
+
+Package: ghfaxviewer-gnome
+Section: graphics
+Priority: optional
+Replaces: gfaxviewer
+Conflicts: gfaxviewer, ghfaxviewer-gtk
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggests: gfax
+description: The GNU HaliFAX - Viewer
+ The GNU HaliFAX project will be a complete free client package for HylaFAX
+ and maybe for other fax systems in the future.
+ It is intended to run on both the Win32 platform and the GNU system.
+ "GNU HaliFAX" is the new name for "GNU FaXile".
+ .
+ This is the GNOME version. If you only have GTK+ installed, please install
+ the ghfaxviewer-gtk package instead.

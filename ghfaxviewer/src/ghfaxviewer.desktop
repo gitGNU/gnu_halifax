@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=GNU HaliFAX - Viewer
+Name[fr]=GNU HaliFAX - Visionneuse
+Name[de]=GNU HaliFAX - Betrachter
+TryExec=ghfaxviewer
+Exec=ghfaxviewer
+Icon=ghfaxviewer/ghfaxviewer-icon.xpm
+Terminal=0
+Type=Application

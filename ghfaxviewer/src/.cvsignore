@@ -1,0 +1,5 @@
+.deps
+ghfaxviewer
+ghfaxviewer-res.rc
+Makefile
+Makefile.in

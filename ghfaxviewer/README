@@ -1,0 +1,85 @@
+GNU HaliFAX (03/20/2001)
+-----------
+(previously known as "GNU FaXile")
+
+
+Why
+---
+
+This software package will be a complete free client package for HylaFAX.
+It is written because the free software world currently lacks a nice graphical
+client package. And as more and more people are going to use the GNU system 
+(of which GNU/Linux is the most common version, based on the Linux kernel) due
+to the current success of GNOME, it seemed to me that such software was needed.
+
+Also, it is a good exercice for me to learn since it is the first complete
+software entirely written by me and released to the public. I also was
+beginning to feel that I had something to give back to the free software
+community, even if some of them don't care about the freedom provided by
+free software.
+
+GNU HaliFAX is part of the GNU project. This means that we are engaged
+in integrating it with the rest of the GNU system the best we can,
+that all of its components and documentation will be free.
+
+Currently two components are being actively written: the Sender
+(gfax), the Viewer (ghfaxviewer). Other components are going to be
+written eventually such as an administrative frontend, as well as a
+gnome applet to watch for incoming faxes and other facilities.
+
+
+Help needed
+-----------
+
+If you have any idea please send them to us so that we can improve GNU
+HaliFAX the best we can.
+If you speak a language for which there is no translation, please send
+one to us.
+If you find bugs, security problems, .. and if you are a programmer,
+please send us patches.
+If you like this project, if you find it useful or if you just think
+we are nice guys, please send us money. The word "free" in "free
+software" refers to freedom, not price. Money is always appreciated
+and can help us a lot in writing nice programs or enhancing others.
+Even if we have long hair, don't sleep and are philosophically
+engaged, we are humans who need food and drink to keep our body alive
+while our souls are flying across the lines of code.
+
+
+Requisites
+----------
+
+- GTK+ 1.2.x
+- libtiff 3.4 (minimum version)
+- mingw32, Mumit's Khan GCC port to win32 (if you use such a system) although
+  Cygnus Solution Cygwin compiler suite *may* work.
+
+
+Notes
+-----
+
+- i18n for GTK+/Win32 USED TO require manual creation of a $lang.utf8
+  with iconv after which you HAD to execute msgfmt on it. This problem
+  has been solved by creating a special makefile (Makefile.win32)
+  which will do all that is needed to build a win32 distribution (in
+  .tgz format). Texts are "translated" from LF unix line-ending to
+  MS-DOgS, CR-LF line-ending, po files are translated to UTF-8.
+
+links
+-----
+
+HylaFAX                (http://www.hylafax.org)
+GTK+                   (http://www.gtk.org)
+GTK+ for Win32         (http://www.gimp.org/~tml/gimp/win32)
+libtiff                (http://www.libtiff.org)
+mingw32                (http://www.mingw.org)
+cygwin                 (http://sources.redhat.com/cygwin)
+GNOME                  (http://www.gnome.org)
+GNU                    (http://www.gnu.org)
+Richard Stallman       (http://www.stallman.org)
+
+The GNU HaliFAX Viewer (http://www.ultim.net/~wolfgang/gnu_halifax/ghfv.html)
+The GNU HaliFAX Sender (http://www.gmsys.com/gnome-gfax.html)
+The GNU HaliFAX Library (???)
+The GNU HaliFAX Administrator (???)
+The GNU HaliFAX Watcher (???)

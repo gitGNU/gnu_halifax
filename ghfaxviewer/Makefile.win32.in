@@ -1,0 +1,80 @@
+# Don't use this file to build this program. Its purpose is
+# to automate the Win32 distribution packaging.
+
+default:
+	@echo "Don't use this file to build this program. Its purpose is"
+	@echo "to automate the Win32 distribution packaging."
+
+DIST_ARCHIVE = @PACKAGE@-@VERSION@-win32.bin.tar.gz
+DIST_DOCFILES = NEWS ChangeLog COPYING README HACKING AUTHORS
+ICONS = printer.xpm left90.xpm right90.xpm reverse.xpm \
+	right_arrow.xpm left_arrow.xpm \
+        zoom_in.xpm zoom_out.xpm info.xpm \
+	ghfaxviewer-icon.xpm ghfaxviewer-logo.xpm
+
+CATALOGS = $(shell echo @CATALOGS@ | sed -e 's/.gmo//g')
+
+DIST_DIR = $(shell pwd)/tmp/@PACKAGE@
+DIST_DOCDIR = $(DIST_DIR)/doc
+DIST_ICONDIR = $(DIST_DIR)/icons
+DIST_LOCALEDIR = $(DIST_DIR)/locale
+
+STRIP = i586-pc-mingw32msv-strip
+
+dir-skeleton:
+	@rm -rf $(DIST_DIR)
+	@mkdir -p $(DIST_DIR)
+	@mkdir -p $(DIST_DOCDIR)
+	@mkdir -p $(DIST_ICONDIR)
+	@mkdir -p $(DIST_LOCALEDIR)
+	@for locale in $(CATALOGS); do \
+		mkdir -p $(DIST_LOCALEDIR)/$$locale/LC_MESSAGES; \
+	done
+
+doc-conversion:
+	@for text in $(DIST_DOCFILES); do \
+		if [ -f $$text ]; then \
+			todos < $$text > $(DIST_DOCDIR)/$$text.txt; \
+			echo $$text.txt generated; \
+		else \
+			echo $$text.txt skipped; \
+		fi \
+	done
+
+locale-conversion:
+	@echo "Converting locales ($(CATALOGS))..."
+	@for locale in $(CATALOGS); do \
+		echo $$locale; \
+		( cd po ; \
+		  iconv -fISO-8859-1 -tUTF-8 -o $$locale.utf8 $$locale.po ; \
+		  msgfmt -o $$locale.gmoutf8 $$locale.utf8 ) \
+	done
+	@echo "Installing locales..."
+	@for locale in $(CATALOGS); do \
+		echo $$locale; \
+		mkdir -p $(DIST_LOCALEDIR)/$$locale/LC_MESSAGES; \
+		cp po/$$locale.gmoutf8 $(DIST_LOCALEDIR)/$$locale/LC_MESSAGES/@PACKAGE@.mo; \
+		rm -f po/$$locale.gmoutf8 po/$$locale.utf8; \
+	done
+
+conversions: doc-conversion locale-conversion
+
+remaining-installation:
+	@echo Installing remaining files
+	@for icon in $(ICONS); do \
+		echo $$icon; \
+		cp src/pixmaps/$$icon $(DIST_ICONDIR); \
+	done
+	cp gfv_gtkrc $(DIST_DIR)
+	cp src/@PACKAGE@.exe $(DIST_DIR)
+	$(STRIP) $(DIST_DIR)/@PACKAGE@.exe
+
+$(DIST_ARCHIVE): src/@PACKAGE@.exe dir-skeleton conversions remaining-installation
+
+win32-bin-package: $(DIST_ARCHIVE)
+	( cd tmp ; \
+	  tar czf $(DIST_ARCHIVE) @PACKAGE@ ; \
+	  mv -f $(DIST_ARCHIVE) .. )
+	@echo done.
+
+.PHONY: win32-bin-package

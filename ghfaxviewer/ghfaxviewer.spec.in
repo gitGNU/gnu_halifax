@@ -1,0 +1,57 @@
+# Note that this is NOT a relocatable package
+%define ver      @VERSION@
+%define rel      1
+%define prefix   /usr
+
+Summary: The GNU HaliFAX - Viewer (for GNOME)
+Name: ghfaxviewer
+Version: %ver
+Release: %rel
+Obsoletes: gfaxviewer
+Copyright: GPL
+Group: Applications/GNOME
+Vendor: Wolfgang Sourdeau <wolfgang@ultim.net>
+Source: http://www.ultim.net/~wolfgang/gnu_halifax/ghfaxviewer-%{ver}.tar.gz
+
+BuildRoot: /var/tmp/ghfaxviewer-%{PACKAGE_VERSION}-root
+
+URL: http://www.ultim.net/~wolfgang/gfv.html
+
+Requires: gnome-libs >= 1.2.3
+Requires: libtiff >= 3.4
+
+%description
+ The GNU HaliFAX will be a complete free client package for HylaFAX
+ and maybe for other fax systems in the future.
+ It is intended to run on both the Win32 platform and the GNU system.
+
+ This is the viewer. Recommended to use with GFax.
+
+
+%prep
+%setup
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%prefix
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{prefix}
+make prefix=$RPM_BUILD_ROOT%{prefix} install
+
+%post
+
+%postun
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-, root, root)
+
+%doc AUTHORS COPYING ChangeLog NEWS README TODO
+%{prefix}/bin/*
+%{prefix}/share/locale/*/LC_MESSAGES/%{name}.mo
+%{prefix}/share/pixmaps/ghfaxviewer/*
+%{prefix}/share/gnome/apps/Graphics/*

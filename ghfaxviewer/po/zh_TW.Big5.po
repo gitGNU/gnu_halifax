@@ -1,0 +1,429 @@
+# The GNU HaliFAX Viewer - french translation file.
+# Copyright (C) 2000-2001 Wolfgang Sourdeau.
+# Wolfgang Sourdeau <wolfgang@contre.com>, 2000-2001.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gfaxviewer 0.9.9\n"
+"POT-Creation-Date: 2000-10-21 05:03-0400\n"
+"PO-Revision-Date: 2001-02-08 18:21-05:00\n"
+"Last-Translator: Kevin Chen <kevin@vega.idv.tw>\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=big5-0\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: src/draw_page.c:169 src/ps_print.c:577 src/thumbnails.c:133
+#: src/winprint.c:187
+msgid "Please wait..."
+msgstr "½Ðµy«á..."
+
+#: src/thumbnails.c:163
+#, c-format
+msgid "Computing index for page %d of %d..."
+msgstr "­pºâ²Ä %d ¤§ %d ­¶..."
+
+#: src/thumbnails.c:209
+#, c-format
+msgid "Page %d"
+msgstr "²Ä %d ­¶"
+
+#: src/tiffimages.c:119
+msgid "%s is not a G3/G4 Fax File"
+msgstr "%s ¤£¬O G3/G4 ¶Ç¯uÀÉ®×"
+
+#: src/tiffimages.c:120
+msgid "%s is not a TIFF file"
+msgstr "%s ¤£¬O¤@­Ó TIFF ÀÉ®×"
+
+#: src/tiffimages.c:121
+msgid "%s seems corrupted or incomplete"
+msgstr "%s ¦ü¥G¤w¸g¯}·l©Î¬O¤£§¹¾ã"
+
+#: src/tiffimages.c:122
+msgid "%s could not be found"
+msgstr "µLªk§ä¨ì %s"
+
+#: src/tiffimages.c:123
+msgid "permission to read %s is missing"
+msgstr "¨S¦³Åª¨ú %s ªºÅv­­"
+
+#: src/viewer.c:364
+msgid "Go to previous page"
+msgstr "¦^¤W­¶"
+
+#: src/viewer.c:388
+msgid "Go to next page"
+msgstr "¨ì¤U­¶"
+
+#: src/viewer.c:413
+msgid "Zoom in"
+msgstr "©ñ¤j"
+
+#: src/viewer.c:436
+msgid "Zoom out"
+msgstr "ÁY¤p"
+
+#: src/viewer.c:429
+msgid "Reverse image"
+msgstr "¤W¤UÄA­Ë"
+
+#: src/viewer.c:484
+msgid "Reverse image"
+msgstr "¤W¤UÄA¨ì"
+
+#: src/viewer.c:504
+msgid "Rotate 90Â° clockwise"
+msgstr "¶¶®ÉÄÁ±ÛÂà 90 «×"
+
+#: src/viewer.c:506
+msgid "Rotate 90° clockwise"
+msgstr "¶¶®ÉÄÁ±ÛÂà 90 «×"
+
+#: src/viewer.c:504
+msgid "Rotate 90Â° counter-clockwise"
+msgstr "°f®ÉÄÁ±ÛÂà 90 «×"
+
+#: src/viewer.c:506
+msgid "Rotate 90° counter-clockwise"
+msgstr "°f®ÉÄÁ±ÛÂà 90 «×"
+
+#: src/viewer.c:529
+msgid "Print fax"
+msgstr "¦C¦L¶Ç¯u"
+
+#: src/ps_print.c:229 src/ps_print.c:246 src/viewer.c:617
+msgid "File"
+msgstr "ÀÉ®×"
+
+#: src/viewer.c:621
+msgid "Open..."
+msgstr "¶}±Ò..."
+
+#: src/viewer.c:572
+msgid "Close"
+msgstr "Ãö³¬"
+
+#: src/viewer.c:576
+msgid "Properties..."
+msgstr "¯S©Ê..."
+
+#: src/viewer.c:625
+msgid "Quit"
+msgstr "Â÷¶}"
+
+#: src/viewer.c:635
+msgid "View"
+msgstr "Æ[¬Ý"
+
+#: src/viewer.c:660
+msgid "Settings"
+msgstr "³]©w"
+
+#: src/viewer.c:664
+msgid "Preferences..."
+msgstr "­Ó¤H³ß¦n..."
+
+#: src/viewer.c:674
+msgid "Help"
+msgstr "¨D§U"
+
+#: src/viewer.c:678
+msgid "About..."
+msgstr "Ãö©ó..."
+
+#: src/viewer.c:683
+msgid "GNU HaliFAX - Viewer"
+msgstr "GNU HaliFAX - ¶Ç¯u¬d¾\\¤u¨ã"
+
+#: src/about.c:88
+msgid "About the GNU HaliFAX - Viewer..."
+msgstr "Ãö©ó GNU HaliFAX ¶Ç¯u¬d¾\\¤u¨ã..."
+
+#: src/about.c:95
+msgid "Version :"
+msgstr "ª©¥» :"
+
+#: src/about.c:98
+msgid "The GNU HaliFAX team :"
+msgstr "GNU HaliFAX ¹Î¶¤:"
+
+#: src/about.c:101
+msgid ""
+"The GNU HaliFAX - Viewer was enhanced in various ways thanks to those"
+" people :"
+msgstr ""
+"GNU HaliFAX ¶Ç¯u¬d¾\\¤u¨ã¦]¤U¦C¤H­ûªº§V¤O¦Ó¼W¦â¤£¤Ö, ·PÁÂ"
+" °Ñ»P¤H¤h :"
+
+#: src/about.c:107
+msgid "What is the GNU HaliFAX - Viewer ?"
+msgstr "GNU HaliFAX ¶Ç¯u¬d¾\\¤u¨ã¬O¤°»ò ?"
+
+#: src/about.c:110
+msgid "Copyright :"
+msgstr "ª©Åv :"
+
+#: src/about.c:113
+msgid "Licensing :"
+msgstr "³\\¥i : "
+
+#: src/about.c:128
+msgid ""
+"Thomas Bartschies, German translation\n"
+"Kevin Chen, Traditional Chinese translation\n"
+"Zbigniew Baniewski, Polish translation"
+msgstr ""
+"Thomas Bartschies, ¼w¤åÂ½Ä¶\n"
+"³¯¦°¤§, ÁcÅé¤¤¤åÂ½Ä¶\n"
+"Zbigniew Baniewski, ªiÄõ¤åÂ½Ä¶"
+
+#: src/info.c:47
+msgid "this fax is clean"
+msgstr "¦¹«Ê¬°²M·¡ªº¶Ç¯u"
+
+#: src/info.c:50
+msgid "some lines have been regenerated"
+msgstr "¦³¼Æ±ø½u¤w­«·s³B²z"
+
+#: src/info.c:53
+msgid "this fax is not clean"
+msgstr "³o«Ê¶Ç¯u¨Ã¤£²M·¡"
+
+#: src/info.c:56 src/info.c:82 src/info.c:108 src/info.c:149 src/info.c:184
+msgid "invalid data"
+msgstr "µL®Äªº¸ê®Æ"
+
+#: src/info.c:73
+msgid "low resolution (204 dpi x 98 dpi)"
+msgstr "§C¸ÑªR«× (204 dpi x 98 dpi)"
+
+#: src/info.c:76
+msgid "high resolution (204 dpi x 196 dpi)"
+msgstr "°ª¸ÑªR«× (204 dpi x 196 dpi)"
+
+#: src/info.c:79
+msgid "strange resolution"
+msgstr "©_©Çªº¸ÑªR«×"
+
+#: src/info.c:105
+msgid "strange compression type"
+msgstr "©_©ÇªºÀ£ÁY§Î¦¡"
+
+#: src/info.c:153
+msgid "2D encoding"
+msgstr "2D ½s½X"
+
+#: src/info.c:156
+msgid "uncompressed"
+msgstr "¸ÑÀ£ÁY"
+
+#: src/info.c:159
+msgid "fill bits"
+msgstr "¶ñ¤J bits"
+
+#: src/info.c:178
+msgid "least to most significant bit (big endian)"
+msgstr "¥Ñ³Ì§C¦ì¦Ü³Ì°ª¦ì (big endian)"
+
+#: src/info.c:181
+msgid "most to least significant bit (little endian)"
+msgstr "¥Ñ³Ì°ª¦ì¦Ü³Ì§C¦ì (little endian)"
+
+#: src/info.c:230
+msgid "Sender ID"
+msgstr "µo°eªÌªº ID"
+
+#: src/info.c:233
+msgid "Destination subaddress"
+msgstr "¥Øªº¦aªº¤l¦a§}"
+
+#: src/info.c:236
+msgid "Date & time of reception"
+msgstr "±µ¦¬ªº®É¶¡¤Î¤é´Á"
+
+#: src/info.c:239
+msgid "Fax data cleanliness"
+msgstr "¶Ç¯u¸ê®Æªº²M¼ä«×"
+
+#: src/info.c:242
+msgid "Resolution"
+msgstr "¸ÑªR«×"
+
+#: src/info.c:245
+msgid "Compression type"
+msgstr "À£ÁY§Î¦¡"
+
+#: src/info.c:248
+msgid "G3/G4 Options"
+msgstr "G3/G4 ¿ï¶µ"
+
+#: src/info.c:251
+msgid "Pixel fill order"
+msgstr "¹Ï¤¸¶ñ¥R¶¶§Ç"
+
+#: src/info.c:254
+msgid "Make and model of receiving fax"
+msgstr "­«²Õ¨Ã²£¥Í¦¬¨ìªº¶Ç¯u"
+
+#: src/info.c:257
+msgid "Software"
+msgstr "³nÅé"
+
+#: src/info.c:260
+msgid "Receiving computer hostname"
+msgstr "±µ¦¬¹q¸£¥D¾÷¦WºÙ"
+
+#: src/info.c:318
+msgid "Fax properties"
+msgstr "¶Ç¯u©Ê½è"
+
+#: src/viewer.c:743
+msgid "Please choose a FAX G3 file to open..."
+msgstr "½Ð¿ï¾Ü¤@­Ó G3 ªº¶Ç¯uÀÉ®×..."
+
+#: src/about.c:38
+msgid ""
+"This program displays image files received on a HylaFAX system."
+msgstr ""
+"³o­Óµ{¦¡¬O¥Î¨ÓÅã¥Ü¸g¥Ñ HylaFAX ¨t²Î©Ò±µ¦¬¨ìªº¶Ç¯u¼v¹³ÀÉ."
+
+#: src/about.c:40
+msgid ""
+"This program is free software, you"
+" are welcome to use it, modify it"
+" and redistribute it under certain"
+" conditions. See the file COPYING"
+" for further informations. There is"
+" NO warranty; not even for"
+" MERCHANTABILITY or FITNESS FOR A"
+" PARTICULAR PURPOSE."
+msgstr ""
+"³o¬O¤@­Ó§K¶Oªº³nÅé, Åwªï¨Ï¥Î, ­×§ï, ¦³±ø¥óªº´²§G¦¹³nÅé."
+" ½Ð¬Ý COPYING ³o­ÓÀÉ®×¥HÀò±o§ó¦h¸ê°T."
+" ¨Ã¤£ªþ±a«OÃÒ, §ó¤£¬O¥i¾P°â©Î¬O¯S§O¥Øªºªº¾A¥Î©Ê."
+
+
+#: src/errors.c:178
+msgid "Something strange happened..."
+msgstr "µo¥Í¤@¨Ç©_©Çªºª¬ªp..."
+
+#: src/errors.c:179
+msgid ""
+"The specified file, %s, could not be opened\n"
+"because %s.\n"
+"Please fix this and try again later."
+msgstr ""
+"µLªk¶}±Ò«ü©wªºÀÉ®× %s\n"
+"¦]¬° %s.\n"
+"½Ð³B²z¦n³o­Ó°ÝÃD¦A¸Õ¸Õ."
+
+#: src/errors.c:182
+msgid "I am sorry"
+msgstr "«Ü©êºp"
+
+#: src/progress.c:53
+msgid "Processing"
+msgstr "³B²z¤¤"
+
+#: src/ps_print.c:887 src/progress.c:69
+msgid "Cancel"
+msgstr "¨ú®ø"
+
+#: src/progress.c:174
+#, c-format
+msgid "%s (done)"
+msgstr "%s (¤w§¹¦¨)"
+
+#: src/winprint.c:164
+msgid "Printer cannot display bitmaps."
+msgstr "¦Lªí¾÷µLªkÅã¥Ü bitmaps."
+
+#: src/winprint.c:165
+msgid "Device Error"
+msgstr "¸Ë¸m¥X¿ù"
+
+#: src/ps_print.c:553 src/ps_print.c:555
+#: src/winprint.c:178
+msgid "The GNU HaliFAX Viewer"
+msgstr "GNU HaliFAX ¶Ç¯u¬d¾\\¤u¨ã"
+
+#: src/ps_print.c:581 src/winprint.c:196
+#, c-format
+msgid "Printing page %d (%d left)"
+msgstr "¥¿¦b¦L²Ä %d ­¶ (³Ñ %d ­¶)"
+
+#: src/ps_print.c:213
+msgid "Output to"
+msgstr "¿é¥X¦Ü"
+
+#: src/ps_print.c:222
+msgid "Printer"
+msgstr "¦Lªí¾÷"
+
+#: src/ps_print.c:242
+msgid "Command"
+msgstr "«ü¥O"
+
+#: src/ps_print.c:254
+msgid "Fax Output.ps"
+msgstr "Fax ¿é¥X.ps"
+
+#: src/ps_print.c:333
+msgid "Page selection"
+msgstr "­¶­±¿ï¾Ü"
+
+#: src/ps_print.c:344
+msgid "All pages"
+msgstr "©Ò¦³­¶­±"
+
+#: src/ps_print.c:359
+msgid "From"
+msgstr "±q"
+
+#: src/ps_print.c:388
+msgid "to"
+msgstr "¨ì"
+
+#: src/ps_print.c:410
+msgid "Current page only"
+msgstr "¶È¥Ø«e­¶­±"
+
+#: src/ps_print.c:700
+#, c-format
+msgid ""
+"%s already exists.\n"
+"Do you want to overwrite it?"
+msgstr ""
+"%s ¤w¸g¦s¦b.\n"
+"±z·Q­n½Æ¼g¥H¦s¦bªºÀÉ®×¶Ü?"
+
+#: src/ps_print.c:707
+msgid "Please answer..."
+msgstr "½Ð¦^µª..."
+
+#: src/ps_print.c:730
+msgid "Yes, please do"
+msgstr "¬Oªº, ³Â·Ð¤F"
+
+#: src/ps_print.c:737
+msgid "No thanks"
+msgstr "ÁÂÁÂ, ¤£¥Î¤F"
+
+#: src/ps_print.c:857
+msgid "Print..."
+msgstr "¦C¦L..."
+
+#: src/ps_print.c:878
+msgid "Print"
+msgstr "¦C¦L"
+
+#: src/gn_print.c:181
+msgid "Print preview..."
+msgstr "¹wÄý¦C¦L..."
+
+#: src/gn_print.c:231
+msgid "Range"
+msgstr "½d³ò"
+

@@ -1,0 +1,3 @@
+?package(ghfaxviewer-gnome):needs=X11 section=Apps/Viewers\
+  title="The GNU HaliFAX - Viewer" command="/usr/bin/ghfaxviewer"\
+  icon="/usr/share/pixmaps/ghfaxviewer/ghfaxviewer-icon.xpm"

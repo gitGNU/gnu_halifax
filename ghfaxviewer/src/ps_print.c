@@ -1,0 +1,939 @@
+/* ps_print.c - this file is part of the GNU HaliFAX Viewer
+ *
+ * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ *
+ * Author: Wolfgang Sourdeau <wolfgang@contre.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <tiffio.h>
+#include <unistd.h>
+#include <gtk/gtk.h>
+
+#include "tiffimages.h"
+#include "viewer.h"
+#include "progress.h"
+#include "print.h"
+#include "i18n.h"
+#include "gtkutils.h"
+
+typedef struct _PList PList;
+typedef struct _PDlgWidgets PDlgWidgets;
+typedef struct _PrintData PrintData;
+typedef struct _OutputData OutputData;
+
+typedef enum
+{
+  PRINT_TO_FILE = 0,
+  PRINT_TO_PRINTER = 1
+} PrintDirection;
+
+struct _PList
+{
+  int active, is_default;
+  char name[17];
+};
+
+struct _PDlgWidgets
+{
+  GtkWidget *print_window;
+  GtkWidget *printer_rb, *printer_opt_menu, *printer_cmd_en;
+  GtkWidget *file_rb, *output_file_en;
+  GtkWidget *all_pages_rb, *cur_page_rb;
+  GtkWidget *from_to_rb, *from_sp_but, *to_sp_but;
+};
+
+struct _PrintData
+{
+  gchar *printer;
+  FaxFile *document;
+  FaxPage *current_page;
+  gint first_page, last_page;
+  PDlgWidgets widgets;
+  GtkWidget *parent_window;
+};
+
+struct _OutputData
+{
+  FILE *output_stream;
+  FaxFile *document;
+  gchar *out_file_name;
+  gint from_page, to_page;
+  GtkWidget *print_dlg, *err_dlg, *parent_window;
+};
+
+/* Dumb UNIX printing */
+
+#define MAX_PLIST 8
+
+static int
+compare_printers (PList *p1, PList *p2)
+{
+  return (strcasecmp(p1->name, p2->name));
+}
+
+void
+make_default_pr (PList *plist, int nbr_pr, char *defname)
+{
+  int count;
+
+  if (strlen (defname))
+    {
+      count = 0;
+      while (count < nbr_pr)
+	{
+	  if (!strcmp (plist->name, defname))
+	    plist->is_default = TRUE;
+	  plist++;
+	  count++;
+	}
+    }
+}
+
+static PList*
+get_printers (void)
+{
+  int plist_count;
+  char defname[17];
+  PList *plist;
+#if defined(LPC_COMMAND) || defined(LPSTAT_COMMAND)
+  FILE *pfile;
+  char line[129], name[17];
+#endif	
+	
+  defname[0] = '\0';
+  
+  plist = g_malloc0 (sizeof (PList) * MAX_PLIST);
+  plist_count = 0;
+  
+#ifdef LPC_COMMAND
+  pfile = popen (LPC_COMMAND " status < /dev/null", "r");
+  if (pfile)
+    {
+      while (fgets(line, sizeof (line), pfile) != NULL
+	     && plist_count < MAX_PLIST)
+	if (strchr(line, ':') != NULL
+	    && line[0] != ' '
+	    && line[0] != '\t'
+	    && strncmp(line, "Press RETURN to continue", 24))
+	  {
+	    *strchr(line, ':') = '\0';
+	    strcpy(plist[plist_count].name, line);
+	    plist[plist_count].active = TRUE;
+	    plist[plist_count].is_default = FALSE;
+	    plist_count++;
+	  }
+      
+      pclose(pfile);
+    }
+#endif /* LPC_COMMAND */
+	
+#ifdef LPSTAT_COMMAND
+  if (!plist_count)
+    {
+      pfile = popen (LPSTAT_COMMAND " -d -p", "r");
+      if (pfile)
+	{
+	  while (fgets (line, sizeof (line), pfile) != NULL
+		 && plist_count < MAX_PLIST)
+	    {
+	      if (sscanf (line, "printer %s", name) == 1)
+		{
+		  strcpy (plist[plist_count].name, name);
+		  plist[plist_count].active = TRUE;
+		  plist[plist_count].is_default = FALSE;
+		  plist_count++;
+		}
+	      else
+		sscanf(line, "system default destination: %s",
+		       defname);
+	    }
+	  
+	  pclose(pfile);
+	}
+    }
+#endif /* LPSTAT_COMMAND */
+	
+  if (plist_count)
+    {
+      make_default_pr (plist, plist_count, defname);
+      if (plist_count > 1)
+	qsort(plist, plist_count, sizeof (PList),
+	      (__compar_fn_t) compare_printers);
+    }
+  else
+    {
+      g_free (plist);
+      plist = NULL;
+    }
+  
+  return plist;
+}
+
+static gint
+activate_printer_cb (GtkWidget *widget, PrintData *print_data)
+{
+  print_data->printer = gtk_object_get_data (GTK_OBJECT (widget),
+					     "printer_name");
+
+  return FALSE;
+}
+
+static GtkWidget*
+make_printer_menu (PrintData *print_data)
+{
+  GtkWidget *menu, *menuitem;
+  PList *plist, *cur_printer;
+  
+  plist = get_printers ();
+  
+  if (plist)
+    {
+      menu = gtk_menu_new ();
+      cur_printer = plist;
+      
+      if (cur_printer->active)
+	print_data->printer = cur_printer->name;
+      
+      while (cur_printer->active)
+	{
+	  menuitem = gtk_menu_item_new_with_label (cur_printer->name);
+	  gtk_menu_append (GTK_MENU (menu), menuitem);
+	  gtk_object_set_data (GTK_OBJECT (menuitem), "printer_name",
+			       cur_printer->name);
+	  gtk_signal_connect (GTK_OBJECT (menuitem), "activate",
+			      GTK_SIGNAL_FUNC (activate_printer_cb),
+			      print_data);
+
+	  if (cur_printer->is_default)
+	    gtk_menu_reorder_child (GTK_MENU (menu), menuitem, 0);
+
+	  cur_printer++;
+	}
+
+      gtk_object_set_data_full (GTK_OBJECT (menu), "printer_list",
+				plist, g_free);
+    }
+  else
+    menu = NULL;
+  
+  return menu;
+}
+
+static gint
+toggle_entries_cb (GtkWidget *widget, PDlgWidgets *widgets)
+{
+  if (widget == widgets->printer_rb)
+    {
+      gtk_widget_set_sensitive (widgets->printer_opt_menu, TRUE);
+      gtk_widget_set_sensitive (widgets->printer_cmd_en, TRUE);
+      gtk_widget_set_sensitive (widgets->output_file_en, FALSE);
+    }
+  else
+    {
+      gtk_widget_set_sensitive (widgets->printer_opt_menu, FALSE);
+      gtk_widget_set_sensitive (widgets->printer_cmd_en, FALSE);
+      gtk_widget_set_sensitive (widgets->output_file_en, TRUE);
+    }
+
+  return FALSE;
+}
+
+static gint
+toggle_page_sel_entries_cb (GtkWidget *widget,
+			    PDlgWidgets *widgets)
+{
+  if (widget == widgets->from_to_rb)
+    {
+      gtk_widget_set_sensitive (widgets->from_sp_but, TRUE);
+      gtk_widget_set_sensitive (widgets->to_sp_but, TRUE);
+    }
+  else
+    {
+      gtk_widget_set_sensitive (widgets->from_sp_but, FALSE);
+      gtk_widget_set_sensitive (widgets->to_sp_but, FALSE);
+    }
+  
+  return FALSE;
+}
+
+static GtkWidget*
+make_output_frame (PrintData *print_data)
+{
+  GtkWidget *output_frame, *table, *output_separator;
+  GtkWidget *printer_menu;
+  GtkWidget *printer_cmd_lbl, *output_file_lbl;
+  GSList *rb_group;
+  gchar *output_file_txt;
+
+  output_frame = gtk_frame_new (_("Output to"));
+  gtk_container_set_border_width (GTK_CONTAINER (output_frame), 5);
+  table = gtk_table_new (5, 2, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 3);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 3);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 3);
+  output_separator = gtk_hseparator_new ();
+  
+  print_data->widgets.printer_rb =
+    gtk_radio_button_new_with_label (NULL, _("Printer"));
+
+  rb_group = gtk_radio_button_group
+    (GTK_RADIO_BUTTON(print_data->widgets.printer_rb));
+  print_data->widgets.file_rb =
+    gtk_radio_button_new_with_label (rb_group, _("File"));
+  
+  gtk_signal_connect (GTK_OBJECT (print_data->widgets.printer_rb),
+		      "clicked", GTK_SIGNAL_FUNC (toggle_entries_cb),
+		      &(print_data->widgets));			     
+  gtk_signal_connect (GTK_OBJECT (print_data->widgets.file_rb),
+		      "clicked", GTK_SIGNAL_FUNC (toggle_entries_cb),
+		      &(print_data->widgets));			     
+
+  printer_cmd_lbl = gtk_label_new (_("Command"));
+  gtk_misc_set_alignment (GTK_MISC (printer_cmd_lbl), 0.0, 0.5);
+  output_file_lbl = gtk_label_new (_("File"));
+  gtk_misc_set_alignment (GTK_MISC (output_file_lbl), 0.0, 0.5);
+  
+  print_data->widgets.printer_cmd_en = gtk_entry_new ();
+  gtk_entry_set_text (GTK_ENTRY (print_data->widgets.printer_cmd_en),
+		      "lpr");
+  gtk_widget_set_usize (print_data->widgets.printer_cmd_en, 80, 20);
+  print_data->widgets.output_file_en = gtk_entry_new ();
+  output_file_txt = _("Fax Output.ps");
+  gtk_entry_set_text (GTK_ENTRY (print_data->widgets.output_file_en),
+		      output_file_txt);
+  gtk_editable_set_position
+    (GTK_EDITABLE (print_data->widgets.output_file_en),
+     strlen (output_file_txt));
+  gtk_widget_set_sensitive (print_data->widgets.output_file_en,
+			    FALSE);
+  gtk_widget_set_usize (print_data->widgets.output_file_en, 150, 20);
+
+  print_data->widgets.printer_opt_menu = gtk_option_menu_new ();
+  printer_menu = make_printer_menu (print_data);
+
+  gtk_widget_set_usize (print_data->widgets.printer_opt_menu, 80, 25);
+
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     print_data->widgets.printer_rb,
+			     0, 1, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     print_data->widgets.printer_opt_menu,
+			     1, 2, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     printer_cmd_lbl,
+			     0, 1, 1, 2);
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     print_data->widgets.printer_cmd_en,
+			     1, 2, 1, 2);
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     output_separator,
+			     0, 2, 2, 3);
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     print_data->widgets.file_rb,
+			     0, 1, 3, 4);
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     output_file_lbl,
+			     0, 1, 4, 5);
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     print_data->widgets.output_file_en,
+			     1, 2, 4, 5);
+  
+  gtk_container_add (GTK_CONTAINER (output_frame), table);
+  
+  if (printer_menu)
+    {
+      gtk_widget_set_usize (printer_menu, 79, -2);
+      gtk_option_menu_set_menu
+	(GTK_OPTION_MENU (print_data->widgets.printer_opt_menu),
+	 printer_menu);
+    }
+  else
+    {
+      gtk_button_clicked (GTK_BUTTON (print_data->widgets.file_rb));
+      gtk_widget_set_sensitive (print_data->widgets.printer_opt_menu,
+				FALSE);
+      gtk_widget_set_sensitive (print_data->widgets.printer_rb,
+				FALSE);
+    }
+  
+  return output_frame;
+}
+
+static GtkWidget*
+make_page_frame (PrintData *print_data)
+{
+  GtkWidget *page_frame, *page_table;
+  GtkWidget *to_label;
+  GtkObject *from_adj, *to_adj;
+  gfloat max_pages;
+  GSList *rb_group;
+
+  page_frame = gtk_frame_new (_("Page selection"));
+  gtk_container_set_border_width (GTK_CONTAINER (page_frame), 5);
+
+  page_table = gtk_table_new (3, 4, FALSE);
+  gtk_table_set_col_spacings (GTK_TABLE (page_table), 3);
+  gtk_container_add (GTK_CONTAINER (page_frame), page_table);
+
+  print_data->widgets.all_pages_rb = 
+    gtk_radio_button_new_with_label (NULL, _("All pages"));
+  rb_group = gtk_radio_button_group
+    (GTK_RADIO_BUTTON (print_data->widgets.all_pages_rb));
+  gtk_table_attach_defaults (GTK_TABLE (page_table),
+			     print_data->widgets.all_pages_rb,
+			     0, 4, 0, 1);
+  gtk_signal_connect (GTK_OBJECT
+		      (print_data->widgets.all_pages_rb),
+		      "clicked",
+		      GTK_SIGNAL_FUNC (toggle_page_sel_entries_cb),
+		      &(print_data->widgets));
+  
+  print_data->widgets.from_to_rb =
+    gtk_radio_button_new_with_label (rb_group, _("From"));
+  rb_group = gtk_radio_button_group
+    (GTK_RADIO_BUTTON (print_data->widgets.from_to_rb));
+  gtk_table_attach_defaults (GTK_TABLE (page_table),
+			     print_data->widgets.from_to_rb,
+			     0, 1, 1, 2);
+  gtk_signal_connect (GTK_OBJECT (print_data->widgets.from_to_rb),
+		      "clicked",
+		      GTK_SIGNAL_FUNC (toggle_page_sel_entries_cb),
+		      &(print_data->widgets));
+
+  max_pages = (gfloat) (print_data->document->nbr_pages + 1);
+  from_adj = gtk_adjustment_new (1.0, 1.0, max_pages, 1.0, 0.0, 0.0);
+
+  print_data->widgets.from_sp_but =
+    gtk_spin_button_new (GTK_ADJUSTMENT (from_adj), 1.0, 0);
+  gtk_spin_button_set_numeric
+    (GTK_SPIN_BUTTON (print_data->widgets.from_sp_but), TRUE);
+  gtk_table_attach_defaults (GTK_TABLE (page_table),
+			     print_data->widgets.from_sp_but,
+			     1, 2, 1, 2);
+  
+  to_label = gtk_label_new (_("to"));
+  gtk_table_attach_defaults (GTK_TABLE (page_table), to_label,
+			     2, 3, 1, 2);
+
+  to_adj = gtk_adjustment_new (max_pages, 1.0, max_pages,
+			       1.0, 0.0, 0.0);
+
+  print_data->widgets.to_sp_but =
+		gtk_spin_button_new (GTK_ADJUSTMENT (to_adj), 1.0, 0);
+  gtk_spin_button_set_numeric
+    (GTK_SPIN_BUTTON (print_data->widgets.to_sp_but), TRUE);
+  gtk_table_attach_defaults (GTK_TABLE (page_table),
+			     print_data->widgets.to_sp_but,
+			     3, 4, 1, 2);
+
+  print_data->widgets.cur_page_rb =
+    gtk_radio_button_new_with_label (rb_group,
+				     _("Current page only"));
+  gtk_table_attach_defaults (GTK_TABLE (page_table),
+			     print_data->widgets.cur_page_rb,
+			     0, 4, 2, 3);
+  gtk_signal_connect (GTK_OBJECT (print_data->widgets.cur_page_rb),
+		      "clicked",
+		      GTK_SIGNAL_FUNC (toggle_page_sel_entries_cb),
+		      &(print_data->widgets));
+  
+  gtk_widget_set_sensitive (print_data->widgets.from_sp_but, FALSE);
+  gtk_widget_set_sensitive (print_data->widgets.to_sp_but, FALSE);
+
+  return page_frame;
+}
+
+static FILE*
+create_temp_print_file (gchar **outfile_name)
+{
+  gint counter;
+  FILE *file_stream;
+  char *file_name, *template;
+  
+  file_stream = NULL;
+  counter = 0;
+  
+  template = g_strdup ("/tmp/gfo-XXXXXX");
+
+#warning Ignore the warning about mktemp at link time,
+#warning it is used securely here...
+  while (!file_stream && counter < 64)
+    {
+      file_name = mktemp (template);
+      file_stream = fopen (template, "wx");
+      if (file_stream)
+	*outfile_name = template;
+      counter++;
+    }
+
+  return file_stream;
+}
+
+static guint
+size_of_page (FaxPage *page)
+{
+  gfloat f_result;
+  guint result;
+  
+  f_result = (gfloat) page->width * (gfloat) page->height / 8.0;
+  result = (guint) f_result;
+
+  return result;
+}
+
+static guint
+size_of_output (OutputData *output_data)
+{
+  FaxPage *cur_page;
+  guint result, pcount, from_p, to_p;
+  
+  result = 0;
+  from_p = output_data->from_page;
+  to_p = output_data->to_page;
+  cur_page = output_data->document->first;
+
+  for (pcount = from_p; pcount <= to_p; pcount++)
+    {
+      result += size_of_page (cur_page);
+      cur_page = cur_page->next;
+    }
+  
+  return result;
+}
+
+static guint
+print_image (FILE *print_file, FaxPage *fax_image,
+	     GfvProgressData *p_data,
+	     guint progress, guint unit, guint total_bytes)
+{
+  gboolean aborted;
+  guint full_length, counter, new_progress;
+  guchar cur_char;
+  
+  full_length = size_of_page (fax_image);
+
+  aborted = FALSE;
+  new_progress = progress;
+  
+  for (counter = 0; (counter < full_length) && !aborted; counter++)
+    {
+      new_progress++;
+      if ((new_progress % unit) == 0)
+	aborted = gfv_progress_update_with_value (new_progress,
+						  total_bytes,
+						  0,
+						  p_data);
+      if (!aborted)
+	{
+	  cur_char = *(fax_image->image + counter);
+	  fprintf(print_file, "%.2x", (unsigned char) ~cur_char);
+		
+	  if ((counter + 1) % 40 == 0)
+	    fprintf(print_file, "\n");
+	}
+      else
+	new_progress = 0;
+    }
+
+  if (!aborted && ((counter + 1) % 40 != 0))
+    fprintf(print_file, "\n");
+
+  return new_progress;
+}
+
+static gboolean
+output_document (OutputData *output_data)
+{
+  gint cur_page_nbr;
+  guint cur_byte, unit, total_bytes;
+  gboolean success;
+  gchar *time_string, *ps_title, *ps_creator, *p_action;
+  FaxPage *cur_page;
+  GfvProgressData *p_data;
+  time_t cur_time;
+
+#ifdef ENABLE_NLS
+  /* If we don't do this, our floating-point numbers might
+   * become floating-comma numbers which postscript doesn't
+   * understand that well... */
+  setlocale (LC_NUMERIC, "C");
+#endif
+
+  cur_page_nbr = output_data->from_page;
+  time (&cur_time);
+  time_string = ctime (&cur_time);
+  
+  success = TRUE;
+  cur_byte = 0;
+  total_bytes = size_of_output (output_data);
+  unit = total_bytes / 100;
+
+  ps_creator = g_strdup_printf(_("The GNU HaliFAX Viewer"));
+  ps_title = g_strdup_printf ("%s %s - %s",
+			      _("The GNU HaliFAX Viewer"),
+			      VERSION,
+			      output_data->document->file_name);
+
+  fprintf(output_data->output_stream,
+	  "%%!PS-Adobe-3.0\n"
+	  "%%%%Creator: %s\n"
+	  "%%%%Title: %s\n"
+	  "%%%%CreationDate: %s"
+	  "%%%%DocumentData: Clean7Bit\n"
+	  "%%%%Origin: 0 0\n"
+	  "%%%%BoundingBox: 0 0 612 792\n"
+	  "%%%%LanguageLevel: 1\n"
+	  "%%%%Pages: (atend)\n"
+	  "%%%%EndComments\n"
+	  "%%%%BeginSetup\n"
+	  "%%%%EndSetup\n",
+	  ps_creator, ps_title, time_string);
+  
+  g_free (ps_title);
+  g_free (ps_creator);
+  
+  p_data = gfv_progress_new (GTK_WINDOW (output_data->parent_window),
+			     _("Please wait..."), NULL, ABORT_BTN);
+  
+  while (cur_page_nbr <= output_data->to_page && success)
+    {
+      p_action = g_strdup_printf (_("Printing page %d (%d left)"),
+				  cur_page_nbr,
+				  output_data->to_page
+				  - cur_page_nbr);
+      gfv_progress_set_action (p_data, p_action);
+      g_free (p_action);
+      cur_page = ti_seek_fax_page (output_data->document,
+				   cur_page_nbr - 1);
+
+      fprintf(output_data->output_stream,
+	      "%%%%Page: %d %d\n",
+	      cur_page_nbr,
+	      cur_page_nbr);
+      fprintf(output_data->output_stream,
+	      "gsave\n"
+	      "100 dict begin\n"
+	      "%f %f scale\n",
+	      ((float) cur_page->width * 72.0
+	       / (float) output_data->document->x_res),
+	      ((float) cur_page->height
+	       * 72.0
+	       / (float) output_data->document->y_res));
+      fprintf(output_data->output_stream,
+	      "%%ImageData: %d %d 1 1 0 1 2 \"image\"\n",
+	      cur_page->width, cur_page->height);
+      fprintf(output_data->output_stream,
+	      "/scanLine %d string def\n",
+	      (int) (cur_page->width / 8));
+      fprintf(output_data->output_stream,
+	      "%d %d 1\n", cur_page->width, cur_page->height);
+      fprintf(output_data->output_stream,
+	      "[%d 0 0 -%d 0 %d]\n", cur_page->width,
+	      cur_page->height, cur_page->height);
+      fprintf(output_data->output_stream,
+	      "{currentfile scanLine readhexstring pop} bind\n"
+	      "image\n");
+      
+      ti_load_fax_page (output_data->document, cur_page);
+      cur_byte = print_image (output_data->output_stream,
+			      cur_page, p_data,
+			      cur_byte, unit, total_bytes);
+
+      if (!cur_byte)
+	success = FALSE;
+      else
+	{
+	  fprintf(output_data->output_stream,
+		  "end\n"
+		  "grestore\n"
+		  "showpage\n");
+
+	  cur_page_nbr++;
+	}
+
+      ti_unload_fax_page (cur_page);
+    }
+
+  if (success)
+    fprintf (output_data->output_stream,
+	     "%%%%Trailer\n"
+	     "%%%%Pages: %d\n"
+	     "%%%%EOF\n", (cur_page_nbr - output_data->from_page));
+
+#ifdef ENABLE_NLS
+  setlocale (LC_NUMERIC, "");
+#endif
+
+  gfv_progress_destroy (p_data);
+
+
+  return success;
+}
+
+static gint
+print_to_file_anyway_cb (GtkWidget *yes_button, OutputData
+			 *output_data)
+{
+  gboolean success;
+  
+  gtk_widget_destroy (output_data->err_dlg);
+  
+  while (gtk_events_pending ())
+    gtk_main_iteration ();
+  
+  output_data->output_stream = fopen (output_data->out_file_name, "w+");
+  success = output_document (output_data);
+  
+  if (success)
+    gtk_widget_destroy (output_data->print_dlg);
+  else
+    unlink (output_data->out_file_name);
+
+  fclose (output_data->output_stream);
+  g_free (output_data->out_file_name);
+  g_free (output_data);
+  
+  return FALSE;
+}
+
+static gint
+no_overwrite_cb (GtkWidget *no_button, OutputData *output_data)
+{
+  gtk_widget_destroy (output_data->err_dlg);
+  g_free (output_data->out_file_name);
+  g_free (output_data);
+
+  return FALSE;
+}
+
+static void
+file_exists_dlg (OutputData *output_data, GtkWidget *print_dlg)
+{
+  GtkWidget *err_win, *vbox, *hbox, *msg_lbl, *yes_but, *no_but;
+  gchar *message;
+  
+  message = g_strdup_printf (_("%s already exists.\n"
+			       "Do you want to overwrite it?"),
+			     output_data->out_file_name);
+
+  err_win = gtk_window_new (GTK_WINDOW_DIALOG);
+  gtk_window_set_title (GTK_WINDOW (err_win), _("Please answer..."));
+  gtk_container_set_border_width (GTK_CONTAINER (err_win), 10);
+  
+  vbox = gtk_vbox_new (FALSE, 1);
+  gtk_container_add (GTK_CONTAINER (err_win), vbox);
+	
+  msg_lbl = gtk_label_new (message);
+  g_free (message);
+  gtk_box_pack_start (GTK_BOX (vbox), msg_lbl, TRUE, FALSE, 3);
+  gtk_label_set_justify (GTK_LABEL (msg_lbl), GTK_JUSTIFY_LEFT);
+  
+  hbox = gtk_hbox_new (FALSE, 3);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, FALSE, 0);
+  
+  output_data->err_dlg = err_win;
+  output_data->print_dlg = print_dlg;
+
+  yes_but = gtk_button_new_with_label (_("Yes, please do"));
+  gtk_signal_connect (GTK_OBJECT (yes_but), "clicked",
+		      GTK_SIGNAL_FUNC (print_to_file_anyway_cb),
+		      output_data);
+  gtk_box_pack_start (GTK_BOX (hbox), yes_but, TRUE, FALSE, 2);
+  
+  no_but = gtk_button_new_with_label (_("No thanks"));
+  gtk_signal_connect (GTK_OBJECT (no_but), "clicked",
+		      GTK_SIGNAL_FUNC (no_overwrite_cb),
+		      output_data);
+  gtk_box_pack_start (GTK_BOX (hbox), no_but, TRUE, FALSE, 2);
+
+  transient_window_show (GTK_WINDOW (err_win),
+			 GTK_WINDOW (print_dlg));
+}
+
+static gint
+launch_print_job_cb (GtkWidget *widget,
+		     PrintData *print_data)
+{
+  OutputData *output_data;
+  PrintDirection direction;
+  gchar *command, *print_command;
+  gboolean progress_success;
+  
+  progress_success = FALSE;
+
+  output_data = g_malloc (sizeof (OutputData));
+  output_data->document = print_data->document;
+  output_data->parent_window = print_data->parent_window;
+  
+  if (gtk_toggle_button_get_active
+      (GTK_TOGGLE_BUTTON (print_data->widgets.printer_rb)))
+    direction = PRINT_TO_PRINTER;
+  else
+    direction = PRINT_TO_FILE;
+	
+  if (gtk_toggle_button_get_active
+      (GTK_TOGGLE_BUTTON (print_data->widgets.all_pages_rb)))
+    {
+      output_data->from_page = 1;
+      output_data->to_page = print_data->document->nbr_pages + 1;
+    }
+  else if (gtk_toggle_button_get_active
+	   (GTK_TOGGLE_BUTTON (print_data->widgets.from_to_rb)))
+    {
+      output_data->from_page = gtk_spin_button_get_value_as_int 
+	(GTK_SPIN_BUTTON (print_data->widgets.from_sp_but));
+      output_data->to_page = gtk_spin_button_get_value_as_int
+	(GTK_SPIN_BUTTON (print_data->widgets.to_sp_but));
+    } else
+      output_data->from_page = output_data->to_page =
+	print_data->current_page->nbr + 1;
+
+
+  if (direction == PRINT_TO_PRINTER)
+    {
+      print_command = gtk_entry_get_text
+	(GTK_ENTRY (print_data->widgets.printer_cmd_en));
+      output_data->output_stream =
+	create_temp_print_file (&output_data->out_file_name);
+
+      progress_success = output_document (output_data);
+      fclose (output_data->output_stream);
+
+      if (progress_success)
+	{
+	  command = g_strdup_printf ("%s -P%s %s",
+				     print_command,
+				     print_data->printer,
+				     output_data->out_file_name);
+	  system (command);
+	  g_free (command);
+
+	  gtk_widget_destroy (widget->parent->parent);
+	}
+
+      unlink (output_data->out_file_name);
+      g_free (output_data->out_file_name);
+      g_free (output_data);
+    }
+  else
+    {
+      output_data->out_file_name = g_strdup
+	(gtk_entry_get_text
+	 (GTK_ENTRY (print_data->widgets.output_file_en)));
+      output_data->output_stream = fopen
+	(output_data->out_file_name, "wx");
+
+      if (output_data->output_stream)
+	{
+	  progress_success = output_document (output_data);
+	  fclose (output_data->output_stream);
+	  
+	  if (!progress_success)
+	    unlink (output_data->out_file_name);
+
+	  g_free (output_data->out_file_name);
+	  g_free (output_data);
+
+	  gtk_widget_destroy (widget->parent->parent);
+	}
+      else
+	file_exists_dlg (output_data, widget->parent->parent);
+    }
+
+
+  return FALSE;
+}
+
+static gint
+cancel_print_cb (GtkWidget *widget, gpointer null)
+{
+  gtk_widget_destroy (widget->parent->parent);
+
+  return FALSE;
+}
+
+static GtkWidget*
+print_dialog (ViewerData *viewer_data)
+{
+  GtkWidget *print_dlg, *table,
+    *output_frame, *page_frame,
+    *print_but, *cancel_but;
+  PrintData *print_data;
+
+  print_data = g_malloc (sizeof (PrintData));
+  print_data->document = viewer_data->fax_file;
+  print_data->current_page = viewer_data->current_page;
+  print_data->parent_window = viewer_data->viewer_window;
+
+  print_dlg = gtk_window_new (GTK_WINDOW_DIALOG);
+  gtk_window_set_title (GTK_WINDOW (print_dlg), _("Print..."));
+  gtk_container_set_border_width (GTK_CONTAINER (print_dlg), 3);
+
+  table = gtk_table_new (3, 2, FALSE);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 5);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 5);
+  gtk_container_add (GTK_CONTAINER (print_dlg), table);
+
+  output_frame = make_output_frame (print_data);
+  gtk_table_attach_defaults (GTK_TABLE (table), output_frame,
+			     0, 2, 0, 1); 
+
+  page_frame = make_page_frame (print_data);
+  gtk_table_attach_defaults (GTK_TABLE (table), page_frame,
+			     0, 2, 1, 2); 
+
+  print_but = gtk_button_new_with_label (_("Print"));
+  gtk_signal_connect (GTK_OBJECT (print_but), "clicked",
+		      GTK_SIGNAL_FUNC (launch_print_job_cb),
+		      print_data);
+  gtk_table_attach_defaults (GTK_TABLE (table),
+			     print_but,
+			     0, 1, 2, 3); 
+  
+  cancel_but = gtk_button_new_with_label (_("Cancel"));
+  gtk_signal_connect (GTK_OBJECT (cancel_but), "clicked",
+		      GTK_SIGNAL_FUNC (cancel_print_cb),
+		      NULL);
+  gtk_table_attach_defaults (GTK_TABLE (table), cancel_but,
+			     1, 2, 2, 3); 
+
+  gtk_object_set_data_full (GTK_OBJECT (print_dlg),
+			    "print_data", print_data, g_free);
+
+  return print_dlg;
+}
+
+void
+print_cb (GtkWidget *widget, ViewerData *viewer_data)
+{
+  if (viewer_data->fax_file)
+    {
+      viewer_data->print_dialog =
+	print_dialog (viewer_data);
+      
+      transient_window_show (GTK_WINDOW (viewer_data->print_dialog),
+			     GTK_WINDOW (viewer_data->viewer_window));
+    }
+}

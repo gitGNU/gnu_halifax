@@ -1,0 +1,109 @@
+/* fileopen.c - this file is part of the GNU HaliFAX Viewer
+ *
+ * Copyright (C) 2000-2001 Wolfgang Sourdeau
+ *
+ * Author: Wolfgang Sourdeau <wolfgang@contre.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <gtk/gtk.h>
+
+#include "tiffimages.h"
+#include "viewer.h"
+#include "gtkutils.h"
+
+#include "setup.h"
+
+static void
+file_dlg_ok_cb (GtkWidget *ok_button, GtkWidget *file_dlg)
+{
+  gchar *file_name;
+#ifdef CAN_SAVE_CONFIG
+  gchar *last_directory;
+#endif
+  GSList *fail_list, *fail_reason_list;
+  ViewerData *viewer_data;
+
+  file_name = g_strdup (gtk_file_selection_get_filename
+			(GTK_FILE_SELECTION (file_dlg)));
+  fail_list = NULL;
+  fail_reason_list = NULL;
+
+  if (file_name)
+    {
+      viewer_data = gtk_object_get_user_data (GTK_OBJECT (file_dlg));
+      gtk_widget_destroy (file_dlg);
+      fax_viewer_open_file (viewer_data, file_name);
+
+#ifdef CAN_SAVE_CONFIG
+      last_directory = g_dirname (file_name);
+      save_last_directory (last_directory);
+      g_free (last_directory);
+#endif
+    }
+}
+
+static void
+file_dialog (ViewerData *viewer_data)
+{
+  GtkWidget *open_dialog;
+#ifdef CAN_SAVE_CONFIG
+  gchar *last_dir;
+#endif
+
+  open_dialog =
+    gtk_file_selection_new (_("Please choose a FAX "
+			      "G3 file to open..."));
+
+#ifdef CAN_SAVE_CONFIG
+  last_dir = load_last_directory ();
+  gtk_file_selection_set_filename (GTK_FILE_SELECTION
+				   (open_dialog), last_dir);
+  g_free (last_dir);
+#endif
+
+  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION
+				  (open_dialog)->ok_button),
+		      "clicked",
+		      GTK_SIGNAL_FUNC (file_dlg_ok_cb),
+		      (gpointer) open_dialog);
+  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION
+					 (open_dialog)->cancel_button),
+			     "clicked",
+			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			     GTK_OBJECT (open_dialog));
+  gtk_object_set_user_data (GTK_OBJECT (open_dialog),
+			    (gpointer) viewer_data);
+
+  transient_window_show (GTK_WINDOW (open_dialog),
+			 GTK_WINDOW (viewer_data->viewer_window));
+}
+
+void
+file_dialog_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
+{
+  file_dialog (viewer_data);
+}
+
+void
+close_file_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
+{
+  fax_viewer_open_file (viewer_data, NULL);  
+}

@@ -1,0 +1,14 @@
+src/draw_page.c
+src/thumbnails.c
+src/tiffimages.c
+src/viewer.c
+src/toolbar.c
+src/menu.c
+src/about.c
+src/info.c
+src/fileopen.c
+src/errors.c
+src/progress.c
+src/winprint.c
+src/ps_print.c
+src/gn_print.c

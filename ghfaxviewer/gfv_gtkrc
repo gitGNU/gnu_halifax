@@ -1,0 +1,15 @@
+# gtkrc to give the GNU HaliFAX Viewer a native look under Windows 
+
+style "gtk-default-style-C" {
+  fontset = "-*-MS Sans Serif-medium-r-normal-*-*-100-*-*-p-*-iso8859-1"
+  bg[NORMAL] = "#c0c0c0"
+  bg[PRELIGHT] = "#c0c0c0"
+}
+
+class "GtkWidget" style "gtk-default-style-C"
+
+style "gtk-progress-style-C" {
+  bg[PRELIGHT] = "#505050"
+}
+
+class "GtkProgress" style "gtk-progress-style-C"
