@@ -63,7 +63,7 @@ binary-arch-gtk: checkroot build-gtk
 	-ln -s ghfaxviewer-gtk debian/tmp/usr/bin/ghfaxviewer
 	-ln -s ../man7/undocumented.7.gz debian/tmp/usr/share/man/man1/ghfaxviewer.1.gz
 	-ln -s ../man7/undocumented.7.gz debian/tmp/usr/share/man/man1/ghfaxviewer-gtk.1.gz
-	debstd AUTHORS ChangeLog NEWS README TODO debian/copyright
+	debstd AUTHORS ChangeLog NEWS README README.cvs TODO debian/copyright
 	dh_installmenu -pghfaxviewer-gtk -Pdebian/tmp
 	
 	# fixes the /usr/share/doc link problem...
@@ -100,7 +100,7 @@ binary-arch-gnome: checkroot build-gnome
 	-mv debian/$(secondary) debian/tmp
 	-ln -s ../man7/undocumented.7.gz debian/tmp/usr/share/man/man1/ghfaxviewer.1.gz
 	-ln -s ../man7/undocumented.7.gz debian/tmp/usr/share/man/man1/ghfaxviewer-gnome.1.gz
-	debstd AUTHORS ChangeLog NEWS README TODO debian/copyright
+	debstd AUTHORS ChangeLog NEWS README README.cvs TODO debian/copyright
 	dh_installmenu -pghfaxviewer-gnome -Pdebian/tmp
 	-rm -rf debian/$(secondary)
 	-mv debian/tmp debian/$(secondary)
