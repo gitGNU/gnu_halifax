@@ -434,12 +434,14 @@ static gboolean
 viewer_window_cfg_event_cb (GtkWidget *viewer_window,
 			    GdkEventConfigure *event, gpointer nothing)
 {
-  vwindow_set_def_coords (viewer_window->window);
-
   /* the signal has to be caught only once */
   gtk_signal_disconnect_by_func (GTK_OBJECT (viewer_window),
 				 GTK_SIGNAL_FUNC (viewer_window_cfg_event_cb),
 				 nothing);
+  while (gtk_events_pending ())
+    gtk_main_iteration ();
+  
+  vwindow_set_def_coords (viewer_window->window);
 
   return FALSE;
 }
@@ -476,10 +478,10 @@ viewer_window_new (ViewerData *viewer_data)
 
   /* This signal is handled only once, to resize and reposition the
      window according to our settings. */
-  gtk_signal_connect (GTK_OBJECT (viewer_data->viewer_window),
- 		      "configure-event",
-		      GTK_SIGNAL_FUNC (viewer_window_cfg_event_cb),
-		      NULL);
+  gtk_signal_connect_after (GTK_OBJECT (viewer_data->viewer_window),
+			    "configure-event",
+			    GTK_SIGNAL_FUNC (viewer_window_cfg_event_cb),
+			    NULL);
 
   viewer_data->page_area = gtk_drawing_area_new ();
   gtk_signal_connect (GTK_OBJECT (viewer_data->page_area),

@@ -1,3 +1,10 @@
+2001-05-01  Wolfgang Sourdeau  <wolfgang@contre.com>
+
+	* src/viewer.c (viewer_window_cfg_event_cb): flush the event queue
+	before resizing the window, so that we are sure no other event
+	will resize it afterwards. Of course, we discard the callback from
+	the signal handler queue beforehand...
+
 2001-04-30  Wolfgang Sourdeau  <wolfgang@contre.com>
 
 	* src/gtkutils.c (dialog_window_get_gtkwin): new function to
