@@ -1,0 +1,85 @@
+.if n .po 0
+.ds Fx \fIHyla\s-1FAX(tm)\s+1\fP
+.ds Mx \fIMgetty+Sendfax\s+1\fP
+.ds Gx \fIGFax\s+1\fP
+.ds gb \fBgfax\s+1\fP
+.ds gi \fIgfax\s+1\fP
+.ds li \fIlpr\s+1\fP
+.ds lb \fBlpr\s+1\fP
+.TH "gfax" "1" "0.4.2" "Wolfgang Sourdeau" "The GNU HaliFAX Sender"
+.SH "NAME"
+.LP 
+gfax \- graphical popup frontend to send faxes
+.SH "SYNTAX"
+.LP 
+\*(gb
+<\fIfilename\fP>
+.br 
+\*(lb
+\fI\-Pfax\fP <\fIfilename\fP>
+.SH "DESCRIPTION"
+.LP 
+\*(Gx is the GNU HaliFAX component for sending faxes.
+.LP 
+It is a front end fax program that performs the familiar pop\-up fax
+manager when one prints to a fax printer.
+\*(Gx works with all X programs that use \*(li as the printer interface,
+even the command line.
+.LP 
+\*(Gx has been tested with such programs as Emacs, Nedit, and Ghostscript to
+name a few. It should work with any application that prints using
+.I lpr.
+\*(Gx relies on underlying fax transport software such as
+\*(Mx or \*(Fx to actually send the facimiles.  This
+software must already be installed and setup on your system for \*(Gx to
+work.
+.LP 
+More documentation regarding \*(Gx is available in the manual page you
+obtain by selecting the
+.I "Manual"
+entry from the help menu. This will popup a gnome\-help browser
+displaying the file /usr/share/gnome/help/gfax/C/gfax.html.
+.LP 
+More informations about the GNU HaliFAX project are available at the
+GNU HaliFAX official website:
+.LP 
+\fBhttp://www.gnu.org/software/halifax/\fP
+.SH "NOTE"
+.LP 
+\*(Gx doesn't actually send the fax, it is up to the fax subsystem
+software such as \*(Mx. If you're having problems sending
+faxes make sure the fax subsystem works first.
+.SH "OPTIONS"
+.LP 
+.TP 
+\fB\-test\fR or \fB\-t\fR
+You may give \*(gi the
+\fI\-\-test\fR
+or
+\fI\-t\fR
+option on the command line to print
+the actual command that will be sent to the fax transmission agent. This is
+mainly used for debugging and getting the fax agent working properly.
+.BR 
+.TP 
+.BR 
+This option is not normally used.
+.SH "EXAMPLES"
+.LP 
+To run this program the standard way type:
+.LP 
+\*(gb /tmp/myfile
+.LP 
+Alternativly you can run it as:
+.LP 
+\*(lb \-Pfax /tmp/myfile
+.SH "AUTHORS"
+.LP 
+George Farris <george@gmsys.com>
+.SH "SEE ALSO"
+.LP 
+halifax(1)     \- introducing the GNU HaliFAX project
+.br
+ghfaxviewer(1) \- the GNU HaliFAX Viewer
+.br 
+sendfax(1)
