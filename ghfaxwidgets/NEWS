@@ -1,0 +1,7 @@
+2001/10/01
+
+- added some test programs;
+- added debian directory;
+- converted dialog_window to ghfw_dlg_window (pure GTK widget);
+- created macros/ghfaxwidgets.m4;
+
