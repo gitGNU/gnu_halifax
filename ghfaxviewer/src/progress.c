@@ -94,9 +94,12 @@ gfv_progress_new (GtkWindow *parent_window,
       abort_btn = gtk_button_new_with_label (_("Cancel"));
 #endif
       gtk_signal_connect (GTK_OBJECT (abort_btn), "clicked",
-			  (GtkSignalFunc) progress_abort, prog_data);
+			  (GtkSignalFunc) progress_abort, prog_data); 
       dialog_window_set_button (dlg_window, abort_btn);
-	    
+      dialog_window_set_escapable_with_callback (dlg_window, 
+						 (GtkSignalFunc) progress_abort,
+						 prog_data);
+
       prog_data->abort_btn = abort_btn;
     }
 

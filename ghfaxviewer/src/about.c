@@ -192,6 +192,7 @@ about_cb (GtkWidget *irrelevant, gpointer viewer_window)
 		      about_dialog);
 
   dialog_window_set_button (about_dialog, ok_button);
+  dialog_window_set_escapable (about_dialog);
 
   dialog_window_show (about_dialog, GTK_WINDOW (viewer_window));
 }

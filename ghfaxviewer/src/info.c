@@ -312,14 +312,14 @@ create_info_table (GtkWidget *window, TiffInfo *file_info)
 }
 
 static DialogWindow *
-create_info_window (GtkWidget *viewer_window, TiffInfo *file_info)
+create_info_dialog (GtkWidget *viewer_window, TiffInfo *file_info)
 {
-  DialogWindow *info_window;
+  DialogWindow *info_dialog;
   GtkWidget *table, *ok_button;
 
-  info_window = dialog_window_new (_("Fax properties"));
+  info_dialog = dialog_window_new (_("Fax properties"));
   table = create_info_table (viewer_window, file_info);
-  dialog_window_set_content_with_frame (info_window, table);
+  dialog_window_set_content_with_frame (info_dialog, table);
 
 #ifdef NEED_GNOMESUPPORT_H
   ok_button = gnome_stock_button (GNOME_STOCK_BUTTON_OK);
@@ -327,26 +327,27 @@ create_info_window (GtkWidget *viewer_window, TiffInfo *file_info)
   ok_button = gtk_button_new_with_label (_("Close"));
 #endif
   gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
-		      dialog_window_destroy_from_signal, info_window);
+		      dialog_window_destroy_from_signal, info_dialog);
 
-  dialog_window_set_button (info_window,
+  dialog_window_set_button (info_dialog,
 			    ok_button);
+  dialog_window_set_escapable (info_dialog);
 
-  return info_window;
+  return info_dialog;
 }
 
 void
 info_cb (GtkWidget *irrelevant, ViewerData *viewer_data)
 {
-  DialogWindow *info_window;
+  DialogWindow *info_dialog;
   TiffInfo *file_info;
 
   if (viewer_data->fax_file)
     {
       file_info = ti_get_file_info (viewer_data->fax_file);
-      info_window = create_info_window (viewer_data->viewer_window,
+      info_dialog = create_info_dialog (viewer_data->viewer_window,
 					file_info);
-      dialog_window_show (info_window,
+      dialog_window_show (info_dialog,
 			  GTK_WINDOW (viewer_data->viewer_window));
 
       ti_destroy_file_info (file_info);

@@ -291,12 +291,10 @@ print_cb (GtkWidget *widget, ViewerData *viewer_data)
 				| GNOME_PRINT_DIALOG_COPIES);
 
       gnome_print_dialog_construct_range_page 
-	(GPD (print_dialog),
-	 GNOME_PRINT_RANGE_CURRENT
-	 | GNOME_PRINT_RANGE_ALL
-	 | GNOME_PRINT_RANGE_RANGE,
-	 1,
-	 viewer_data->fax_file->nbr_pages + 1,
+	(GPD (print_dialog), (GNOME_PRINT_RANGE_CURRENT
+			      | GNOME_PRINT_RANGE_ALL
+			      | GNOME_PRINT_RANGE_RANGE),
+	 1, viewer_data->fax_file->nbr_pages + 1,
 	 _("Current page only"),
 	 _("Range"));
 					   

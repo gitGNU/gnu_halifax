@@ -78,10 +78,10 @@ static void
 display_failure (GtkWidget *window,
 		 gchar *title, gchar *message, gchar *but_text)
 {
-  DialogWindow *fail_window;
+  DialogWindow *fail_dialog;
   GtkWidget *vbox, *msg_lbl, *ok_but; 
 
-  fail_window = dialog_window_new (title);
+  fail_dialog = dialog_window_new (title);
 
   vbox = gtk_vbox_new (FALSE, 5);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
@@ -95,12 +95,13 @@ display_failure (GtkWidget *window,
   ok_but = gtk_button_new_with_label (but_text); 
   gtk_signal_connect (GTK_OBJECT (ok_but), "clicked",
 		      dialog_window_destroy_from_signal,
-		      fail_window);
+		      fail_dialog);
 
-  dialog_window_set_content_with_frame (fail_window, vbox);
-  dialog_window_set_button (fail_window, ok_but);
+  dialog_window_set_content_with_frame (fail_dialog, vbox);
+  dialog_window_set_button (fail_dialog, ok_but);
+  dialog_window_set_escapable (fail_dialog);
 
-  dialog_window_show (fail_window,
+  dialog_window_show (fail_dialog,
 		      GTK_WINDOW (window));
 }
 

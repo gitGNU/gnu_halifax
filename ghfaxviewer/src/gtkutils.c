@@ -32,6 +32,7 @@
 #include "setup.h"
 
 typedef struct _DialogWindow DialogWindow;
+typedef struct _EscCallbackData EscCallbackData;
 
 struct _DialogWindow
 {
@@ -39,6 +40,12 @@ struct _DialogWindow
   GtkWidget *vbox;
   GtkWidget *content;
   GtkHButtonBox *button_box;
+};
+
+struct _EscCallbackData
+{
+  GtkSignalFunc callback;
+  gpointer user_data;
 };
 
 /* Menu creation */
@@ -150,14 +157,22 @@ transient_window_show (GtkWindow *transient, GtkWindow *parent)
 
 static gboolean
 key_press_event_cb (GtkWidget *window, GdkEventKey *event,
-		    gpointer user_data)
+		    EscCallbackData *esc_cb_data)
 {
   gboolean ret_code;
 
   if (event->keyval == GDK_Escape)
     {
-      gtk_widget_destroy (window);
-      ret_code = TRUE;
+      if (esc_cb_data)
+	{
+	  esc_cb_data->callback (window, esc_cb_data->user_data);
+	  ret_code = FALSE;
+	}
+      else
+	{
+	  gtk_widget_destroy (window);
+	  ret_code = TRUE;
+	}
     }
   else
     ret_code = FALSE;
@@ -170,6 +185,12 @@ gtk_window_set_escapable (GtkWindow *window)
 {
   gtk_signal_connect (GTK_OBJECT (window), "key-press-event",
 		      GTK_SIGNAL_FUNC (key_press_event_cb), NULL);
+}
+
+void
+free_data_on_destroy_cb (GtkWidget *widget, gpointer data)
+{
+  g_free (data);
 }
 
 /* dialog windows */
@@ -197,6 +218,23 @@ void
 dialog_window_set_escapable (DialogWindow *window)
 {
   gtk_window_set_escapable ((GtkWindow*) window->window);
+}
+
+void
+dialog_window_set_escapable_with_callback (DialogWindow *window,
+					   GtkSignalFunc callback,
+					   gpointer user_data)
+{
+  EscCallbackData *esc_cb_data;
+
+  esc_cb_data = g_malloc (sizeof (EscCallbackData));
+  esc_cb_data->callback = callback;
+  esc_cb_data->user_data = user_data;
+  gtk_signal_connect (GTK_OBJECT (window->window), "destroy",
+		      (GtkSignalFunc) free_data_on_destroy_cb,
+		      esc_cb_data);
+  gtk_signal_connect (GTK_OBJECT (window->window), "key-press-event",
+		      GTK_SIGNAL_FUNC (key_press_event_cb), esc_cb_data);
 }
 
 GtkWidget *
@@ -254,7 +292,6 @@ dialog_window_set_button_box (DialogWindow *window,
 {
   if (!window->button_box)
     {
-      dialog_window_set_escapable (window);
       gtk_box_pack_end (GTK_BOX (window->vbox), GTK_WIDGET (button_box),
 			FALSE, FALSE, 0);
       window->button_box = button_box;

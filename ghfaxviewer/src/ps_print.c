@@ -89,7 +89,7 @@ struct _PrintData
   FaxPage *current_page;
   gint first_page, last_page;
   PDlgWidgets widgets;
-  DialogWindow *print_dlg;
+  DialogWindow *print_dialog;
   GtkWidget *parent_window;
 };
 
@@ -99,7 +99,7 @@ struct _OutputData
   FaxFile *document;
   gchar *out_file_name;
   gint from_page, to_page;
-  DialogWindow *print_dlg, *err_dlg;
+  DialogWindow *print_dialog, *err_dialog;
   GtkWidget *parent_window;
 };
 
@@ -724,7 +724,7 @@ print_to_file_anyway_cb (GtkWidget *yes_button,
 			 OutputData *output_data)
 {
   gboolean success;
-  DialogWindow *print_dlg;
+  DialogWindow *print_dialog;
   
   while (gtk_events_pending ())
     gtk_main_iteration ();
@@ -733,31 +733,31 @@ print_to_file_anyway_cb (GtkWidget *yes_button,
   success = output_document (output_data);
   fclose (output_data->output_stream);
   
-  print_dlg = output_data->print_dlg;
+  print_dialog = output_data->print_dialog;
 
   if (success)
     {
-      dialog_window_destroy (output_data->err_dlg);
-      dialog_window_destroy (print_dlg);
+      dialog_window_destroy (output_data->err_dialog);
+      dialog_window_destroy (print_dialog);
     }
   else
     {
       unlink (output_data->out_file_name);
-      dialog_window_destroy (output_data->err_dlg);
+      dialog_window_destroy (output_data->err_dialog);
     }
 }
 
 static void
-file_exists_dlg_destroy_cb (GtkWidget *window, OutputData *output_data)
+file_exists_dialog_destroy_cb (GtkWidget *window, OutputData *output_data)
 {
   g_free (output_data->out_file_name);
   g_free (output_data);
 }
 
 static void
-file_exists_dlg (OutputData *output_data, DialogWindow *print_dlg)
+file_exists_dialog (OutputData *output_data, DialogWindow *print_dialog)
 {
-  DialogWindow *err_dlg;
+  DialogWindow *err_dialog;
   GtkWidget *button_box, *msg_lbl, *yes_but, *no_but;
   gchar *message;
   
@@ -765,18 +765,19 @@ file_exists_dlg (OutputData *output_data, DialogWindow *print_dlg)
 			       "Do you want to overwrite it?"),
 			     output_data->out_file_name);
 
-  err_dlg = dialog_window_new (_("Please answer..."));
-  dialog_window_add_destroy_callback (err_dlg,
-				      GTK_SIGNAL_FUNC (file_exists_dlg_destroy_cb),
+  err_dialog = dialog_window_new (_("Please answer..."));
+  dialog_window_add_destroy_callback (err_dialog,
+				      GTK_SIGNAL_FUNC (file_exists_dialog_destroy_cb),
 				      output_data);
 
   msg_lbl = gtk_label_new (message);
   g_free (message);
   gtk_label_set_justify (GTK_LABEL (msg_lbl), GTK_JUSTIFY_LEFT);
-  dialog_window_set_content_with_frame (err_dlg, msg_lbl);
+  dialog_window_set_content_with_frame (err_dialog, msg_lbl);
   
   button_box = dialog_window_bbox ();
-  dialog_window_set_button_box (err_dlg, GTK_HBUTTON_BOX (button_box));
+  dialog_window_set_button_box (err_dialog, GTK_HBUTTON_BOX (button_box));
+  dialog_window_set_escapable (err_dialog);
 
   yes_but = gtk_button_new_with_label (_("Yes, please do"));
   gtk_signal_connect (GTK_OBJECT (yes_but), "clicked",
@@ -789,16 +790,16 @@ file_exists_dlg (OutputData *output_data, DialogWindow *print_dlg)
   no_but = gtk_button_new_with_label (_("No thanks"));
   gtk_signal_connect (GTK_OBJECT (no_but), "clicked",
 		      GTK_SIGNAL_FUNC (dialog_window_destroy_from_signal),
-		      err_dlg);
+		      err_dialog);
   gtk_box_pack_start (GTK_BOX (button_box), no_but,
 		      FALSE, FALSE, 5);
   GTK_WIDGET_SET_FLAGS(no_but, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (no_but);
 
-  output_data->err_dlg = err_dlg;
-  output_data->print_dlg = print_dlg;
+  output_data->err_dialog = err_dialog;
+  output_data->print_dialog = print_dialog;
 
-  dialog_window_show (err_dlg, dialog_window_get_gtkwin (print_dlg));
+  dialog_window_show (err_dialog, dialog_window_get_gtkwin (print_dialog));
 }
 
 static gint
@@ -858,7 +859,7 @@ launch_print_job_cb (GtkWidget *widget,
 	  system (command);
 	  g_free (command);
 
-	  dialog_window_destroy (print_data->print_dlg);
+	  dialog_window_destroy (print_data->print_dialog);
 	}
 
       unlink (output_data->out_file_name);
@@ -884,23 +885,24 @@ launch_print_job_cb (GtkWidget *widget,
 	  g_free (output_data->out_file_name);
 	  g_free (output_data);
 
-	  dialog_window_destroy (print_data->print_dlg);
+	  dialog_window_destroy (print_data->print_dialog);
 	}
       else
-	file_exists_dlg (output_data, print_data->print_dlg);
+	file_exists_dialog (output_data, print_data->print_dialog);
     }
 
   return FALSE;
 }
 
 static void
-print_dlg_bbox (PrintData *print_data)
+print_dialog_bbox (PrintData *print_data)
 {
   GtkWidget *button_box, *print_but, *cancel_but;
 
   button_box = dialog_window_bbox ();
-  dialog_window_set_button_box (print_data->print_dlg,
+  dialog_window_set_button_box (print_data->print_dialog,
 				GTK_HBUTTON_BOX (button_box));
+  dialog_window_set_escapable (print_data->print_dialog);
 
   print_but = gtk_button_new_with_label (_("Print"));
   GTK_WIDGET_SET_FLAGS(print_but, GTK_CAN_DEFAULT);
@@ -915,13 +917,13 @@ print_dlg_bbox (PrintData *print_data)
   gtk_box_pack_start (GTK_BOX (button_box), cancel_but, FALSE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (cancel_but), "clicked",
 		      GTK_SIGNAL_FUNC (dialog_window_destroy_from_signal),
-		      print_data->print_dlg);
+		      print_data->print_dialog);
 
   gtk_widget_show (button_box);
 }
 
 static void
-print_dlg_destroy_cb (GtkWidget *widget, PrintData *print_data)
+print_dialog_destroy_cb (GtkWidget *widget, PrintData *print_data)
 {
   g_free (print_data);
 }
@@ -929,17 +931,17 @@ print_dlg_destroy_cb (GtkWidget *widget, PrintData *print_data)
 static DialogWindow *
 print_dialog (ViewerData *viewer_data)
 {
-  DialogWindow *print_dlg;
-  GtkWidget *table, *output_frame, *page_frame, *button_box;
+  DialogWindow *print_dialog;
+  GtkWidget *table, *output_frame, *page_frame;
   PrintData *print_data;
 
-  print_dlg = dialog_window_new (_("Print..."));
+  print_dialog = dialog_window_new (_("Print..."));
 
   print_data = g_malloc (sizeof (PrintData));
   print_data->document = viewer_data->fax_file;
   print_data->current_page = viewer_data->current_page;
   print_data->parent_window = viewer_data->viewer_window;
-  print_data->print_dlg = print_dlg;
+  print_data->print_dialog = print_dialog;
 
   table = gtk_table_new (3, 2, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 5);
@@ -952,14 +954,14 @@ print_dialog (ViewerData *viewer_data)
   gtk_table_attach_defaults (GTK_TABLE (table), page_frame,
 			     0, 2, 1, 2); 
 
-  print_dlg_bbox (print_data);
+  print_dialog_bbox (print_data);
 
-  dialog_window_set_content (print_dlg, table);
-  dialog_window_add_destroy_callback (print_dlg,
-				      GTK_SIGNAL_FUNC (print_dlg_destroy_cb),
+  dialog_window_set_content (print_dialog, table);
+  dialog_window_add_destroy_callback (print_dialog,
+				      GTK_SIGNAL_FUNC (print_dialog_destroy_cb),
 				      print_data);
 
-  return print_dlg;
+  return print_dialog;
 }
 
 void

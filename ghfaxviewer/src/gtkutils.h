@@ -31,6 +31,9 @@ void menu_item_new (GtkWidget *menu, gchar *label,
 		    GtkSignalFunc callback, gpointer data);
 
 void gtk_window_set_escapable (GtkWindow *window);
+void dialog_window_set_escapable_with_callback (DialogWindow *window,
+						GtkSignalFunc callback,
+						gpointer user_data);
 
 void dialog_window_set_escapable (DialogWindow *window);
 GtkWidget *dialog_window_bbox ();
