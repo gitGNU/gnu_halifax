@@ -132,19 +132,19 @@ save_window_coords (GdkWindow *window)
   gdk_window_get_size (window, &width, &height);
 
   gconf_client_set_int (gc_client,
-			CONFIG_KEY "win_x",
+			CONFIG_KEY "viewer_def_x",
 			x,
 			&gerror);
   gconf_client_set_int (gc_client,
-			CONFIG_KEY "win_y",
+			CONFIG_KEY "viewer_def_y",
 			y,
 			&gerror);
   gconf_client_set_int (gc_client,
-			CONFIG_KEY "win_width",
+			CONFIG_KEY "viewer_def_width",
 			width,
 			&gerror);
   gconf_client_set_int (gc_client,
-			CONFIG_KEY "win_height",
+			CONFIG_KEY "viewer_def_height",
 			height,
 			&gerror);
 }
@@ -184,16 +184,16 @@ gnome_screen_setup ()
   GError *gerror;
 
   viewer_def_x = gconf_client_get_int (gc_client,
-				       CONFIG_KEY "win_x",
+				       CONFIG_KEY "viewer_def_x",
 				       &gerror);
   viewer_def_y = gconf_client_get_int (gc_client,
-				       CONFIG_KEY "win_y",
+				       CONFIG_KEY "viewer_def_y",
 				       &gerror);
   viewer_def_width = gconf_client_get_int (gc_client,
-					   CONFIG_KEY "win_width",
+					   CONFIG_KEY "viewer_def_width",
 					   &gerror);
   viewer_def_height = gconf_client_get_int (gc_client,
-					    CONFIG_KEY "win_height",
+					    CONFIG_KEY "viewer_def_height",
 					    &gerror);
 
   if (viewer_def_width == 0 && viewer_def_height == 0)

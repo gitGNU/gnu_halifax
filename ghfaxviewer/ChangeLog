@@ -1,5 +1,12 @@
 2001-04-12  Wolfgang Sourdeau  <wolfgang@contre.com>
 
+	* src/callbcks.c (widget_close_cb): when leaving from the menu (or
+	any widget) we should save the window status too and not rely on
+	viewerclose_cb which should be triggered by a delete_event signal.
+
+	* src/setup.c: keys named win_* should be named viewer_def_*
+	instead. 
+
 	* configure.in: minimal gnome-print version is 0.28
 
 	* src/ps_print.c (get_printers): removed unused name[];

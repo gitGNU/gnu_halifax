@@ -53,7 +53,7 @@ gnome_menu_bar_new (ViewerData *viewer_data)
     GNOMEUIINFO_SEPARATOR,
     GNOMEUIINFO_MENU_PROPERTIES_ITEM (info_cb, viewer_data),
     GNOMEUIINFO_SEPARATOR,
-    GNOMEUIINFO_MENU_EXIT_ITEM (closeviewer_cb, viewer_data),
+    GNOMEUIINFO_MENU_EXIT_ITEM (widget_close_cb, viewer_data),
     GNOMEUIINFO_END
   };
   
@@ -149,7 +149,7 @@ file_menu_new (ViewerData *viewer_data)
   menu_separator_new (file_menu);
   menu_item_new (file_menu, _("Properties..."), info_cb, viewer_data);
   menu_separator_new (file_menu);
-  menu_item_new (file_menu, _("Quit"), closeviewer_cb, viewer_data);
+  menu_item_new (file_menu, _("Quit"), widget_close_cb, viewer_data);
 
   return file_menu_item;
 }

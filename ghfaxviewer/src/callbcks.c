@@ -25,6 +25,7 @@
 
 #include "tiffimages.h"
 #include "viewer.h"
+#include "setup.h"
 
 void
 nextpage_cb (GtkWidget *widget, ViewerData *viewer_data)
@@ -164,3 +165,10 @@ left90_cb (GtkWidget *widget, ViewerData *viewer_data)
     }
 }
 
+void widget_close_cb (GtkWidget *widget, ViewerData *viewer_data)
+{
+#ifdef CAN_SAVE_CONFIG
+  save_window_coords (viewer_data->viewer_window->window);
+#endif
+  gtk_widget_destroy (viewer_data->viewer_window);
+}

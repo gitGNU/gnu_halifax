@@ -189,6 +189,7 @@ button_press_event_cb (GtkWidget *widget,
 }
 
 #ifdef CAN_SAVE_CONFIG
+/* When the close button is pressed */
 gint
 precloseviewer_cb (GtkWidget *widget, GdkEventAny *event,
 		   gpointer nothing)
