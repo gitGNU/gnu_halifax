@@ -63,8 +63,8 @@ ghfw_progress_window_destroy (GtkObject *object)
 
   progress_window = GHFW_PROGRESS_WINDOW (object);
 
-  if (progress_window->action_string)
-    g_free (progress_window->action_string);
+  /* if (progress_window->action_string) */
+  /*   g_free (progress_window->action_string); */
 
   if (GTK_OBJECT_CLASS (parent_class)->destroy)
     (* GTK_OBJECT_CLASS (parent_class)->destroy) (object);
