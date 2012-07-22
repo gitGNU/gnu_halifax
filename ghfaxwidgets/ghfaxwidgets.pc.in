@@ -6,5 +6,5 @@ includedir=@includedir@
 Name: GHFaxWidgets
 Description: GNU HaliFAX Widgets Library
 Version: @VERSION@
-Libs: -L${libdir} -lglib-2.0
+Libs: -L${libdir} -lghfaxwidgets
 Cflags: -I${includedir}/ghfaxwidgets
