@@ -1,8 +1,0 @@
-Makefile
-Makefile.in
-files
-substvars
-postrm.debhelper
-prerm.debhelper
-postinst.debhelper
-ghfaxviewer

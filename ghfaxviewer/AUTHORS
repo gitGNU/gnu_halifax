@@ -1,22 +1,4 @@
-Maintainer and main author of ghfaxviewer :
-Wolfgang Sourdeau <wolfgang@contre.com>
-
-From the Eye of GNOME, which is copyrighted by the Free Software
-Foundation and written by Federico Mena Quintero:
-src/cursors.c and src/cursors.h
-the function "stock_init" in src/setup.c
-
 The GNU HaliFAX team:
-Wolfgang Sourdeau <wolfgang@contre.com>
+Wolfgang Sourdeau <wolfgang@gnu.org>
 George Farris <george@gmsys.com>
 Tilman Bubeck <bubeck@think-at-work.de>
-
-Translations:
-Thomas Bartschies, Tilman Bubeck: German translation (de.po)
-Kevin Chen: Traditional Chinese (zh_TW.Big5.po)
-Zbigniew Baniewski: Polish translation (pl.po)
-
-ports:
-Dominik Brettnacher (FreeBSD):
-	small modifications in src/ps_print.c to obtain
-	"__compare_fn_t" on non-glibc systems
