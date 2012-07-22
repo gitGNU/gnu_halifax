@@ -22,13 +22,14 @@
 #ifndef GHFW_DLG_WINDOW_H
 #define GHFW_DLG_WINDOW_H
 
-G_BEGIN_DECLS
+#include <glib.h>
+#include <glib-object.h>
 
 #define GHFW_DLG_WINDOW_TYPE            (ghfw_dlg_window_get_type ())
-#define GHFW_DLG_WINDOW(obj)		(GTK_CHECK_CAST (obj, GHFW_DLG_WINDOW_TYPE, GhfwDlgWindow))
-#define GHFW_DLG_WINDOW_CLASS(obj)	(GTK_CHECK_CAST (obj, GHFW_DLG_WINDOW_TYPE, GhfwDlgWindowClass))
-#define GHFW_IS_DLG_WINDOW(obj)         (GTK_CHECK_TYPE (obj, GHFW_DLG_WINDOW_TYPE))
-#define GHFW_IS_DLG_WINDOW_CLASS(klass) (GTK_CHECK_CLASS_TYPE (klass, GHFW_DLG_WINDOW_TYPE))
+#define GHFW_DLG_WINDOW(obj)		(G_TYPE_CHECK_INSTANCE_CAST (obj, GHFW_DLG_WINDOW_TYPE, GhfwDlgWindow))
+#define GHFW_DLG_WINDOW_CLASS(obj)	(G_TYPE_CHECK_CLASS_CAST (obj, GHFW_DLG_WINDOW_TYPE, GhfwDlgWindowClass))
+#define GHFW_IS_DLG_WINDOW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GHFW_DLG_WINDOW_TYPE))
+#define GHFW_IS_DLG_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE (klass, GHFW_DLG_WINDOW_TYPE))
 
 
 typedef struct _GhfwDlgWindow GhfwDlgWindow;
@@ -50,8 +51,7 @@ struct _GhfwDlgWindowClass
   void (* escaped) (GhfwDlgWindow *dlg_window);
 };
 
-GtkType        ghfw_dlg_window_get_type       (void);
-
+GType        ghfw_dlg_window_get_type       (void);
 
 GhfwDlgWindow* ghfw_dlg_window_new (gchar *title);
 void ghfw_dlg_window_set_content (GhfwDlgWindow *window, GtkWidget *content);
@@ -65,7 +65,5 @@ void ghfw_dlg_window_set_button (GhfwDlgWindow *window,
 void ghfw_dlg_window_set_escapable (GhfwDlgWindow *window);
 
 GtkWidget *ghfw_dlg_window_button_box ();
-
-G_END_DECLS
 
 #endif /* GHFW_DLG_WINDOW_H */

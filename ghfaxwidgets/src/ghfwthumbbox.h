@@ -54,7 +54,7 @@ struct _GhfwThumbBoxClass
   void (* escaped) (GhfwThumbBox *thumbbox);
 };
 
-GtkType        ghfw_thumbbox_get_type       (void);
+GType        ghfw_thumbbox_get_type       (void);
 
 
 GtkWidget *ghfw_thumbbox_new (gchar *title);

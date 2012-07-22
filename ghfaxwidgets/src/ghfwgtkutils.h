@@ -28,7 +28,7 @@ void free_data_on_destroy_cb (GtkWidget *widget, gpointer data);
 
 GtkWidget *menu_separator_new (GtkWidget *menu);
 GtkWidget *menu_item_new (GtkWidget *menu, gchar *label,
-			  GtkSignalFunc callback, gpointer data);
+			  GCallback callback, gpointer data);
 
 void gtk_window_set_escapable (GtkWidget *window);
 void transient_window_show (GtkWidget *transient, GtkWidget *parent);

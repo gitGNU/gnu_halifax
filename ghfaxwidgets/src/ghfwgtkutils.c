@@ -70,7 +70,7 @@ menu_separator_new (GtkWidget *menu)
 
 GtkWidget *
 menu_item_new (GtkWidget *menu, gchar *label,
-	       GtkSignalFunc callback, gpointer data)
+	       GCallback callback, gpointer data)
 {
   GtkWidget *new_menu_item;
 

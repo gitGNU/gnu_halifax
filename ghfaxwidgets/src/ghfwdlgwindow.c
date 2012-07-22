@@ -22,10 +22,11 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "ghfwdlgwindow.h"
 #include "ghfwgtkutils.h"
 
 #include "i18n.h"
+
+#include "ghfwdlgwindow.h"
 
 enum {
   PARAM_0,
@@ -263,8 +264,8 @@ ghfw_dlg_window_set_content (GhfwDlgWindow *window, GtkWidget *content)
       window->content = content;
     }
   else
-    g_print ("GhfwDlgWindow->content (%x->%x) is not NULL\n",
-	     (int) window, (int) window->content);
+    g_print ("GhfwDlgWindow->content (%p->%p) is not NULL\n",
+	     window, window->content);
 }
 
 void
@@ -294,8 +295,8 @@ ghfw_dlg_window_set_button_box (GhfwDlgWindow *window,
       window->button_box = button_box;
     }
   else
-    g_print ("GhfwDlgWindow->button_box (%x->%x) is not NULL\n",
-	     (int) window, (int) window->button_box);
+    g_print ("GhfwDlgWindow->button_box (%p->%p) is not NULL\n",
+	     window, window->button_box);
 }
 
 void
@@ -311,6 +312,6 @@ ghfw_dlg_window_set_button (GhfwDlgWindow *window,
   ghfw_dlg_window_set_button_box (window,
 				button_box);
 
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  gtk_widget_set_can_default (button, TRUE);
   gtk_widget_grab_default (button);
 }

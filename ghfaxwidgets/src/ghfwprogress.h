@@ -28,11 +28,11 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#define GHFW_PROGRESS_WINDOW_TYPE            (ghfw_progress_window_get_type ())
-#define GHFW_PROGRESS_WINDOW(obj)		(GTK_CHECK_CAST (obj, GHFW_PROGRESS_WINDOW_TYPE, GhfwProgressWindow))
-#define GHFW_PROGRESS_WINDOW_CLASS(obj)	(GTK_CHECK_CAST (obj, GHFW_PROGRESS_WINDOW_TYPE, GhfwProgressWindowClass))
-#define GHFW_IS_PROGRESS_WINDOW(obj)         (GTK_CHECK_TYPE (obj, GHFW_PROGRESS_WINDOW_TYPE))
-#define GHFW_IS_PROGRESS_WINDOW_CLASS(klass) (GTK_CHECK_CLASS_TYPE (klass, GHFW_PROGRESS_WINDOW_TYPEo))
+#define GHFW_PROGRESS_WINDOW_TYPE               (ghfw_progress_window_get_type ())
+#define GHFW_PROGRESS_WINDOW(obj)               (G_TYPE_CHECK_INSTANCE_CAST (obj, GHFW_PROGRESS_WINDOW_TYPE, GhfwProgressWindow))
+#define GHFW_PROGRESS_WINDOW_CLASS(obj) 	(G_TYPE_CHECK_CLASS_CAST (obj, GHFW_PROGRESS_WINDOW_TYPE, GhfwProgressWindowClass))
+#define GHFW_IS_PROGRESS_WINDOW(obj)            (G_TYPE_CHECK_INSTANCE_TYPE (obj, GHFW_PROGRESS_WINDOW_TYPE))
+#define GHFW_IS_PROGRESS_WINDOW_CLASS(klass)    (G_TYPE_CHECK_CLASS_TYPE (klass, GHFW_PROGRESS_WINDOW_TYPEo))
 
 typedef struct _GhfwProgressWindow GhfwProgressWindow;
 typedef struct _GhfwProgressWindowClass GhfwProgressWindowClass;
@@ -60,7 +60,7 @@ struct _GhfwProgressWindowClass
   void (*aborted) (GhfwProgressWindow *progress_window);
 };
 
-GtkType   ghfw_progress_window_get_type (void);
+GType   ghfw_progress_window_get_type (void);
 
 GhfwProgressWindow *ghfw_progress_window_new (gchar *title,
 					      gchar *action_string);

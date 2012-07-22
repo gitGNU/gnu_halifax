@@ -27,15 +27,17 @@
 #endif
 
 #ifdef NEED_GNOMESUPPORT_H
+#include <gtk/gtk.h>
 #include <gnome.h>
 #else
 #include <gtk/gtk.h>
 #endif
 
 #include "ghfwdlgwindow.h"
-#include "ghfwprogress.h"
 #include "ghfwgtkutils.h"
 #include "i18n.h"
+
+#include "ghfwprogress.h"
 
 enum {
   PARAM_0,
