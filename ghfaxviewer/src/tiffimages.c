@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 10:27:05 wolfgang>
+ * Time-stamp: <2012-07-22 16:31:04 wsourdeau>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -275,15 +275,15 @@ ti_open_fax_file (char* file_name)
 static void
 adapt_index (FaxPage *fax_page)
 {
-  gint delta;
+  intptr_t delta;
   gint steps;
   GSList *current_elem;
 
-  delta = (guint) fax_page->image - (guint) fax_page->old_image;
+  delta = fax_page->image - fax_page->old_image;
 
   if (delta)
     {
-      current_elem = fax_page->image_index->next;
+      current_elem = fax_page->image_index;
       steps = 0;
       
       while (current_elem)
