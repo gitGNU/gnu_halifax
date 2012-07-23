@@ -1,16 +1,20 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.50)
-AC_INIT(config.h.in)
-
-AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(ghfaxviewer, 0.29.10)
-
+AC_PREREQ(2.69)
+AC_INIT(ghfaxviewer, 0.29.10)
+AC_CONFIG_HEADERS(config.h)
+AC_CONFIG_MACRO_DIR([m4])
+AC_USE_SYSTEM_EXTENSIONS
 AC_CANONICAL_HOST
-
-AM_MAINTAINER_MODE
-
 AC_ISC_POSIX
 AC_PROG_CC
+AC_LANG_C
+AC_LIBTOOL_WIN32_DLL
+AC_PROG_LIBTOOL
+
+AM_INIT_AUTOMAKE()
+AM_MAINTAINER_MODE
+
+AC_SUBST([LIBTOOL_DEPS])
 
 dnl AC_LIBTOOL_WIN32_DLL
 dnl AC_PROG_LIBTOOL
@@ -33,7 +37,6 @@ case $host_os in
 esac
 
 AC_PROG_INSTALL
-AC_LANG_C
 
 WINDOWS_DETECTED=no
 
@@ -42,31 +45,25 @@ ALL_LINGUAS="de fr pl zh_TW.Big5"
 MANPAGES=ghfaxviewer.1
 PIXMAPS_DIR="$datadir/pixmaps/ghfaxviewer"
 
-AC_PATH_PROG(LIBTOOL, "libtool")
-  
-AM_GNU_GETTEXT
+AM_GNU_GETTEXT([external])
 
 dnl Test for libtiff
   
-AC_PATH_X
-  
-dnl if test x"$have_x" = x"yes"; then
-dnl  AC_CHECK_LIB(tiff, TIFFReadScanline,
-dnl       AC_CHECK_HEADER(tiffio.h,
-dnl                     TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff",
-dnl       AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
-dnl       AC_CHECK_LIB(tiff, TIFFWriteScanline,
-dnl         AC_CHECK_HEADER(tiffio.h,
-dnl                         TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff -ljpeg -lz",
-dnl           AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
-dnl           AC_CHECK_LIB(tiff34, TIFFFlushData,
-dnl             AC_CHECK_HEADER(tiffio.h,
-dnl                             TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff34 -ljpeg -lz",
-dnl               AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
-dnl              AC_MSG_WARN(*** please install libtiff (TIFF library not found) ***), -ljpeg -lz -lm), -ljpeg -lz -lm), -lm)
-dnl fi
+AC_CHECK_LIB(tiff, TIFFReadScanline,
+            AC_CHECK_HEADER(tiffio.h, TIFF='tiff'; TIFF_LIBS="${LIBS} -ltiff",
+                            AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
+            AC_CHECK_LIB(tiff, TIFFWriteScanline,
+                         AC_CHECK_HEADER(tiffio.h, TIFF='tiff'; TIFF_LIBS="${LIBS} -ltiff -ljpeg -lz",
+                                         AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
+                         AC_CHECK_LIB(tiff34, TIFFFlushData,
+                                      AC_CHECK_HEADER(tiffio.h, TIFF='tiff'; TIFF_LIBS="${LDFLAGS} -ltiff34 -ljpeg -lz",
+                                                      AC_MSG_WARN(*** please install libtiff (TIFF header files not found) ***)),
+                                      AC_MSG_WARN(*** please install libtiff (TIFF library not found) ***),
+                                     -ljpeg -lz -lm),
+                         -ljpeg -lz -lm),
+            -lm)
 
-dnl deps="$TIFF_LIBS"
+deps="$TIFF_LIBS"
 
 AC_ARG_ENABLE(debug,
   [  --enable-debug          warnings, debugging codes and messages],
@@ -95,7 +92,7 @@ else
 fi
 
 PKG_CHECK_MODULES(GNOME, libgnomeui-2.0 >= 0.14.0  libgnomeprintui-2.2 >= 0.14.0)
-PKG_CHECK_MODULES(GHFAXWIDGETS, libgnomeui-2.0 >= 0.14.0  libgnomeprintui-2.2 >= 0.14.0)
+PKG_CHECK_MODULES(GHFAXWIDGETS, ghfaxwidgets >= 0.0.0)
 AC_SUBST(GNOME_CFLAGS)
 AC_SUBST(GNOME_LIBS)
 AC_SUBST(GNOME_PRINT_CFLAGS)
@@ -103,8 +100,8 @@ AC_SUBST(GNOME_PRINT_LIBS)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
-AC_SUBST(GHFW_CFLAGS)
-AC_SUBST(GHFW_LIBS)
+AC_SUBST(GHFAXWIDGETS_CFLAGS)
+AC_SUBST(GHFAXWIDGETS_LIBS)
 
 AC_SUBST(SUPPSUBDIRS)
 
@@ -115,7 +112,6 @@ dnl AC_SUBST(RC_ICON_DIRECTIVE)
 
 dnl AM_CONDITIONAL(TARGET_GNU, test $OS = GNU)
 dnl AM_CONDITIONAL(TARGET_WIN32, test $OS = WIN32)
-AM_CONDITIONAL(HAVE_TIFF, test "x$TIFF_LIBS" != x)
 dnl AM_CONDITIONAL(GNOME, test x"$USING_GNOME" = xyes)
 dnl AM_CONDITIONAL(WITHOUT_GNOMEPRINT, test "x$no_gnome_print" = xyes)
 
@@ -123,7 +119,6 @@ AC_OUTPUT([
 Makefile
 ghfaxviewer.spec
 debian/Makefile
-intl/Makefile
 docs/Makefile
 src/Makefile
 src/ghfaxviewer-res.rc
