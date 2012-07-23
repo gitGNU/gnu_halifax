@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 10:26:54 wolfgang>
+ * Time-stamp: <2012-07-22 15:41:48 wsourdeau>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -42,7 +42,7 @@
 #include "i18n.h"
 #include "errors.h"
 #include "setup.h"
-#include "ps_export.h"
+/* #include "ps_export.h" */
 #include "callbcks.h"
 
 /* Shorthand for type of comparison functions.  */
