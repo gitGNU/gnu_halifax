@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2000, 2001, 2002, 2003 Wolfgang Sourdeau
  *
- * Time-stamp: <2003-03-07 10:27:26 wolfgang>
+ * Time-stamp: <2012-07-22 16:31:27 wsourdeau>
  *
  * Author: Wolfgang Sourdeau <wolfgang@contre.com>
  *
@@ -485,7 +485,7 @@ ti_zoomed_fax_page (FaxPage *orig_page,
       ir_data->y_pix_size = unfloat (ir_data->fact_y);
       ir_data->put_pixel = choose_pixel_func (rotation, FALSE);
 
-      g_slist_foreach (orig_page->image_index->next,
+      g_slist_foreach (orig_page->image_index,
 		       (GFunc) process_ir_zoom, ir_data);
     }
   else
@@ -494,7 +494,7 @@ ti_zoomed_fax_page (FaxPage *orig_page,
       ir_data->put_pixel = choose_pixel_func (rotation, TRUE);
       ir_data->y_pix_size = unfloat (ir_data->fact_y);
 
-      g_slist_foreach (orig_page->image_index->next,
+      g_slist_foreach (orig_page->image_index,
 		       (GFunc) process_ir_unzoom, ir_data);
     }
 

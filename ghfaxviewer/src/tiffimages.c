@@ -304,7 +304,7 @@ fill_index (FaxPage *fax_page)
   guint prog_min_rel_step;
 
   char_ptr = fax_page->image;
-  index = g_slist_alloc ();
+  index = NULL;
   is_open = FALSE;
 
   if (progress_func)
